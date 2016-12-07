@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "8d04bb4e_144b7aa2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:24:50Z",
+      "side": 1,
+      "message": "When will the watching trigger an action? (at upload/creation or at submit time)?",
+      "range": {
+        "startLine": 9,
+        "startChar": 25,
+        "endLine": 9,
+        "endChar": 53
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d05c749_13d0aeb6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:24:50Z",
+      "side": 1,
+      "message": "So we would add\n* the gitlink\n* config in the .gitmodules file\n\nin the superproject (if and only if?)\n\n* the newly added project/submodule allows for superproject subscription?\n* or do we check and enable the superproject subscription for that project? For the internal AOSP test superproject we configured all projects inheriting from \"all projects\" to allow the superproject subscription for the given superproject, so I\u0027d go with just checking here?",
+      "range": {
+        "startLine": 9,
+        "startChar": 59,
+        "endLine": 10,
+        "endChar": 24
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d04bb4e_5455023d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:24:50Z",
+      "side": 1,
+      "message": "Are the superproject config changes created as a change or just updating the superproject without a reviewable change?\n\nIn case of a change is that change tied to the manifest change by adding it into the same topic or making up a topic?",
+      "range": {
+        "startLine": 10,
+        "startChar": 28,
+        "endLine": 10,
+        "endChar": 45
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d04bb4e_f486b6a4",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 12

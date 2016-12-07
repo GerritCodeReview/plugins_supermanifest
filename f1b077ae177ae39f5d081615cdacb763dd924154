@@ -183,6 +183,30 @@
       "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d05c749_737adadb",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T22:47:24Z",
+      "side": 1,
+      "message": "Oh I see that would be the target/destination branch.\n\nThat way all of destination (repo/branch) are encoded in the key and all the sources (repo/Ref/Path) are encoded via the value.\n\nI wonder if we want to do it the other way round, as that is easier to parse  and react on, i.e. if there is a change to project:branch \"foo:bar\", we can just lookup if repoconversion.\"foo:bar\".superproject_destination exists and then trigger the update directed at that destination.\n\nThat said, I wonder if we want to have a RefSpec, similar to\nthe ACLs for the superproject subscription, see https://gerrit-review.googlesource.com/Documentation/user-submodules.html#_ensure_the_subscription_is_allowed\n\n  [allowManifestToSuperprojectConversion \"manifest-project\"]\n     wildcardRefs (or \"exactRefs\" or \"matchingRefs\") \u003d refs/heads/*:refs/heads/*\n      destinationSuperProject \u003d name\n      \n      Some configuration for the base URL in the superproject is needed, it can be derived from the manifest, set to the servers baseURL or be relative assuming all urls are at the same host.\n\n      Some configuration (boolean) whether to record branches/labels/shallow recommendation.",
+      "parentUuid": "6d05c749_93b2de96",
+      "range": {
+        "startLine": 66,
+        "startChar": 58,
+        "endLine": 66,
+        "endChar": 72
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

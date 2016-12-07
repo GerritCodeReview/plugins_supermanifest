@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d04bb4e_f486b6a4",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:18:39Z",
+      "side": 1,
+      "message": "From what I have been told by Gerrit developers, never ever log an exception silently, who looks at logs (without users complaining) ?\n\nSo either throw an exception at the user or as you propose make a special branch (in the superproject?)",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 323,
+        "endChar": 94
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d04bb4e_b48c2ec7",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:18:39Z",
+      "side": 1,
+      "message": "I don\u0027t think there is a reason to set it to false here.\n\nThe reason you need to explicitly enable it is the way the functionality was added to JGit. When adding it to JGit, the default functionality should not change, so now we are stuck with having to set that option explicitly.\n\nYou may also want to set the option for setRecordSubmoduleLabels, though git-core did not yet make progress on that (the series to implement that is stalling currently.)",
+      "range": {
+        "startLine": 347,
+        "startChar": 4,
+        "endLine": 348,
+        "endChar": 34
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d05c749_b3b56283",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:18:39Z",
+      "side": 1,
+      "message": "If possible we want to have relative urls for submodules, as that allows copying the superproject and all submodules to $vendor.",
+      "range": {
+        "startLine": 351,
+        "startChar": 4,
+        "endLine": 351,
+        "endChar": 32
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d04bb4e_94892ab7",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:18:39Z",
+      "side": 1,
+      "message": "This ought to go into its own review and if possible with the same topic?",
+      "range": {
+        "startLine": 361,
+        "startChar": 4,
+        "endLine": 361,
+        "endChar": 34
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d05c749_93b2de96",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-07T20:18:39Z",
+      "side": 1,
+      "message": "why this :destbranch?",
+      "range": {
+        "startLine": 66,
+        "startChar": 58,
+        "endLine": 66,
+        "endChar": 72
+      },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

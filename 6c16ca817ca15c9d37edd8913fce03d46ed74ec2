@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "ed6ff7a9_d48cfc19",
+        "filename": "src/main/resources/Documentation/about.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-08T17:50:01Z",
+      "side": 1,
+      "message": "to the manifest file `manifest.xml` in project `platforms/manifest` in its branch `refs/heads/nyc` for clarity?",
+      "range": {
+        "startLine": 15,
+        "startChar": 42,
+        "endLine": 16,
+        "endChar": 62
+      },
+      "revId": "6c16ca817ca15c9d37edd8913fce03d46ed74ec2",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d7aef68_769ed03e",
         "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
         "patchSetId": 16

@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "edcc5755_b2e73864",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-08T12:41:19Z",
+      "side": 1,
+      "message": "I\u0027ve updated the description. I think this will completely ignore subscription settings. We could try to make manifest edits also result in subscription settings, but I\u0027m not sure if automatically changing configurations is  a desired design.",
+      "parentUuid": "6d05c749_13d0aeb6",
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d04bb4e_f486b6a4",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 12

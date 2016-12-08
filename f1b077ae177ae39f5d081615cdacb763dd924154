@@ -94,6 +94,24 @@
     },
     {
       "key": {
+        "uuid": "edcc5755_322ee8bc",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-08T09:38:29Z",
+      "side": 1,
+      "message": "this is a plugin though, and these events are posted async, so there is no user to report anything to.",
+      "parentUuid": "8d04bb4e_f486b6a4",
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d04bb4e_b48c2ec7",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 12
@@ -140,6 +158,24 @@
     },
     {
       "key": {
+        "uuid": "2dc74f2e_741300d5",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-08T09:38:29Z",
+      "side": 1,
+      "message": "Sure, but I couldn\u0027t tell from the doc what value to put here. If we\u0027re platforms/manifest/ what should I put here? \"../..\" ?",
+      "parentUuid": "6d05c749_b3b56283",
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d04bb4e_94892ab7",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 12
@@ -157,6 +193,24 @@
         "endLine": 361,
         "endChar": 34
       },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edcc5755_d242047b",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-08T09:38:29Z",
+      "side": 1,
+      "message": "there is no review: it\u0027s submitted automatically. Note that this only triggers after submit of the manifest XML change.",
+      "parentUuid": "8d04bb4e_94892ab7",
       "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -204,6 +258,24 @@
         "endLine": 66,
         "endChar": 72
       },
+      "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2dc74f2e_14187cec",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-08T09:38:29Z",
+      "side": 1,
+      "message": "the destination is the key, because you can only have one destination per entry. Presumably, a single source could actually go to multiple destinatoins (eg. for use with different groups in the manifest)\n\nI like the idea of having wildcards, but I think we could just maintain the  current syntax\n\n   [superproject \"bla:*\"]\n       srcRef \u003d \"refs/heads/*\"",
+      "parentUuid": "6d05c749_737adadb",
       "revId": "f1b077ae177ae39f5d081615cdacb763dd924154",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false

@@ -1,0 +1,297 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d8e0bb3_1d7e931c",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "2016",
+      "range": {
+        "startLine": 1,
+        "startChar": 17,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_7d85d7ee",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "Should this be final?",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 22
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed9617c8_9c92a538",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "Should this be private final?",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 34
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed9617c8_bc976127",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "Should this be private?",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 8
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_9d92a338",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "[optional] return Objects.hash(destRepoKey, destBranch);",
+      "range": {
+        "startLine": 113,
+        "startChar": 6,
+        "endLine": 115,
+        "endChar": 20
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed9617c8_dc8c2d1a",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "ObjectId.zeroId()",
+      "range": {
+        "startLine": 122,
+        "startChar": 21,
+        "endLine": 122,
+        "endChar": 44
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_bd975f27",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "cfgFactory doesn\u0027t have an own cache, it gets the project as ProjectState from the project cache, it then gets the config from the ProjectState and ProjectState caches config files it has loaded once. To clear the cache evict the project from the project cache.",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 154,
+        "endChar": 37
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_fd91e732",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "We normally use ConfigInvalidException from JGit.",
+      "range": {
+        "startLine": 197,
+        "startChar": 22,
+        "endLine": 197,
+        "endChar": 37
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_dd8c2b1a",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "You can check this with\n\n  Repository.isValidRefName(destBranch)",
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed9617c8_3ca43189",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "[optional] Check if project exists via project cache. Should be cheaper than opening the repository.",
+      "range": {
+        "startLine": 264,
+        "startChar": 4,
+        "endLine": 268,
+        "endChar": 5
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_bdbcbf9f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "You can get the Gerrit server identity injected and use it as author:\n\n  @GerritPersonIdent PersonIdent serverIdent",
+      "range": {
+        "startLine": 360,
+        "startChar": 38,
+        "endLine": 360,
+        "endChar": 54
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d8e0bb3_5d881b08",
+        "filename": "src/main/resources/Documentation/about.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "repository",
+      "range": {
+        "startLine": 1,
+        "startChar": 65,
+        "endLine": 1,
+        "endChar": 74
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed9617c8_7c85d9ee",
+        "filename": "src/main/resources/Documentation/about.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2016-12-08T15:30:57Z",
+      "side": 1,
+      "message": "`All-Projects`",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 12
+      },
+      "revId": "71533fa8718871837119cbe40537fee32ec96120",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

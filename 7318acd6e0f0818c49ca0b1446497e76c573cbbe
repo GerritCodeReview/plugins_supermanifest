@@ -45,6 +45,24 @@
       "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed9617c8_5c2c9d07",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-08T18:13:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed9617c8_3c1fd1d4",
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

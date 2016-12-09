@@ -25,6 +25,98 @@
     },
     {
       "key": {
+        "uuid": "ed6ff7a9_746b2808",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-09T18:16:22Z",
+      "side": 1,
+      "message": "What is this message supposed to do?\n(debugging/development leftover or some sort of informative thing for users, if the latter, maybe \"SuperManifestModule start\" to differ from other plugins?)",
+      "range": {
+        "startLine": 26,
+        "startChar": 24,
+        "endLine": 26,
+        "endChar": 29
+      },
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6ff7a9_b49dc0f8",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-09T18:16:22Z",
+      "side": 1,
+      "message": "As this is just a plugin, do you intend to come up with your own coding style or loosely follow Gerrit? (that has a line limit of 80)",
+      "range": {
+        "startLine": 55,
+        "startChar": 76,
+        "endLine": 55,
+        "endChar": 96
+      },
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6ff7a9_d4923ce7",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-09T18:16:22Z",
+      "side": 1,
+      "message": "In Gerrit the logger usually goes as the very first variable in a class. (statics go first, and the logger goes firster ;)",
+      "range": {
+        "startLine": 71,
+        "startChar": 2,
+        "endLine": 71,
+        "endChar": 91
+      },
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed6ff7a9_f49738d4",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-09T18:16:22Z",
+      "side": 1,
+      "message": "This hints at bad UI design.\n\nSo when setting one option to a specific value, it influences the behavior of another (it\u0027s ignored).\n\nI think a better design would be to have a refspec for the src/dst branch as that is one setting only without weird cross influences.\n\nAnd on that one setting it is easy to detect what is valid or invalid both for humans as well as machines. A valid refspec is either \"refs/heads/onebranch:refs/heads/onematch\" or \"refs/heads/*:refs/heads*\".\n\nThis plugin needs just regular Git refspecs and that is what people are familar with, so I\u0027d suggest to go with such a UI design as it is easier to use (less overhead for people to remember and less for you to document).\n\nSo if I were to design the config it would rather be\n\n    [superproject \"platforms/manifest\"]\n        targetRepo \u003d \"submodules\"\n        refmatch \u003d refs/heads/nyc:refs/heads/nyc\n\n        srcPath \u003d manifest.xml [optional]\n        putLabelsAsGroups \u003d true [optional]\n        useShallow \u003d true [optional]\n        copySection \u003d true [optional]\n        linkSections \u003d true [optional]\n        onError \u003d {silentlyLogged, pageOncall} [just kidding]",
+      "range": {
+        "startLine": 112,
+        "startChar": 3,
+        "endLine": 112,
+        "endChar": 61
+      },
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a699be3_3778182f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 17

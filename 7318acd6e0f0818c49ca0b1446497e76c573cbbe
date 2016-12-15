@@ -171,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "fac16fc3_247d321f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-15T17:10:20Z",
+      "side": 1,
+      "message": "1) Oh, right. \n2) With 1) you could have different refspecs in each target for the same source.",
+      "parentUuid": "1a1ba32a_55844cf4",
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a699be3_3778182f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 17

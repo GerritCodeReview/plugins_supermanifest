@@ -207,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "fac16fc3_649e0a3f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2016-12-15T18:08:37Z",
+      "side": 1,
+      "message": "Oh I see my problem. I assumed this problem was very closely related to regular superproject updates, in which you would have in the submodule (which is similar to the XML manifest in this case):\n\n    submodule1,refs/meta/config,project.config:\n    [allowSuperproject \"superproject1\"]\n        all \u003d refs/heads/branch1:refs/heads/branch1\n    [allowSuperproject \"superproject2\"]\n        all \u003d refs/heads/branch2:refs/heads/branch2\n\n    submodule2,refs/meta/config,project.config:\n    [allowSuperproject \"superproject2\"]\n        all \u003d refs/heads/branch1:refs/heads/branch1\n    [allowSuperproject \"superproject1\"]\n        all \u003d refs/heads/branch2:refs/heads/branch2\n\nto allow the subscriptions (which is just optional and tightening the security aspect; you could allow everything here) and on the superproject side in the .gitmodules:\n\n    superproject1,branch1,.gitmodules\n    [submodule \"submodule1\"]\n        branch \u003d branch1\n\n    superproject1,branch2,.gitmodules\n    [submodule \"submodule2\"]\n        branch \u003d branch2\n\n    superproject2,branch1,.gitmodules\n    [submodule \"submodule2\"]\n        branch \u003d branch1\n\n    superproject2,branch2,.gitmodules\n    [submodule \"submodule1\"]\n        branch \u003d branch2\n\nThis scheme cannot be easily transferred to this plugin, because the configuration is not in target-branch specific files (.gitmodules), but in All-Projects, which is why currently the target-branch needs to be encoded in the section for keys.\n\nSo if we were to come up with a target specific branch outside the branch itself (and Gerrit specific), this could be:\n\n    superproject1,refs/meta/refs/heads/branch1,manifestupdate.config\n    [updateFromManifest \"manifestrepo1\"]\n        refspec \u003d refs/heads/branch1:refs/heads/branch1\n\n    superproject1,refs/meta/refs/heads/branch2,manifestupdate.config\n    [updateFromManifest \"manifestrepo2\"]\n        refspec \u003d refs/heads/branch2:refs/heads/branch2\n\n    superproject2,refs/meta/refs/heads/branch1,manifestupdate.config\n    [updateFromManifest \"manifestrepo2\"]\n        refspec \u003d refs/heads/branch1:refs/heads/branch1\n\n    superproject2,refs/meta/refs/heads/branch2,manifestupdate.config\n    [updateFromManifest \"manifestrepo1\"]\n        refspec \u003d refs/heads/branch2:refs/heads/branch2\n\n\nWhile the individual configuration seems very expressive and clear to me, I think having these specific config branches \"refs/meta/refs/heads/branch1\" is a pain, though\nas it spreads the config across a lot of branches and files. And as you only have one source branch anyway for the conversion from manifests (unlike submodules where you have many submodules to one superproject), the config files will stay as short.\n\nSo your original proposal to put it at a central place via\n\n    all in one config file:\n    [updateFromManifest \"superproject2,branch2\"]\n        src \u003d manifestrepo1,branch2\n    [updateFromManifest \"superproject2,branch1\"]\n        src \u003d manifestrepo2,branch1\n    [updateFromManifest \"superproject1,branch2\"]\n        src \u003d manifestrepo2,branch2\n    [updateFromManifest \"superproject1,branch1\"]\n        src \u003d manifestrepo1,branch1\n\nseems a good idea to me. Well you split up the srcRepo and srcBranch into 2 keys, I just aligned it into one value, because then it looks similar to the destination specification.\n\nSo your design is sound, sorry for the noise.",
+      "parentUuid": "1a1ba32a_b5ba00a2",
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a699be3_3778182f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 17

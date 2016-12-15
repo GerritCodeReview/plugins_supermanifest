@@ -48,6 +48,24 @@
     },
     {
       "key": {
+        "uuid": "1a1ba32a_357d501f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-15T13:03:55Z",
+      "side": 1,
+      "message": "debug.",
+      "parentUuid": "ed6ff7a9_746b2808",
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed6ff7a9_b49dc0f8",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 17
@@ -65,6 +83,24 @@
         "endLine": 55,
         "endChar": 96
       },
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa132f0f_347d501f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-15T13:03:55Z",
+      "side": 1,
+      "message": "google-java-format.",
+      "parentUuid": "ed6ff7a9_b49dc0f8",
       "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -111,6 +147,24 @@
         "endLine": 112,
         "endChar": 61
       },
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ba32a_55844cf4",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-15T13:03:55Z",
+      "side": 1,
+      "message": "you\u0027re commenting on the internal representation which isn\u0027t necessarily the external one.\n\nfor your proposal, I have two issues:\n\n1) you name the config entry by its source. However, the problem space is such that one source may go into multiple targets, but a target (repository, branch) tuple is unique. So I think the config entries should be named by their targets.\n\n2) your suggestion to use refspecs in the configuration section implies that you can never have a configuration where two branches from one side go (eg. XML) into two different repositories on the other one (eg superproject).",
+      "parentUuid": "ed6ff7a9_f49738d4",
       "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false

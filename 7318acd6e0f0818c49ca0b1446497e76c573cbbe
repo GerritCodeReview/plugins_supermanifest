@@ -189,6 +189,24 @@
     },
     {
       "key": {
+        "uuid": "1a1ba32a_b5ba00a2",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 17
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2016-12-15T17:18:44Z",
+      "side": 1,
+      "message": "I don\u0027t understand you; can you give an example of how to configure\n\n manifestrepo1 , branch1 \u003d\u003e superproject1 , branch1\n manifestrepo1 , branch2 \u003d\u003e superproject2 , branch2\n manifestrepo2 , branch1 \u003d\u003e superproject2 , branch1\n manifestrepo2 , branch2 \u003d\u003e superproject1 , branch2\n\nusing the mechanism you want?\n\nif this is too general, what is a good assumption to make on how data flows?",
+      "parentUuid": "fac16fc3_247d321f",
+      "revId": "7318acd6e0f0818c49ca0b1446497e76c573cbbe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a699be3_3778182f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 17

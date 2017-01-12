@@ -195,6 +195,12 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     Set<String> wildcardDestinations = new HashSet<>();
     Set<String> sources = new HashSet<>();
 
+    for (String sect : cfg.getSections()) {
+      if (!sect.equals(SECTION_NAME)) {
+        log.warn(name + ".config: ignoring invalid section " + sect);
+      }
+    }
+        
     for (String subsect : cfg.getSubsections(SECTION_NAME)) {
       try {
         ConfigEntry e = newConfigEntry(cfg, subsect);

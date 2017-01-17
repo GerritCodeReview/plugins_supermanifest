@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "e3c2ad70_1a4c7dd6",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-01-17T09:16:39Z",
+      "side": 1,
+      "message": "As far as I can see, the JGit config implementation normalizes the sections to lower case when it reads them.\n\nhttps://github.com/eclipse/jgit/blob/stable-4.6/org.eclipse.jgit/src/org/eclipse/jgit/lib/ConfigSnapshot.java#L246",
+      "range": {
+        "startLine": 199,
+        "startChar": 16,
+        "endLine": 199,
+        "endChar": 22
+      },
+      "revId": "c64658cd2c359a7fd49b44263edb353e7d9cb8c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43d37948_f58b1876",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2

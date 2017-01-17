@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63d6bd38_56c41490",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2017-01-17T07:20:53Z",
+      "side": 1,
+      "message": "I believe section names in Git config files are case-insensitive.",
+      "range": {
+        "startLine": 199,
+        "startChar": 16,
+        "endLine": 199,
+        "endChar": 22
+      },
+      "revId": "c64658cd2c359a7fd49b44263edb353e7d9cb8c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43d37948_f58b1876",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2017-01-17T07:20:53Z",
+      "side": 1,
+      "message": "nit: trailing whitespace",
+      "revId": "c64658cd2c359a7fd49b44263edb353e7d9cb8c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

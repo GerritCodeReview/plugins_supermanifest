@@ -150,31 +150,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
   }
 
-  private static boolean hasDiff(
-      GitRepositoryManager repoManager, String repoName, String oldId, String newId, String path)
-      throws IOException {
-    if (oldId.equals(ObjectId.toString(null))) {
-      return true;
-    }
-
-    Project.NameKey projectName = new Project.NameKey(repoName);
-
-    try (Repository repo = repoManager.openRepository(projectName);
-        RevWalk rw = new RevWalk(repo)) {
-
-      RevCommit c1 = rw.parseCommit(ObjectId.fromString(oldId));
-      if (c1 == null) {
-        return true;
-      }
-      RevCommit c2 = rw.parseCommit(ObjectId.fromString(newId));
-
-      try (TreeWalk tw = TreeWalk.forPath(repo, path, c1.getTree().getId(), c2.getTree().getId())) {
-
-        return !tw.getObjectId(0).equals(tw.getObjectId(1));
-      }
-    }
-  }
-
   /*
      [superproject "submodules:refs/heads/nyc"]
         srcRepo = platforms/manifest
@@ -348,19 +323,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
 
       if (c.destBranch.equals("*") && !event.getRefName().startsWith(REFS_HEADS)) {
         continue;
-      }
-
-      try {
-        if (!hasDiff(
-            repoManager,
-            event.getProjectName(),
-            event.getOldObjectId(),
-            event.getNewObjectId(),
-            c.xmlPath)) {
-          continue;
-        }
-      } catch (IOException e) {
-        log.error("ignoring hasDiff error for" + c.toString() + ":", e.toString());
       }
 
       try {

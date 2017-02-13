@@ -283,9 +283,11 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
             + "  srcRef = refs/heads/master\n"
             + "  srcPath = super.xml\n");
 
-    // trigger XML change to verify that it worked.
+    // Push a change to the source branch. We intentionally change the included XML file
+    // (rather than the one mentioned in srcPath), to double check that we don't try to be too
+    // smart about eliding nops.
     pushFactory
-        .create(db, admin.getIdent(), manifestRepo, "Subject", "super.xml", superXml + " ")
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default.xml", xml + " ")
         .to("refs/heads/master")
         .assertOkStatus();
 

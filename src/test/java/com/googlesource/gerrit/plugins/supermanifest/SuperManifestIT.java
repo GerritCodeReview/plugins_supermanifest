@@ -34,7 +34,7 @@ import org.junit.Test;
   sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule"
 )
 public class SuperManifestIT extends LightweightPluginDaemonTest {
-  Project.NameKey testRepoKeys[];
+  Project.NameKey[] testRepoKeys;
 
   void setupTestRepos() throws Exception {
     testRepoKeys = new Project.NameKey[2];
@@ -70,8 +70,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
     Project.NameKey superKey = createProject("superproject");
-
-    TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
+    cloneProject(superKey, admin);
 
     pushConfig(
         "[superproject \""
@@ -171,7 +170,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
     Project.NameKey superKey = createProject("superproject");
-    TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
+    cloneProject(superKey, admin);
 
     pushConfig(
         "[superproject \""
@@ -271,7 +270,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
         .assertOkStatus();
 
     Project.NameKey superKey = createProject("superproject");
-    TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
+    cloneProject(superKey, admin);
 
     pushConfig(
         "[superproject \""

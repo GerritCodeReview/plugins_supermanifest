@@ -328,11 +328,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       try {
         update(c, event.getRefName());
       } catch (IOException | GitAPIException e) {
-        // We are in an asynchronously called listener, so there is no user action
-        // to give feedback to. We log the error, but it would be nice if we could surface
-        // these logs somewhere.
-        // Perhaps we could store these as commits in some special branch (but in what repo?).
-        log.error("update for " + c.toString() + " failed: ", e);
+        // We are in an asynchronously called listener, so there is no user action to give
+        // feedback to. We log the error, but it would be nice if we could surface these logs
+        // somewhere.  Perhaps we could store these as commits in some special branch (but in
+        // what repo?).
+        log.error(String.format("update for %s (ref %s) failed: %s", c.toString(), event.getRefName, e);
       }
     }
   }

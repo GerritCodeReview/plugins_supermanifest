@@ -56,8 +56,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -328,11 +326,12 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       try {
         update(c, event.getRefName());
       } catch (IOException | GitAPIException e) {
-        // We are in an asynchronously called listener, so there is no user action
-        // to give feedback to. We log the error, but it would be nice if we could surface
-        // these logs somewhere.
-        // Perhaps we could store these as commits in some special branch (but in what repo?).
-        log.error("update for " + c.toString() + " failed: ", e);
+        // We are in an asynchronously called listener, so there is no user action to give
+        // feedback to. We log the error, but it would be nice if we could surface these logs
+        // somewhere.  Perhaps we could store these as commits in some special branch (but in
+        // what repo?).
+        log.error(
+            String.format("update for %s (ref %s) failed", c.toString(), event.getRefName()), e);
       }
     }
   }

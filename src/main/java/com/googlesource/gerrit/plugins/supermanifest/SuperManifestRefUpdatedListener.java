@@ -418,7 +418,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         Repository repo = openRepository(repoName);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
-          log.warn("%s: repo %s cannot resolve %s", repo, refName);
+          log.warn(String.format("in repo %s: cannot resolve ref %s", uriStr, refName));
           return null;
         }
 

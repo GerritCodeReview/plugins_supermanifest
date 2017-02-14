@@ -122,7 +122,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     String destBranch;
 
     public String src() {
-      return srcRepoKey + ":" + srcRef + ":" + xmlPath;
+      String src = srcRef;
+      if (destBranch.equals("*")) {
+        src = "*";
+      }
+      return srcRepoKey + ":" + src + ":" + xmlPath;
     }
 
     public String dest() {

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4aa8d501_7291d9be",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-14T13:13:40Z",
+      "side": 1,
+      "message": "nit: Could you please rephrase it? It is not very understandable.",
+      "range": {
+        "startLine": 286,
+        "startChar": 7,
+        "endLine": 286,
+        "endChar": 39
+      },
+      "revId": "09d18d6a827d5d893e76f830b349a38f69075eaa",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

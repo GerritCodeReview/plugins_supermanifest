@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8fa31ac_12d4d2c3",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "canonicalWebUri",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2369492_b48bb0c9",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "srcRepoUri",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 18
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92e897be_4e6da676",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "optional + unrelated: Is there a reason why this method isn\u0027t a constructor of ConfigEntry? A constructor would have many advantages.",
+      "range": {
+        "startLine": 189,
+        "startChar": 34,
+        "endLine": 189,
+        "endChar": 48
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6dd8e6e_9373d4c4",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "Why isn\u0027t this part of newConfigEntry(..)?",
+      "range": {
+        "startLine": 205,
+        "startChar": 8,
+        "endLine": 211,
+        "endChar": 9
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82997ad9_cb98e4ff",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "Using\n\n \"platform\"\n\nwould be much more obvious.",
+      "range": {
+        "startLine": 305,
+        "startChar": 20,
+        "endLine": 305,
+        "endChar": 55
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cb0517e_9aac8793",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "optional: This variable as well as the method parameter of setupTestRepos(..) are both called \u0027prefix\u0027. It\u0027s a bit misleading as they refer to different things.",
+      "range": {
+        "startLine": 305,
+        "startChar": 11,
+        "endLine": 305,
+        "endChar": 17
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcec4d8e_2946db4c",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T14:20:12Z",
+      "side": 1,
+      "message": "Please pass a charset to this method.",
+      "range": {
+        "startLine": 347,
+        "startChar": 72,
+        "endLine": 347,
+        "endChar": 82
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "36122ac2_8040af8c",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T16:19:44Z",
+      "side": 1,
+      "message": "I did a little homework, and there is a lot of confusion, but as I understand it: we only care about URLs (more specifically, HTTP URLs). To manipulate them, the JDK URI class is better code since it is newer. Since URL describes a more specific concept than URI, I think it is the better choice here.",
+      "parentUuid": "a7c0df48_594474a5",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2369492_b48bb0c9",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -191,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "104a8715_2301a6bd",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T16:19:44Z",
+      "side": 1,
+      "message": "The config entry is not an exported API, so within the context of the \nSuperManifestRefUpdatedListener I am not concerned with abuse.\n\nThe whole ctors/getters etc. style makes for very voluminous code full of boilerplate, which I dislike.",
+      "parentUuid": "7b027fae_3e8ff06c",
+      "range": {
+        "startLine": 189,
+        "startChar": 34,
+        "endLine": 189,
+        "endChar": 48
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6dd8e6e_9373d4c4",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -259,6 +307,30 @@
       "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6cc8ea8_8d7d26d9",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T16:19:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32ce3d4f_a5635e9b",
+      "range": {
+        "startLine": 205,
+        "startChar": 8,
+        "endLine": 211,
+        "endChar": 9
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {

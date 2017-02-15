@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dc6890d5_368a2961",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T15:06:58Z",
+      "side": 1,
+      "message": "Gerrit is calling this the CanonicalWebUrl (see the inject statement below).",
+      "parentUuid": "b8fa31ac_12d4d2c3",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c2369492_b48bb0c9",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-15T14:20:12Z",
       "side": 1,
       "message": "srcRepoUri",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 18
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d117fcc9_c280f8b0",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T15:06:58Z",
+      "side": 1,
+      "message": "see above.",
+      "parentUuid": "c2369492_b48bb0c9",
       "range": {
         "startLine": 121,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c4c1096b_535a8dd1",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T15:06:58Z",
+      "side": 1,
+      "message": "the configuration class is pure data; it doesn\u0027t do the ctor/getter/setter dance to avoid boilerplate.",
+      "parentUuid": "92e897be_4e6da676",
+      "range": {
+        "startLine": 189,
+        "startChar": 34,
+        "endLine": 189,
+        "endChar": 48
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e6dd8e6e_9373d4c4",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2017-02-15T14:20:12Z",
       "side": 1,
       "message": "Why isn\u0027t this part of newConfigEntry(..)?",
+      "range": {
+        "startLine": 205,
+        "startChar": 8,
+        "endLine": 211,
+        "endChar": 9
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abba962f_a53f6fbc",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-02-15T15:06:58Z",
+      "side": 1,
+      "message": "because newConfigEntry is static, so it has no access to the canonicalWebUrl.",
+      "parentUuid": "e6dd8e6e_9373d4c4",
       "range": {
         "startLine": 205,
         "startChar": 8,

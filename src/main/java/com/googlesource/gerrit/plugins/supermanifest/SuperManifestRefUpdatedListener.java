@@ -278,9 +278,9 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   }
 
   /** for debugging. */
-  private String printConfiguration() {
+  private String configurationToString() {
     StringBuilder b = new StringBuilder();
-    b.append("# configuration entries: " + config.size() + "\n");
+    b.append("number of configuration entries: " + config.size() + "\n");
     for (ConfigEntry c : config) {
       b.append(c.toString() + "\n");
     }
@@ -302,7 +302,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
 
     config = filtered;
-    log.info("SuperManifest: new configuration" + printConfiguration());
+    log.info("loaded new configuration: " + configurationToString());
   }
 
   @Override
@@ -409,9 +409,9 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       }
 
       String repoName = url.getPath();
-
-      // The path starts with '/'.
-      repoName = repoName.substring(1);
+      while (repoName.startsWith("/")) {
+        repoName = repoName.substring(1);
+      }
 
       try {
         Repository repo = openRepository(repoName);

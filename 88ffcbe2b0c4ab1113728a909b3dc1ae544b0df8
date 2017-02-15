@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "83341d0a_dcc05ec1",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T16:55:39Z",
+      "side": 1,
+      "message": "Okay.",
+      "parentUuid": "36122ac2_8040af8c",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2369492_b48bb0c9",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2

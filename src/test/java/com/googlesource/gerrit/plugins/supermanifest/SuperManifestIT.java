@@ -25,8 +25,11 @@ import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.RefNames;
+import java.net.URI;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
+import org.eclipse.jgit.lib.BlobBasedConfig;
+import org.eclipse.jgit.lib.Config;
 import org.junit.Test;
 
 @TestPlugin(
@@ -36,10 +39,10 @@ import org.junit.Test;
 public class SuperManifestIT extends LightweightPluginDaemonTest {
   Project.NameKey[] testRepoKeys;
 
-  void setupTestRepos() throws Exception {
+  void setupTestRepos(String prefix) throws Exception {
     testRepoKeys = new Project.NameKey[2];
     for (int i = 0; i < 2; i++) {
-      testRepoKeys[i] = createProject("project" + i);
+      testRepoKeys[i] = createProject(prefix + i);
 
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[i], admin);
 
@@ -63,7 +66,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
   @Test
   public void basicFunctionalityWorks() throws Exception {
-    setupTestRepos();
+    setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
     Project.NameKey manifestKey = createProject("manifest");
@@ -83,13 +86,13 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
             + "  srcPath = default.xml\n");
 
     String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
-    String originXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
     // XML change will trigger commit to superproject.
     String xml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<manifest>\n"
             + remoteXml
-            + originXml
+            + defaultXml
             + "  <project name=\""
             + testRepoKeys[0].get()
             + "\" path=\"project1\" />\n"
@@ -113,7 +116,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<manifest>\n"
             + remoteXml
-            + originXml
+            + defaultXml
             + "  <project name=\""
             + testRepoKeys[0].get()
             + "\" path=\"project1\" />\n"
@@ -146,7 +149,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<manifest>\n"
             + remoteXml
-            + originXml
+            + defaultXml
             + "  <project name=\""
             + testRepoKeys[1].get()
             + "\" path=\"project3\" />\n"
@@ -163,7 +166,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
   @Test
   public void wildcardDestBranchWorks() throws Exception {
-    setupTestRepos();
+    setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
     Project.NameKey manifestKey = createProject("manifest");
@@ -237,7 +240,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
   @Test
   public void manifestIncludesOtherManifest() throws Exception {
-    setupTestRepos();
+    setupTestRepos("project");
 
     String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
     String originXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
@@ -292,6 +295,66 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/master");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
+
+  @Test
+  public void relativeFetch() throws Exception {
+    // Test the setup that Android uses, where the "fetch" field is relative to the location of the
+    // manifest repo.
+    setupTestRepos("platform/project");
+    String prefix = testRepoKeys[0].get().split("/")[0];
+
+    Project.NameKey manifestKey = createProject(prefix + "/manifest");
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = createProject("superproject");
+
+    TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    String url = canonicalWebUrl.get();
+    String remoteXml = "  <remote name=\"origin\" fetch=\"..\" review=\"" + url + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"path1\" />\n"
+            + "</manifest>\n";
+    System.err.println(manifestKey + " - config: " + xml);
+
+    pushFactory
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("path1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+
+    Config base = new Config();
+    BlobBasedConfig cfg =
+        new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes());
+
+    String subUrl = cfg.getString("submodule", "path1", "url");
+
+    // URL is valid.
+    URI.create(subUrl);
+
+    // URL is clean.
+    assertThat(subUrl).doesNotContain("../");
   }
 
   // TODO - should add tests for all the error handling in configuration parsing?

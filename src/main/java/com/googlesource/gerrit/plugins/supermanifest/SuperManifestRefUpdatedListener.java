@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.apache.http.client.utils.URIBuilder;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -70,7 +71,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   private static final String SECTION_NAME = "superproject";
 
   private final GitRepositoryManager repoManager;
-  private final String canonicalWebUrl;
+  private final URI canonicalWebUrl;
   private final PluginConfigFactory cfgFactory;
   private final String pluginName;
   private final AllProjectsName allProjectsName;
@@ -93,7 +94,12 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
     this.repoManager = repoManager;
-    this.canonicalWebUrl = canonicalWebUrl;
+    try {
+      this.canonicalWebUrl = new URI(canonicalWebUrl);
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(e);
+    }
+
     this.cfgFactory = cfgFactory;
     this.projectCache = projectCache;
   }
@@ -112,6 +118,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   private static class ConfigEntry {
     Project.NameKey srcRepoKey;
     String srcRef;
+    URI srcRepoUrl;
     String xmlPath;
     Project.NameKey destRepoKey;
     boolean recordSubmoduleLabels;
@@ -179,23 +186,34 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
     for (String subsect : cfg.getSubsections(SECTION_NAME)) {
       try {
-        ConfigEntry e = newConfigEntry(cfg, subsect);
-        if (destinations.contains(e.srcRepoKey.get()) || sources.contains(e.destRepoKey.get())) {
+        ConfigEntry configEntry = newConfigEntry(cfg, subsect);
+        if (destinations.contains(configEntry.srcRepoKey.get())
+            || sources.contains(configEntry.destRepoKey.get())) {
           // Don't want cyclic dependencies.
           throw new ConfigInvalidException(
-              String.format("repo in entry %s cannot be both source and destination", e));
+              String.format("repo in entry %s cannot be both source and destination", configEntry));
         }
-        if (e.destBranch.equals("*")) {
-          if (wildcardDestinations.contains(e.destRepoKey.get())) {
+        if (configEntry.destBranch.equals("*")) {
+          if (wildcardDestinations.contains(configEntry.destRepoKey.get())) {
             throw new ConfigInvalidException(
-                String.format("repo %s already has a wildcard destination branch.", e.destRepoKey));
+                String.format(
+                    "repo %s already has a wildcard destination branch.", configEntry.destRepoKey));
           }
-          wildcardDestinations.add(e.destRepoKey.get());
+          wildcardDestinations.add(configEntry.destRepoKey.get());
         }
-        sources.add(e.srcRepoKey.get());
-        destinations.add(e.destRepoKey.get());
 
-        newConf.add(e);
+        try {
+          String newPath = canonicalWebUrl.getPath() + "/" + configEntry.srcRepoKey.toString();
+          configEntry.srcRepoUrl =
+              new URIBuilder(canonicalWebUrl).setPath(newPath).build().normalize();
+        } catch (URISyntaxException e) {
+          throw new ConfigInvalidException("could not build src URL", e);
+        }
+
+        sources.add(configEntry.srcRepoKey.get());
+        destinations.add(configEntry.destRepoKey.get());
+
+        newConf.add(configEntry);
 
       } catch (ConfigInvalidException e) {
         log.error("ConfigInvalidException: " + e.toString());
@@ -378,9 +396,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       cmd.setInputStream(manifestStream);
       cmd.setRecommendShallow(true);
       cmd.setRemoteReader(reader);
-
-      // Is this the right URL?
-      cmd.setURI(canonicalWebUrl);
+      cmd.setURI(c.srcRepoUrl.toString());
 
       // Must setup a included file reader; the default is to read the file from the filesystem
       // otherwise, which would leak data from the serving machine.

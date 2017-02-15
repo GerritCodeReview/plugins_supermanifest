@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a7c0df48_594474a5",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T15:37:45Z",
+      "side": 1,
+      "message": "Yes but that\u0027s just the string. Even java.net.URL#toURI() uses \"new URI(toString())\", where the toString() returns the string representation of the URL. I suggested the name change to highlight that canonicalWebUrl is a URI object and not a URL object. If you prefer to keep the current name, I won\u0027t mind.",
+      "parentUuid": "dc6890d5_368a2961",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2369492_b48bb0c9",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -143,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "7b027fae_3e8ff06c",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T15:37:45Z",
+      "side": 1,
+      "message": "Okay. Thanks for explaining. I think the standard way in Java would be to have the constructor and the getters to ensure immutability.",
+      "parentUuid": "c4c1096b_535a8dd1",
+      "range": {
+        "startLine": 189,
+        "startChar": 34,
+        "endLine": 189,
+        "endChar": 48
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6dd8e6e_9373d4c4",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -178,6 +226,30 @@
       "side": 1,
       "message": "because newConfigEntry is static, so it has no access to the canonicalWebUrl.",
       "parentUuid": "e6dd8e6e_9373d4c4",
+      "range": {
+        "startLine": 205,
+        "startChar": 8,
+        "endLine": 211,
+        "endChar": 9
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32ce3d4f_a5635e9b",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T15:37:45Z",
+      "side": 1,
+      "message": "Can\u0027t you pass it in or remove the static modifier? Having all code which puts data into a ConfigEntry within one method would be advantageous.",
+      "parentUuid": "abba962f_a53f6fbc",
       "range": {
         "startLine": 205,
         "startChar": 8,
@@ -281,6 +353,30 @@
       "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41ada684_11d7a8b0",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-02-15T15:37:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2f286752_55f6a071",
+      "range": {
+        "startLine": 305,
+        "startChar": 20,
+        "endLine": 305,
+        "endChar": 55
+      },
+      "revId": "88ffcbe2b0c4ab1113728a909b3dc1ae544b0df8",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {

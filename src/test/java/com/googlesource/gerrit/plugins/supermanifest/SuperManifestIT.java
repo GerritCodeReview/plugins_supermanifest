@@ -358,5 +358,18 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     assertThat(subUrl).doesNotContain("../");
   }
 
+  @Test
+  public void testToRepoKey() {
+    URI base = URI.create("https://gerrit-review.googlesource.com");
+    assertThat(
+        SuperManifestRefUpdatedListener.urlToRepoKey(base,
+            "https://gerrit-review.googlesource.com/repo")).isEqualTo("repo");
+    assertThat(SuperManifestRefUpdatedListener.urlToRepoKey(base, "repo")).isEqualTo("repo");
+    assertThat(
+        SuperManifestRefUpdatedListener.urlToRepoKey(
+            URI.create("https://gerrit-review.googlesource.com/"),
+            "https://gerrit-review.googlesource.com/repo")).isEqualTo("repo");
+  }
+
   // TODO - should add tests for all the error handling in configuration parsing?
 }

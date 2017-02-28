@@ -16,6 +16,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
@@ -36,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -467,6 +470,8 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         return repos.get(name);
       }
 
+      name = urlToRepoKey(canonicalWebUrl, name);
+
       Repository repo = repoManager.openRepository(new Project.NameKey(name));
       repos.put(name, repo);
       return repo;
@@ -480,4 +485,20 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       repos.clear();
     }
   }
+
+  @VisibleForTesting
+  static String urlToRepoKey(URI baseUrl, String name) {
+    URI asUrl = URI.create(name);
+
+    if (name.startsWith(baseUrl.toString())) {
+      // It would be nice to parse the URL and do relativize on the Path, but
+      // but I am lazy, and nio.Path considers the file system and symlinks.
+      name = name.substring(baseUrl.toString().length());
+      while (name.startsWith("/")) {
+        name = name.substring(1);
+      }
+    }
+    return name;
+  }
+
 }

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e08c013_694500f2",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-03-01T08:40:47Z",
+      "side": 1,
+      "message": "nit: Unused variable.",
+      "range": {
+        "startLine": 489,
+        "startChar": 4,
+        "endLine": 489,
+        "endChar": 13
+      },
+      "revId": "5c5f7e7138755fbd8af6022169a4ca93388ef7a3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "340d7ce0_589d3d79",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-03-01T08:40:47Z",
+      "side": 1,
+      "message": "nit: Twice \u0027but\u0027.",
+      "range": {
+        "startLine": 492,
+        "startChar": 74,
+        "endLine": 493,
+        "endChar": 12
+      },
+      "revId": "5c5f7e7138755fbd8af6022169a4ca93388ef7a3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

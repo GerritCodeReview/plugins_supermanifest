@@ -310,7 +310,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     Project.NameKey manifestKey = createProject(realPrefix + "/manifest");
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
-    Project.NameKey superKey = createProject("superproject");
+    Project.NameKey superKey = createProject(realPrefix + "/superproject");
 
     TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
 
@@ -351,11 +351,9 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
     String subUrl = cfg.getString("submodule", "path1", "url");
 
-    // URL is valid.
-    URI.create(subUrl);
-
-    // URL is clean.
-    assertThat(subUrl).doesNotContain("../");
+    // This currently produces "/blah_platform/project0", which I think is wrong.
+    // Shouldn't RepoCommand produce a relative URL here, case in point: "../project0" ?
+    assertThat(subUrl).isEqualTo("/" + testRepoKeys[0].get());
   }
 
   @Test
@@ -369,6 +367,12 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
         SuperManifestRefUpdatedListener.urlToRepoKey(
             URI.create("https://gerrit-review.googlesource.com/"),
             "https://gerrit-review.googlesource.com/repo")).isEqualTo("repo");
+  }
+
+  @Test
+  public void testRelativeRepoKey() {
+    String got = SuperManifestRefUpdatedListener.relativeRepoKey("dir//from", "dir/to");
+    assertThat(got).isEqualTo("../to");
   }
 
   // TODO - should add tests for all the error handling in configuration parsing?

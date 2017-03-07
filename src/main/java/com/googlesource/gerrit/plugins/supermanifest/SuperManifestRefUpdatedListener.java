@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
@@ -37,11 +38,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -119,7 +123,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   private static class ConfigEntry {
     Project.NameKey srcRepoKey;
     String srcRef;
-    URI srcRepoUrl;
+    String srcRepoUrl;
     String xmlPath;
     Project.NameKey destRepoKey;
     boolean recordSubmoduleLabels;
@@ -224,7 +228,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
           String.format("pluginName '%s' must have form REPO:BRANCH", name));
     }
 
-    String destRepo = parts[0];
+    String destRepo = FilenameUtils.normalize(parts[0]);
     String destRef = parts[1];
 
     if (!destRef.startsWith(REFS_HEADS)) {
@@ -244,6 +248,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
 
     // TODO(hanwen): sanity check repo names.
+    srcRepo = FilenameUtils.normalize(srcRepo);
     e.srcRepoKey = new Project.NameKey(srcRepo);
 
     if (destRef.equals(REFS_HEADS + "*")) {
@@ -274,17 +279,33 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     e.destBranch = destRef.substring(REFS_HEADS.length());
 
     e.recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
+    e.srcRepoUrl = e.srcRepoKey.toString();
+    return e;
+  }
 
+  /**
+   * Example: relativeRepoKey("dir//from", "dir/to") => "../to".
+   */
+  @VisibleForTesting
+  static String relativeRepoKey(String from, String to) {
+    String[] dst = FilenameUtils.normalize(to).split("/");
+    String[] src = FilenameUtils.normalize(from).split("/");
 
-    try {
-      String newPath = canonicalWebUrl.getPath() + "/" + e.srcRepoKey.toString();
-      e.srcRepoUrl =
-          new URIBuilder(canonicalWebUrl).setPath(newPath).build().normalize();
-    } catch (URISyntaxException exception) {
-      throw new ConfigInvalidException("could not build src URL", exception);
+    int i = 0;
+    while (i < dst.length && i < src.length && src[i].equals(dst[i])) {
+      i++;
     }
 
-    return e;
+    ArrayList<String> result = new ArrayList<>();
+
+    for (int j = i; j < src.length; j++ ) {
+      result.add("..");
+    }
+    for (int j = i; j < dst.length; j++) {
+      result.add(dst[j]);
+    }
+
+    return Joiner.on("/").join(result);
   }
 
   private boolean checkRepoExists(Project.NameKey id) {
@@ -400,7 +421,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       cmd.setInputStream(manifestStream);
       cmd.setRecommendShallow(true);
       cmd.setRemoteReader(reader);
-      cmd.setURI(c.srcRepoUrl.toString());
+      cmd.setURI(c.srcRepoUrl);
 
       // Must setup a included file reader; the default is to read the file from the filesystem
       // otherwise, which would leak data from the serving machine.

@@ -468,9 +468,9 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         return repos.get(name);
       }
 
-      name = urlToRepoKey(canonicalWebUrl, name);
+      String shortName = urlToRepoKey(canonicalWebUrl, name);
 
-      Repository repo = repoManager.openRepository(new Project.NameKey(name));
+      Repository repo = repoManager.openRepository(new Project.NameKey(shortName));
       repos.put(name, repo);
       return repo;
     }

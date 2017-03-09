@@ -464,11 +464,10 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
 
     private Repository openRepository(String name) throws IOException {
+      name = urlToRepoKey(canonicalWebUrl, name);
       if (repos.containsKey(name)) {
         return repos.get(name);
       }
-
-      name = urlToRepoKey(canonicalWebUrl, name);
 
       Repository repo = repoManager.openRepository(new Project.NameKey(name));
       repos.put(name, repo);

@@ -20,10 +20,6 @@ junit_tests(
     tags = [
         "supermanifest-plugin",
     ],
-    data = [
-         # plugin test handling is broken; kludge it here.
-         ":supermanifest.jar",
-    ],
     resources = glob(["src/test/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [

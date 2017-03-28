@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
@@ -37,12 +38,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.apache.http.client.utils.URIBuilder;
+
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -119,7 +122,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   private static class ConfigEntry {
     Project.NameKey srcRepoKey;
     String srcRef;
-    URI srcRepoUrl;
+    URI baseUrl;
     String xmlPath;
     Project.NameKey destRepoKey;
     boolean recordSubmoduleLabels;
@@ -158,6 +161,17 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     public int hashCode() {
       return Objects.hash(destRepoKey, destBranch);
     }
+
+    // The base URL as a String that RepoCommand accepts.
+    public String baseUrlForRepo() {
+      return trimTrailingSlash(baseUrl.toString());
+    }
+  }
+  public static String trimTrailingSlash(String u) {
+    while (u.endsWith("/")) {
+      u = u.substring(0, u.length() - 1);
+    }
+    return u;
   }
 
   /*
@@ -203,7 +217,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
           wildcardDestinations.add(configEntry.destRepoKey.get());
         }
 
-
         sources.add(configEntry.srcRepoKey.get());
         destinations.add(configEntry.destRepoKey.get());
 
@@ -224,7 +237,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
           String.format("pluginName '%s' must have form REPO:BRANCH", name));
     }
 
-    String destRepo = parts[0];
+    String destRepo = FilenameUtils.normalize(parts[0]);
     String destRef = parts[1];
 
     if (!destRef.startsWith(REFS_HEADS)) {
@@ -244,6 +257,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
 
     // TODO(hanwen): sanity check repo names.
+    srcRepo = FilenameUtils.normalize(srcRepo);
     e.srcRepoKey = new Project.NameKey(srcRepo);
 
     if (destRef.equals(REFS_HEADS + "*")) {
@@ -275,14 +289,8 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
 
     e.recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
 
-
-    try {
-      String newPath = canonicalWebUrl.getPath() + "/" + e.srcRepoKey.toString();
-      e.srcRepoUrl =
-          new URIBuilder(canonicalWebUrl).setPath(newPath).build().normalize();
-    } catch (URISyntaxException exception) {
-      throw new ConfigInvalidException("could not build src URL", exception);
-    }
+    // "platforms/manifest" => "platforms/"
+    e.baseUrl = URI.create(e.srcRepoKey.toString()).resolve(".");
 
     return e;
   }
@@ -379,9 +387,9 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   }
 
   private void update(ConfigEntry c, String srcRef) throws IOException, GitAPIException {
-    try (GerritRemoteReader reader = new GerritRemoteReader()) {
-      Repository destRepo = reader.openRepository(c.destRepoKey.toString());
-      Repository srcRepo = reader.openRepository(c.srcRepoKey.toString());
+    try (GerritRemoteReader reader = new GerritRemoteReader(c.baseUrl)) {
+      Repository destRepo = reader.openRepository("/" + c.destRepoKey.toString());
+      Repository srcRepo = reader.openRepository("/" + c.srcRepoKey.toString());
 
       RepoCommand cmd = new RepoCommand(destRepo);
 
@@ -400,10 +408,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       cmd.setInputStream(manifestStream);
       cmd.setRecommendShallow(true);
       cmd.setRemoteReader(reader);
-      cmd.setURI(c.srcRepoUrl.toString());
+      System.err.println("setting: " + c.baseUrl);
+      cmd.setURI(c.baseUrlForRepo());
 
-      // Must setup a included file reader; the default is to read the file from the filesystem
-      // otherwise, which would leak data from the serving machine.
+      // Must setup a included file reader; the default is to read the file from the filesystem.
+      // This would leak data from the serving machine.
       cmd.setIncludedFileReader(new GerritIncludeReader(srcRepo, srcRef));
 
       RevCommit commit = cmd.call();
@@ -413,31 +422,19 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
   private class GerritRemoteReader implements RepoCommand.RemoteReader, Closeable {
     private final Map<String, Repository> repos;
-
-    GerritRemoteReader() {
+    private final URI baseUrl;
+    GerritRemoteReader(URI baseUrl) {
+      this.baseUrl = baseUrl;
       this.repos = new HashMap<>();
     }
 
     @Override
-    public ObjectId sha1(String uriStr, String refName) throws GitAPIException {
-      URI url;
+    public ObjectId sha1(String repoUrl, String refName) throws GitAPIException {
       try {
-        url = new URI(uriStr);
-      } catch (URISyntaxException e) {
-        // TODO(hanwen): is there a better exception for this?
-        throw new InvalidRemoteException(e.getMessage());
-      }
-
-      String repoName = url.getPath();
-      while (repoName.startsWith("/")) {
-        repoName = repoName.substring(1);
-      }
-
-      try {
-        Repository repo = openRepository(repoName);
+        Repository repo = openRepository(repoUrl);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
-          log.warn(String.format("in repo %s: cannot resolve ref %s", uriStr, refName));
+          log.warn(String.format("in repo %s: cannot resolve ref %s", repoUrl, refName));
           return null;
         }
 
@@ -445,11 +442,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        log.warn("failed to open repository: " + repoName, e);
+        log.warn("failed to open repository: " + repoUrl, e);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =
-            new RefNotFoundException(String.format("cannot open %s to read %s", repoName, refName));
+            new RefNotFoundException(String.format("cannot open %s to read %s", repoUrl, refName));
         e.initCause(io);
         throw e;
       }
@@ -463,8 +460,21 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       return readBlob(repo, ref + ":" + path);
     }
 
-    private Repository openRepository(String name) throws IOException {
-      name = urlToRepoKey(canonicalWebUrl, name);
+    private Repository openRepository(String repoUrl) throws IOException {
+      // If we get a full URL that points to ourselves, strip the host to get a repository name.
+      repoUrl = canonicalWebUrl.relativize(URI.create(repoUrl)).toString();
+      repoUrl = urlToRepoKey(canonicalWebUrl, repoUrl);
+
+      // A relative URL is interpreted relative to the base URL.
+      System.err.println("Base " + baseUrl);
+      System.err.println("Repo " + repoUrl);
+      String name = trimTrailingSlash(baseUrl.resolve(repoUrl).toString());
+
+      // Keep an absolute URL, but strip leading "/".
+      while (name.startsWith("/")) {
+        name = name.substring(1);
+      }
+
       if (repos.containsKey(name)) {
         return repos.get(name);
       }
@@ -485,15 +495,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
 
   @VisibleForTesting
   static String urlToRepoKey(URI baseUrl, String name) {
-    if (name.startsWith(baseUrl.toString())) {
-      // It would be nice to parse the URL and do relativize on the Path, but
-      // I am lazy, and nio.Path considers the file system and symlinks.
-      name = name.substring(baseUrl.toString().length());
-      while (name.startsWith("/")) {
-        name = name.substring(1);
-      }
-    }
-    return name;
+    return baseUrl.relativize(URI.create(name)).toString();
   }
 
 }

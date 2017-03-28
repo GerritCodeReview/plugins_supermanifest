@@ -163,6 +163,19 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
     branch = gApi.projects().name(superKey.get()).branch("refs/heads/other");
     assertThat(branch.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+
+    System.err.println("\n\n\n\nSUBMOD: " + branch.file(".gitmodules").asString());
+
+
+    Config base = new Config();
+    BlobBasedConfig cfg =
+        new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes(UTF_8));
+
+    String subUrl = cfg.getString("submodule", "project3", "url");
+
+    // For the android case, this produces "../platform/project", which
+    // (relative to the superproject) is equivalent to "project"
+    assertThat(subUrl).isEqualTo(canonicalWebUrl.get() + testRepoKeys[1].toString());
   }
 
   @Test
@@ -310,7 +323,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     Project.NameKey manifestKey = createProject(realPrefix + "/manifest");
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
-    Project.NameKey superKey = createProject("superproject");
+    Project.NameKey superKey = createProject(realPrefix + "/superproject");
 
     TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
 
@@ -351,11 +364,70 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
 
     String subUrl = cfg.getString("submodule", "path1", "url");
 
-    // URL is valid.
-    URI.create(subUrl);
+    // For the android case, this produces "../platform/project", which
+    // (relative to the superproject) is equivalent to "project"
+    assertThat(subUrl).isEqualTo("../" + testRepoKeys[0]);
+  }
 
-    // URL is clean.
-    assertThat(subUrl).doesNotContain("../");
+
+  // Disabled: this is a bug in JGit.
+  // @Test
+  public void relativeFetchGerritCase() throws Exception {
+    // Gerrit does not use submodule, but check that RepoCommand produces a result that mimicks
+    // gerrit's .gitmodules file.
+    setupTestRepos("plugins/plugin");
+
+    // The test framework adds more cruft to the prefix.
+    String pluginPrefix = testRepoKeys[0].get().split("/")[0];
+
+    Project.NameKey manifestKey = createProject("manifest");
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = createProject("gerrit");
+
+    TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    String url = canonicalWebUrl.get();
+    String remoteXml = "  <remote name=\"origin\" fetch=\".\" review=\"" + url + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"path0\" />\n"
+            + "</manifest>\n";
+    pushFactory
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("path0").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+
+    Config base = new Config();
+    BlobBasedConfig cfg =
+        new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes(UTF_8));
+
+    String subUrl = cfg.getString("submodule", "path0", "url");
+
+    // For submodules, the URL is relative to the superproject's origin repository.
+    // However, the origin repository should be interpreted as a directory ("gerrit.gs.com/gerrit/")
+    // so "../plugins/cookbook" yields "gerrit.gs.com/plugins/cookbook".
+    assertThat(subUrl).isEqualTo("../" + testRepoKeys[0]);
   }
 
   @Test
@@ -370,6 +442,7 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
             URI.create("https://gerrit-review.googlesource.com/"),
             "https://gerrit-review.googlesource.com/repo")).isEqualTo("repo");
   }
+
 
   // TODO - should add tests for all the error handling in configuration parsing?
 }

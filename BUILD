@@ -11,6 +11,7 @@ gerrit_plugin(
         "Implementation-URL: https://gerrit-review.googlesource.com/#/todo",
     ],
     resources = glob(["src/main/**/*"]),
+    deps = [ "//lib:commons-io" ],
 )
 
 junit_tests(

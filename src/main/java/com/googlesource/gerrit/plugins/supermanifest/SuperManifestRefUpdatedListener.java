@@ -394,13 +394,13 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       InputStream manifestStream =
           new ByteArrayInputStream(readBlob(srcRepo, srcRef + ":" + c.xmlPath));
 
-      cmd.setAuthor(serverIdent);
-      cmd.setRecordRemoteBranch(true);
-      cmd.setRecordSubmoduleLabels(c.recordSubmoduleLabels);
-      cmd.setInputStream(manifestStream);
-      cmd.setRecommendShallow(true);
-      cmd.setRemoteReader(reader);
-      cmd.setURI(c.srcRepoUrl.toString());
+      cmd.setAuthor(serverIdent)
+          .setRecordRemoteBranch(true)
+          .setRecordSubmoduleLabels(c.recordSubmoduleLabels)
+          .setInputStream(manifestStream)
+          .setRecommendShallow(true)
+          .setRemoteReader(reader)
+          .setURI(c.srcRepoUrl.toString());
 
       // Must setup a included file reader; the default is to read the file from the filesystem
       // otherwise, which would leak data from the serving machine.

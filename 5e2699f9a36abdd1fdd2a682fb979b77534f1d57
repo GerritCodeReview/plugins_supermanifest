@@ -22,6 +22,30 @@
       "revId": "5e2699f9a36abdd1fdd2a682fb979b77534f1d57",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df7411ff_3766b1ca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-04-11T16:00:58Z",
+      "side": 1,
+      "message": "I keep messing this up because it\u0027s so inconsistent (there is no trailing . on the subject line.)",
+      "parentUuid": "7ae55a05_22a5cad5",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 1
+      },
+      "revId": "5e2699f9a36abdd1fdd2a682fb979b77534f1d57",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

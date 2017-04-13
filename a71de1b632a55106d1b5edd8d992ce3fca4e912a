@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12e83781_f21e0dac",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-04-13T14:57:42Z",
+      "side": 1,
+      "message": "nit: name this baseUri to be inline with the type (you named it *uri in JGit)",
+      "range": {
+        "startLine": 122,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 15
+      },
+      "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "658bc136_35762f29",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-04-13T14:57:42Z",
+      "side": 1,
+      "message": "optional: The one-letter variable names make this class a little hard to read. Optionally rename e to configEntry and c to configEntry in #update().",
+      "range": {
+        "startLine": 275,
+        "startChar": 4,
+        "endLine": 275,
+        "endChar": 5
+      },
+      "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e6d5b9d_01f6f724",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-04-13T14:57:42Z",
+      "side": 1,
+      "message": "nit: Could you place a comment before this line to explain what it is doing?\n\nIIRC this will take something like \"foo/my/project\" and return \"foo/my/\"\n\nA one liner would make it clear even to readers who are not familiar with all the details of URI",
+      "range": {
+        "startLine": 279,
+        "startChar": 18,
+        "endLine": 279,
+        "endChar": 63
+      },
+      "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

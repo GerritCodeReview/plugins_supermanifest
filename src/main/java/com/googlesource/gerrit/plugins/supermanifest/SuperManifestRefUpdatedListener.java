@@ -119,7 +119,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   private static class ConfigEntry {
     Project.NameKey srcRepoKey;
     String srcRef;
-    URI srcRepoUrl;
+    URI baseUrl;
     String xmlPath;
     Project.NameKey destRepoKey;
     boolean recordSubmoduleLabels;
@@ -165,7 +165,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         srcRepo = platforms/manifest
         srcRef = refs/heads/nyc
         srcPath = manifest.xml
-
   */
   private Set<ConfigEntry> parseConfiguration(PluginConfigFactory cfgFactory, String name) {
     Config cfg = null;
@@ -277,9 +276,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
 
 
     try {
-      String newPath = canonicalWebUrl.getPath() + "/" + e.srcRepoKey.toString();
-      e.srcRepoUrl =
-          new URIBuilder(canonicalWebUrl).setPath(newPath).build().normalize();
+      e.baseUrl = new URI(e.srcRepoKey.toString()).resolve("");
     } catch (URISyntaxException exception) {
       throw new ConfigInvalidException("could not build src URL", exception);
     }
@@ -400,7 +397,8 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
           .setInputStream(manifestStream)
           .setRecommendShallow(true)
           .setRemoteReader(reader)
-          .setURI(c.srcRepoUrl.toString());
+          .setTargetURI(c.destRepoKey.toString())
+          .setURI(c.baseUrl.toString());
 
       // Must setup a included file reader; the default is to read the file from the filesystem
       // otherwise, which would leak data from the serving machine.

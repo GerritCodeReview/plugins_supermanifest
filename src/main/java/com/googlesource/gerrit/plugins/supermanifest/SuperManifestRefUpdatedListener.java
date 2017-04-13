@@ -119,13 +119,79 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   private static class ConfigEntry {
     Project.NameKey srcRepoKey;
     String srcRef;
-    URI srcRepoUrl;
+    URI baseUri;
     String xmlPath;
     Project.NameKey destRepoKey;
     boolean recordSubmoduleLabels;
 
     // destBranch can be "*" in which case srcRef is ignored.
     String destBranch;
+
+    public ConfigEntry(Config cfg, String name) throws ConfigInvalidException {
+      String[] parts = name.split(":");
+      if (parts.length != 2) {
+        throw new ConfigInvalidException(
+            String.format("pluginName '%s' must have form REPO:BRANCH", name));
+      }
+
+      String destRepo = parts[0];
+      String destRef = parts[1];
+
+      if (!destRef.startsWith(REFS_HEADS)) {
+        throw new ConfigInvalidException(
+            String.format("invalid destination '%s'. Must specify refs/heads/", destRef));
+      }
+
+      if (destRef.contains("*") && !destRef.equals(REFS_HEADS + "*")) {
+        throw new ConfigInvalidException(
+            String.format("invalid destination '%s'. Use just '*' for all branches.", destRef));
+      }
+
+      String srcRepo = cfg.getString(SECTION_NAME, name, "srcRepo");
+      if (srcRepo == null) {
+        throw new ConfigInvalidException(String.format("entry %s did not specify srcRepo", name));
+      }
+
+      // TODO(hanwen): sanity check repo names.
+      srcRepoKey = new Project.NameKey(srcRepo);
+
+      if (destRef.equals(REFS_HEADS + "*")) {
+        srcRef = "";
+      } else {
+        if (!Repository.isValidRefName(destRef)) {
+          throw new ConfigInvalidException(String.format("destination branch '%s' invalid", destRef));
+        }
+
+        srcRef = cfg.getString(SECTION_NAME, name, "srcRef");
+        if (!Repository.isValidRefName(srcRef)) {
+          throw new ConfigInvalidException(String.format("source ref '%s' invalid", srcRef));
+        }
+
+        if (srcRef == null) {
+          throw new ConfigInvalidException(String.format("entry %s did not specify srcRef", name));
+        }
+      }
+
+      xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");
+      if (xmlPath == null) {
+        throw new ConfigInvalidException(String.format("entry %s did not specify srcPath", name));
+      }
+
+      destRepoKey = new Project.NameKey(destRepo);
+
+      // The external format is chosen so we can support copying over tags as well.
+      destBranch = destRef.substring(REFS_HEADS.length());
+
+      recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
+
+
+      try {
+        // http://foo/platform/manifest => http://foo/platform/
+        baseUri = new URI(srcRepoKey.toString()).resolve("");
+      } catch (URISyntaxException exception) {
+        throw new ConfigInvalidException("could not build src URL", exception);
+      }
+    }
 
     public String src() {
       String src = srcRef;
@@ -165,7 +231,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         srcRepo = platforms/manifest
         srcRef = refs/heads/nyc
         srcPath = manifest.xml
-
   */
   private Set<ConfigEntry> parseConfiguration(PluginConfigFactory cfgFactory, String name) {
     Config cfg = null;
@@ -187,7 +252,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
     for (String subsect : cfg.getSubsections(SECTION_NAME)) {
       try {
-        ConfigEntry configEntry = newConfigEntry(cfg, subsect);
+        ConfigEntry configEntry = new ConfigEntry(cfg, subsect);
         if (destinations.contains(configEntry.srcRepoKey.get())
             || sources.contains(configEntry.destRepoKey.get())) {
           // Don't want cyclic dependencies.
@@ -215,76 +280,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
 
     return newConf;
-  }
-
-  private ConfigEntry newConfigEntry(Config cfg, String name) throws ConfigInvalidException {
-    String[] parts = name.split(":");
-    if (parts.length != 2) {
-      throw new ConfigInvalidException(
-          String.format("pluginName '%s' must have form REPO:BRANCH", name));
-    }
-
-    String destRepo = parts[0];
-    String destRef = parts[1];
-
-    if (!destRef.startsWith(REFS_HEADS)) {
-      throw new ConfigInvalidException(
-          String.format("invalid destination '%s'. Must specify refs/heads/", destRef));
-    }
-
-    if (destRef.contains("*") && !destRef.equals(REFS_HEADS + "*")) {
-      throw new ConfigInvalidException(
-          String.format("invalid destination '%s'. Use just '*' for all branches.", destRef));
-    }
-
-    ConfigEntry e = new ConfigEntry();
-    String srcRepo = cfg.getString(SECTION_NAME, name, "srcRepo");
-    if (srcRepo == null) {
-      throw new ConfigInvalidException(String.format("entry %s did not specify srcRepo", name));
-    }
-
-    // TODO(hanwen): sanity check repo names.
-    e.srcRepoKey = new Project.NameKey(srcRepo);
-
-    if (destRef.equals(REFS_HEADS + "*")) {
-      e.srcRef = "";
-    } else {
-      if (!Repository.isValidRefName(destRef)) {
-        throw new ConfigInvalidException(String.format("destination branch '%s' invalid", destRef));
-      }
-
-      e.srcRef = cfg.getString(SECTION_NAME, name, "srcRef");
-      if (!Repository.isValidRefName(e.srcRef)) {
-        throw new ConfigInvalidException(String.format("source ref '%s' invalid", e.srcRef));
-      }
-
-      if (e.srcRef == null) {
-        throw new ConfigInvalidException(String.format("entry %s did not specify srcRef", name));
-      }
-    }
-
-    e.xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");
-    if (e.xmlPath == null) {
-      throw new ConfigInvalidException(String.format("entry %s did not specify srcPath", name));
-    }
-
-    e.destRepoKey = new Project.NameKey(destRepo);
-
-    // The external format is chosen so we can support copying over tags as well.
-    e.destBranch = destRef.substring(REFS_HEADS.length());
-
-    e.recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
-
-
-    try {
-      String newPath = canonicalWebUrl.getPath() + "/" + e.srcRepoKey.toString();
-      e.srcRepoUrl =
-          new URIBuilder(canonicalWebUrl).setPath(newPath).build().normalize();
-    } catch (URISyntaxException exception) {
-      throw new ConfigInvalidException("could not build src URL", exception);
-    }
-
-    return e;
   }
 
   private boolean checkRepoExists(Project.NameKey id) {
@@ -400,7 +395,8 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
           .setInputStream(manifestStream)
           .setRecommendShallow(true)
           .setRemoteReader(reader)
-          .setURI(c.srcRepoUrl.toString());
+          .setTargetURI(c.destRepoKey.toString())
+          .setURI(c.baseUri.toString());
 
       // Must setup a included file reader; the default is to read the file from the filesystem
       // otherwise, which would leak data from the serving machine.
@@ -484,11 +480,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   }
 
   @VisibleForTesting
-  static String urlToRepoKey(URI baseUrl, String name) {
-    if (name.startsWith(baseUrl.toString())) {
+  static String urlToRepoKey(URI baseUri, String name) {
+    if (name.startsWith(baseUri.toString())) {
       // It would be nice to parse the URL and do relativize on the Path, but
       // I am lazy, and nio.Path considers the file system and symlinks.
-      name = name.substring(baseUrl.toString().length());
+      name = name.substring(baseUri.toString().length());
       while (name.startsWith("/")) {
         name = name.substring(1);
       }

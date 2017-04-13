@@ -26,5 +26,6 @@ junit_tests(
         ":supermanifest__plugin",
         "//gerrit-acceptance-framework:lib",
         "//gerrit-plugin-api:lib",
+        "//lib/bouncycastle:bcprov",
     ],
 )

@@ -354,8 +354,11 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     // URL is valid.
     URI.create(subUrl);
 
+    // The suburls must be interpreted as relative to the parent project as a directory, i.e.
+    // to go from superproject/ to platform/project0, you have to do ../platform/project0
+
     // URL is clean.
-    assertThat(subUrl).doesNotContain("../");
+    assertThat(subUrl).isEqualTo("../" + realPrefix + "/project0");
   }
 
   @Test

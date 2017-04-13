@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c130c24_b8964d7e",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-04-13T15:59:15Z",
+      "side": 1,
+      "message": "I tried argue for URL in a previous review, but I give up.",
+      "parentUuid": "12e83781_f21e0dac",
+      "range": {
+        "startLine": 122,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 15
+      },
+      "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "658bc136_35762f29",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-04-13T14:57:42Z",
       "side": 1,
       "message": "optional: The one-letter variable names make this class a little hard to read. Optionally rename e to configEntry and c to configEntry in #update().",
+      "range": {
+        "startLine": 275,
+        "startChar": 4,
+        "endLine": 275,
+        "endChar": 5
+      },
+      "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb3804b8_2abb8763",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-04-13T15:59:15Z",
+      "side": 1,
+      "message": "made this a ctor instead.",
+      "parentUuid": "658bc136_35762f29",
       "range": {
         "startLine": 275,
         "startChar": 4,
@@ -68,6 +116,30 @@
       "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96dab242_e0ca98a3",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-04-13T15:59:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e6d5b9d_01f6f724",
+      "range": {
+        "startLine": 279,
+        "startChar": 18,
+        "endLine": 279,
+        "endChar": 63
+      },
+      "revId": "a71de1b632a55106d1b5edd8d992ce3fca4e912a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

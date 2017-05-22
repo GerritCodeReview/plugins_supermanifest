@@ -233,11 +233,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         srcPath = manifest.xml
   */
   private Set<ConfigEntry> parseConfiguration(PluginConfigFactory cfgFactory, String name) {
-    Config cfg = null;
+    Config cfg;
     try {
       cfg = cfgFactory.getProjectPluginConfig(allProjectsName, name);
     } catch (NoSuchProjectException e) {
-      Preconditions.checkState(false);
+      throw new IllegalStateException(e);
     }
 
     Set<ConfigEntry> newConf = new HashSet<>();
@@ -290,9 +290,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   public void stop() {}
 
   @Override
-  public void start() {
-    updateConfiguration();
-  }
+  public void start() { updateConfiguration(); }
 
   /** for debugging. */
   private String configurationToString() {

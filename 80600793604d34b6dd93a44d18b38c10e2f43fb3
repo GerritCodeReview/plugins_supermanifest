@@ -70,6 +70,30 @@
       "revId": "80600793604d34b6dd93a44d18b38c10e2f43fb3",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef27f8aa_c6c524ab",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-23T07:39:05Z",
+      "side": 1,
+      "message": "I\u0027m fine with that :) \n\nthe beauty of the formatter is that I don\u0027t have to worry about it anymore :)",
+      "parentUuid": "d75b9ed9_dcc1d1df",
+      "range": {
+        "startLine": 293,
+        "startChar": 2,
+        "endLine": 293,
+        "endChar": 46
+      },
+      "revId": "80600793604d34b6dd93a44d18b38c10e2f43fb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

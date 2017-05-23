@@ -17,7 +17,6 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
@@ -37,12 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.apache.http.client.utils.URIBuilder;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -159,7 +159,8 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         srcRef = "";
       } else {
         if (!Repository.isValidRefName(destRef)) {
-          throw new ConfigInvalidException(String.format("destination branch '%s' invalid", destRef));
+          throw new ConfigInvalidException(
+              String.format("destination branch '%s' invalid", destRef));
         }
 
         srcRef = cfg.getString(SECTION_NAME, name, "srcRef");
@@ -183,7 +184,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       destBranch = destRef.substring(REFS_HEADS.length());
 
       recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
-
 
       try {
         // http://foo/platform/manifest => http://foo/platform/
@@ -268,7 +268,6 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
           wildcardDestinations.add(configEntry.destRepoKey.get());
         }
 
-
         sources.add(configEntry.srcRepoKey.get());
         destinations.add(configEntry.destRepoKey.get());
 
@@ -290,7 +289,9 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   public void stop() {}
 
   @Override
-  public void start() { updateConfiguration(); }
+  public void start() {
+    updateConfiguration();
+  }
 
   /** for debugging. */
   private String configurationToString() {
@@ -345,6 +346,10 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
       try {
         update(c, event.getRefName());
       } catch (IOException | GitAPIException e) {
+        // We only want the trace up to here. We could recurse into the exception, but this at least
+        // catches the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
+        e.setStackTrace(trimStack(e.getStackTrace(), Thread.currentThread().getStackTrace()[1]));
+
         // We are in an asynchronously called listener, so there is no user action to give
         // feedback to. We log the error, but it would be nice if we could surface these logs
         // somewhere.  Perhaps we could store these as commits in some special branch (but in
@@ -353,6 +358,22 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
             String.format("update for %s (ref %s) failed", c.toString(), event.getRefName()), e);
       }
     }
+  }
+
+  /** Remove boring stack frames. */
+  @VisibleForTesting
+  static StackTraceElement[] trimStack(StackTraceElement[] boom, StackTraceElement ref) {
+    String key = ref.getClassName() + "#" + ref.getMethodName();
+    List<StackTraceElement> trimmed = new ArrayList<>();
+    for (StackTraceElement e : boom) {
+      String boomKey = e.getClassName() + "#" + e.getMethodName();
+      if (boomKey.equals(key)) {
+        break;
+      }
+      trimmed.add(e);
+    }
+
+    return trimmed.toArray(new StackTraceElement[trimmed.size()]);
   }
 
   private static class GerritIncludeReader implements ManifestParser.IncludedFileReader {
@@ -489,5 +510,4 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     }
     return name;
   }
-
 }

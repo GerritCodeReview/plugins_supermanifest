@@ -26,12 +26,17 @@ import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.RefNames;
+import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;
 import org.eclipse.jgit.lib.Config;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @TestPlugin(
   name = "supermanifest",
@@ -165,8 +170,32 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
     assertThat(branch.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
 
+  void outer() {
+    inner();
+  }
+  void inner() {
+    throw new IllegalStateException();
+  }
+
+  @Test
+  public void trimStackTrace() throws Exception {
+    innerTest();
+  }
+
+  private void innerTest() {
+    try {
+      outer();
+      fail("should throw");
+    } catch (IllegalStateException e) {
+      StackTraceElement[] trimmed = SuperManifestRefUpdatedListener.trimStack(e.getStackTrace(),
+          Thread.currentThread().getStackTrace()[1]);
+      assertThat(Arrays.toString(trimmed)).doesNotContain("trimStackTrace");
+    }
+  }
+
   @Test
   public void wildcardDestBranchWorks() throws Exception {
+
     setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
@@ -365,13 +394,15 @@ public class SuperManifestIT extends LightweightPluginDaemonTest {
   public void testToRepoKey() {
     URI base = URI.create("https://gerrit-review.googlesource.com");
     assertThat(
-        SuperManifestRefUpdatedListener.urlToRepoKey(base,
-            "https://gerrit-review.googlesource.com/repo")).isEqualTo("repo");
+            SuperManifestRefUpdatedListener.urlToRepoKey(
+                base, "https://gerrit-review.googlesource.com/repo"))
+        .isEqualTo("repo");
     assertThat(SuperManifestRefUpdatedListener.urlToRepoKey(base, "repo")).isEqualTo("repo");
     assertThat(
-        SuperManifestRefUpdatedListener.urlToRepoKey(
-            URI.create("https://gerrit-review.googlesource.com/"),
-            "https://gerrit-review.googlesource.com/repo")).isEqualTo("repo");
+            SuperManifestRefUpdatedListener.urlToRepoKey(
+                URI.create("https://gerrit-review.googlesource.com/"),
+                "https://gerrit-review.googlesource.com/repo"))
+        .isEqualTo("repo");
   }
 
   // TODO - should add tests for all the error handling in configuration parsing?

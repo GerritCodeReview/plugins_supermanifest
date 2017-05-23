@@ -46,6 +46,30 @@
       "revId": "80600793604d34b6dd93a44d18b38c10e2f43fb3",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d75b9ed9_dcc1d1df",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-23T07:26:26Z",
+      "side": 1,
+      "message": "If you use google-java-format on this code in the future, it will probably reformat it.",
+      "parentUuid": "84af2003_b9c11d45",
+      "range": {
+        "startLine": 293,
+        "startChar": 2,
+        "endLine": 293,
+        "endChar": 46
+      },
+      "revId": "80600793604d34b6dd93a44d18b38c10e2f43fb3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

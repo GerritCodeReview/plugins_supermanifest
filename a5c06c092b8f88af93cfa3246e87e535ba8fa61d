@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7c7ccc8_42bebb92",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-24T08:59:00Z",
+      "side": 1,
+      "message": "Does \"up to here\" include the entry of this method or not? The current implementation strips this method from the stack trace but I would understand this comment to keep this method in the trace. I\u0027m just asking to make sure that the code is doing what you intended it to do.",
+      "range": {
+        "startLine": 349,
+        "startChar": 11,
+        "endLine": 349,
+        "endChar": 45
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fc6c8b0_42ea58ed",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-24T08:59:00Z",
+      "side": 1,
+      "message": "optional: I thought that comical and \"cute\" names were discouraged.",
+      "range": {
+        "startLine": 365,
+        "startChar": 59,
+        "endLine": 365,
+        "endChar": 63
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81677c26_97d56fdd",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-24T08:59:00Z",
+      "side": 1,
+      "message": "Can\u0027t we directly compare the class and method name instead of creating this artificial key?",
+      "range": {
+        "startLine": 366,
+        "startChar": 4,
+        "endLine": 366,
+        "endChar": 64
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57125891_57d05c5f",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-24T08:59:00Z",
+      "side": 1,
+      "message": "Some of these imports are unused.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 31
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6883966d_89ed6476",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-24T08:59:00Z",
+      "side": 1,
+      "message": "The entry for \u0027innerTest\u0027 is stripped as well. Shouldn\u0027t the test reflect that?",
+      "range": {
+        "startLine": 192,
+        "startChar": 59,
+        "endLine": 192,
+        "endChar": 73
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

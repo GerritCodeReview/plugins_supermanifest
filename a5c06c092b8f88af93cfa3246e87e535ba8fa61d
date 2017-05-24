@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "23af39f6_180d3bc5",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-24T11:32:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7c7ccc8_42bebb92",
+      "range": {
+        "startLine": 349,
+        "startChar": 11,
+        "endLine": 349,
+        "endChar": 45
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fc6c8b0_42ea58ed",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-24T08:59:00Z",
       "side": 1,
       "message": "optional: I thought that comical and \"cute\" names were discouraged.",
+      "range": {
+        "startLine": 365,
+        "startChar": 59,
+        "endLine": 365,
+        "endChar": 63
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "053c43e8_64c149f9",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-24T11:32:44Z",
+      "side": 1,
+      "message": "yeah. oh well.",
+      "parentUuid": "2fc6c8b0_42ea58ed",
       "range": {
         "startLine": 365,
         "startChar": 59,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e1ec042d_18f944f2",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-24T11:32:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81677c26_97d56fdd",
+      "range": {
+        "startLine": 366,
+        "startChar": 4,
+        "endLine": 366,
+        "endChar": 64
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57125891_57d05c5f",
         "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "45d608a0_8304516e",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-24T11:32:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57125891_57d05c5f",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 31
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6883966d_89ed6476",
         "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
         "patchSetId": 2
@@ -114,6 +210,30 @@
       "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea5f7237_37e99162",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-24T11:32:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6883966d_89ed6476",
+      "range": {
+        "startLine": 192,
+        "startChar": 59,
+        "endLine": 192,
+        "endChar": 73
+      },
+      "revId": "a5c06c092b8f88af93cfa3246e87e535ba8fa61d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

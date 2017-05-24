@@ -22,6 +22,30 @@
       "revId": "25f919a15782cb62bdb15c7386a60dee58830cfb",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f95de7e5_9572906f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-05-24T11:42:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d0c008a_1bb99b39",
+      "range": {
+        "startLine": 366,
+        "startChar": 27,
+        "endLine": 366,
+        "endChar": 29
+      },
+      "revId": "25f919a15782cb62bdb15c7386a60dee58830cfb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

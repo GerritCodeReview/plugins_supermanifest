@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d0c008a_1bb99b39",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1030912
+      },
+      "writtenOn": "2017-05-24T11:38:31Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 366,
+        "startChar": 27,
+        "endLine": 366,
+        "endChar": 29
+      },
+      "revId": "25f919a15782cb62bdb15c7386a60dee58830cfb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

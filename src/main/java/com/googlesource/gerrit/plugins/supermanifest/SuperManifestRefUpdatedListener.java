@@ -310,11 +310,9 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   /** for debugging. */
   private String configurationToString() {
     StringBuilder b = new StringBuilder();
-    b.append("Supermanifest config (" + config.size() + ") {\n");
+    b.append("Supermanifest config (").append(config.size()).append(") {\n");
     for (ConfigEntry c : config) {
-      b.append(" ");
-      b.append(c.toString());
-      b.append("\n");
+      b.append(" ").append(c).append("\n");
     }
     b.append("}\n");
     return b.toString();

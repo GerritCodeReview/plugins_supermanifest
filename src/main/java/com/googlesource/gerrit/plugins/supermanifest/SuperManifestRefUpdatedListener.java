@@ -105,6 +105,11 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     this.projectCache = projectCache;
   }
 
+  private void warn(String formatStr, Object... args) {
+    // This assumes that the URL does not contain the % char.
+    log.warn(canonicalWebUrl + " : " + formatStr, args);
+  }
+
   private static byte[] readBlob(Repository repo, String idStr) throws IOException {
     try (ObjectReader reader = repo.newObjectReader()) {
       ObjectId id = repo.resolve(idStr);
@@ -247,7 +252,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
 
     for (String sect : cfg.getSections()) {
       if (!sect.equals(SECTION_NAME)) {
-        log.warn(name + ".config: ignoring invalid section " + sect);
+        warn("%s.config: ignoring invalid section %s", name, sect);
       }
     }
     for (String subsect : cfg.getSubsections(SECTION_NAME)) {
@@ -274,7 +279,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         newConf.add(configEntry);
 
       } catch (ConfigInvalidException e) {
-        log.error("ConfigInvalidException: " + e.toString());
+        warn("ConfigInvalidException: %s", e);
       }
     }
 
@@ -455,7 +460,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         Repository repo = openRepository(repoName);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
-          log.warn(String.format("in repo %s: cannot resolve ref %s", uriStr, refName));
+          warn("in repo %s: cannot resolve ref %s", uriStr, refName);
           return null;
         }
 
@@ -463,7 +468,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        log.warn("failed to open repository: " + repoName, e);
+        warn("failed to open repository %s: %s", repoName, e);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =

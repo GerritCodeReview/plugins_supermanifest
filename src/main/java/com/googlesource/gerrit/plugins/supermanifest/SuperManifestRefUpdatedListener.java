@@ -105,6 +105,21 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     this.projectCache = projectCache;
   }
 
+  private void warn(String formatStr, Object... args) {
+    // This assumes that the URL does not contain the % char. The docs claim that
+    // log.warn() uses format strings, but it doesn't seem to work, so we do it
+    // explicitly.
+    log.warn(String.format(canonicalWebUrl + " : " + formatStr, args));
+  }
+
+  private void error(String formatStr, Object... args) {
+    log.error(String.format(canonicalWebUrl + " : " + formatStr, args));
+  }
+
+  private void info(String formatStr, Object... args) {
+    log.info(String.format(canonicalWebUrl + " : " + formatStr, args));
+  }
+
   private static byte[] readBlob(Repository repo, String idStr) throws IOException {
     try (ObjectReader reader = repo.newObjectReader()) {
       ObjectId id = repo.resolve(idStr);
@@ -247,7 +262,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
 
     for (String sect : cfg.getSections()) {
       if (!sect.equals(SECTION_NAME)) {
-        log.warn(name + ".config: ignoring invalid section " + sect);
+        warn("%s.config: ignoring invalid section %s", name, sect);
       }
     }
     for (String subsect : cfg.getSubsections(SECTION_NAME)) {
@@ -274,7 +289,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         newConf.add(configEntry);
 
       } catch (ConfigInvalidException e) {
-        log.error("ConfigInvalidException: " + e.toString());
+        error("invalid configuration: %s", e);
       }
     }
 
@@ -296,10 +311,13 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
   /** for debugging. */
   private String configurationToString() {
     StringBuilder b = new StringBuilder();
-    b.append("number of configuration entries: " + config.size() + "\n");
+    b.append("Supermanifest config (" + config.size() + ") {\n");
     for (ConfigEntry c : config) {
-      b.append(c.toString() + "\n");
+      b.append(" ");
+      b.append(c.toString());
+      b.append("\n");
     }
+    b.append("}\n");
     return b.toString();
   }
 
@@ -309,16 +327,16 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
     Set<ConfigEntry> filtered = new HashSet<>();
     for (ConfigEntry e : entries) {
       if (!checkRepoExists(e.srcRepoKey)) {
-        log.error(String.format("source repo '%s' does not exist", e.srcRepoKey));
+        error("source repo '%s' does not exist", e.srcRepoKey);
       } else if (!checkRepoExists(e.destRepoKey)) {
-        log.error(String.format("destination repo '%s' does not exist", e.destRepoKey));
+        error("destination repo '%s' does not exist", e.destRepoKey);
       } else {
         filtered.add(e);
       }
     }
 
     config = filtered;
-    log.info("loaded new configuration: " + configurationToString());
+    info("loaded new configuration: %s", configurationToString());
   }
 
   @Override
@@ -355,15 +373,14 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         // feedback to. We log the error, but it would be nice if we could surface these logs
         // somewhere.  Perhaps we could store these as commits in some special branch (but in
         // what repo?).
-        log.error(
-            String.format("update for %s (ref %s) failed", c.toString(), event.getRefName()), e);
+        error("update for %s (ref %s) failed: %s", c.toString(), event.getRefName(), e);
       }
     }
   }
 
   /**
-   * Remove boring stack frames. This retains the innermost frames up to and including the
-   * {@code class#method} passed in {@code ref}.
+   * Remove boring stack frames. This retains the innermost frames up to and including the {@code
+   * class#method} passed in {@code ref}.
    */
   @VisibleForTesting
   static StackTraceElement[] trimStack(StackTraceElement[] trace, StackTraceElement ref) {
@@ -455,7 +472,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         Repository repo = openRepository(repoName);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
-          log.warn(String.format("in repo %s: cannot resolve ref %s", uriStr, refName));
+          warn("in repo %s: cannot resolve ref %s", uriStr, refName);
           return null;
         }
 
@@ -463,7 +480,7 @@ class SuperManifestRefUpdatedListener implements GitReferenceUpdatedListener, Li
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        log.warn("failed to open repository: " + repoName, e);
+        warn("failed to open repository %s: %s", repoName, e);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =

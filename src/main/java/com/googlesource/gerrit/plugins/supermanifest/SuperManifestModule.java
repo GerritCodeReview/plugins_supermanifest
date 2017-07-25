@@ -22,8 +22,7 @@ import com.google.gerrit.extensions.registration.DynamicSet;
 import com.google.inject.AbstractModule;
 
 public class SuperManifestModule extends AbstractModule {
-  SuperManifestModule() {
-  }
+  SuperManifestModule() {}
 
   @Override
   protected void configure() {

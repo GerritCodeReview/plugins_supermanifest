@@ -237,6 +237,9 @@ public class SuperManifestRefUpdatedListener
           case Repo:
             subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
             break;
+          case Jiri:
+            subModuleUpdater = new JiriUpdater(serverIdent, canonicalWebUrl);
+            break;
           default:
             throw new ConfigInvalidException(
                 String.format("invalid toolType: %s", c.getToolType().name()));

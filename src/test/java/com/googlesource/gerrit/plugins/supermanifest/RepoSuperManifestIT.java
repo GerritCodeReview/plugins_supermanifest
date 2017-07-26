@@ -38,7 +38,7 @@ import org.junit.Test;
   name = "supermanifest",
   sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule"
 )
-public class SuperManifestIT extends LightweightPluginDaemonTest {
+public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   Project.NameKey[] testRepoKeys;
 
   void setupTestRepos(String prefix) throws Exception {

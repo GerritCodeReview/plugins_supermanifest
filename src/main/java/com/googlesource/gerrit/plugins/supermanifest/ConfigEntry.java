@@ -26,7 +26,8 @@ import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
 
 enum ToolType {
-  Repo
+  Repo,
+  Jiri
 }
 
 class ConfigEntry {
@@ -77,6 +78,9 @@ class ConfigEntry {
       case "":
       case "repo":
         this.toolType = ToolType.Repo;
+        break;
+      case "jiri":
+        this.toolType = ToolType.Jiri;
         break;
       default:
         throw new ConfigInvalidException(
@@ -134,7 +138,7 @@ class ConfigEntry {
 
   @Override
   public String toString() {
-    return String.format("%s => %s", src(), dest());
+    return String.format("%s -> %s => %s", toolType, src(), dest());
   }
 
   @Override

@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6bef6ac3_04aa4a63",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "but then can\u0027t use this in sub package, also this doesn\u0027t pose any security threat. Also does gerrit make its plugin\u0027s packages public that anyone can access them?",
+      "parentUuid": "c8530213_2956c0f6",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 6
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c50e040_5ff1f8ae",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52b117aa_4320137f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c50e040_5ff1f8ae",
+      "range": {
+        "startLine": 35,
+        "startChar": 9,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c07689fd_b98a0ea8",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "yeah sry, been working with golang for a while",
+      "parentUuid": "9307f926_98274173",
+      "range": {
+        "startLine": 72,
+        "startChar": 36,
+        "endLine": 72,
+        "endChar": 37
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12c1ac3a_cceaa714",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "cde56589_f9ce24e8",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12c1ac3a_cceaa714",
+      "range": {
+        "startLine": 137,
+        "startChar": 26,
+        "endLine": 137,
+        "endChar": 45
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6489e103_40de8e27",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2017-07-31T11:43:58Z",
       "side": 1,
       "message": "isn\u0027t this constant for the entire lifetime of the class? Can you adjust lifetime of this thing to reflect that?",
+      "range": {
+        "startLine": 235,
+        "startChar": 46,
+        "endLine": 235,
+        "endChar": 65
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad498eee_75c385ed",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "It depends on config, if config file has multiple configs with multiple types, this is not going to be constant",
+      "parentUuid": "6489e103_40de8e27",
       "range": {
         "startLine": 235,
         "startChar": 46,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "a8235396_5e05ab84",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "I tried it on local gerrit instance, and it was throwing null pointer exception, but it was not shown in logs. that\u0027s why catching all exceptions",
+      "parentUuid": "340ad178_e00bc90c",
+      "range": {
+        "startLine": 240,
+        "startChar": 10,
+        "endLine": 240,
+        "endChar": 19
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "967c54b3_a9da6d8b",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 4
@@ -151,6 +295,30 @@
       "writtenOn": "2017-07-31T11:43:58Z",
       "side": 1,
       "message": "what do you base this on?",
+      "range": {
+        "startLine": 241,
+        "startChar": 52,
+        "endLine": 241,
+        "endChar": 71
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6734ee0c_61096320",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "I tried it on local gerrit instance, and it was throwing null pointer exception, but it was not shown in logs.",
+      "parentUuid": "967c54b3_a9da6d8b",
       "range": {
         "startLine": 241,
         "startChar": 52,
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "888d7e8f_82825d62",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e696cba7_dc230a5f",
+      "range": {
+        "startLine": 277,
+        "startChar": 4,
+        "endLine": 277,
+        "endChar": 22
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14c351e2_054efaa0",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/Utils.java",
         "patchSetId": 4
@@ -197,6 +389,30 @@
       "writtenOn": "2017-07-31T11:43:58Z",
       "side": 1,
       "message": "This should also not be public if possible.\n\nI\u0027ll doublecheck if we already have something for this.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 6
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c21b34e0_0d61eb69",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/Utils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "then can\u0027t use this in repo package, and also it is doing nothing that can pose security threat as this doesnot write to anything",
+      "parentUuid": "14c351e2_054efaa0",
       "range": {
         "startLine": 23,
         "startChar": 0,
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "8e87ab81_04b2ab25",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "four, also as we are now making it generic, so it makes sense to keep each tool in its own package to remove clutter, also as every tool can have manifest so to remove name conflict the right way.",
+      "parentUuid": "529a70b4_baf84566",
+      "range": {
+        "startLine": 15,
+        "startChar": 54,
+        "endLine": 15,
+        "endChar": 58
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0789ae77_f4a1bd47",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
         "patchSetId": 4
@@ -252,6 +492,30 @@
       "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4e180f6_35cc9212",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-07-31T19:00:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0789ae77_f4a1bd47",
+      "range": {
+        "startLine": 34,
+        "startChar": 6,
+        "endLine": 34,
+        "endChar": 21
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

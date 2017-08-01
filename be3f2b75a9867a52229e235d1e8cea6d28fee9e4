@@ -331,6 +331,30 @@
     },
     {
       "key": {
+        "uuid": "4ef7a23d_33153e83",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1028062
+      },
+      "writtenOn": "2017-08-01T13:57:16Z",
+      "side": 1,
+      "message": "I have seen the stack traces just fine in our server deployment, and also in our tests, I think.",
+      "parentUuid": "6734ee0c_61096320",
+      "range": {
+        "startLine": 241,
+        "startChar": 52,
+        "endLine": 241,
+        "endChar": 71
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e696cba7_dc230a5f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 4
@@ -460,6 +484,30 @@
       "side": 1,
       "message": "four, also as we are now making it generic, so it makes sense to keep each tool in its own package to remove clutter, also as every tool can have manifest so to remove name conflict the right way.",
       "parentUuid": "529a70b4_baf84566",
+      "range": {
+        "startLine": 15,
+        "startChar": 54,
+        "endLine": 15,
+        "endChar": 58
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4753b639_b12618e4",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1028062
+      },
+      "writtenOn": "2017-08-01T13:57:16Z",
+      "side": 1,
+      "message": "I would rather have it in the same package. Think of it as using Go style visibility :)\n\nYou can prefix the Jiri stuff with Jiri in the name.",
+      "parentUuid": "8e87ab81_04b2ab25",
       "range": {
         "startLine": 15,
         "startChar": 54,

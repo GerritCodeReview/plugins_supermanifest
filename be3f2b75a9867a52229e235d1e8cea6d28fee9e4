@@ -379,6 +379,30 @@
     },
     {
       "key": {
+        "uuid": "cc084c54_189d5831",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-01T18:00:21Z",
+      "side": 1,
+      "message": "how do i pass it? I thought it is automatically picked up if i drop the jar. Also what is wrong with catching and logging it, I can throw it back out if you want, that way we never loose a trace for debugging",
+      "parentUuid": "5638730b_acebf6fb",
+      "range": {
+        "startLine": 241,
+        "startChar": 52,
+        "endLine": 241,
+        "endChar": 71
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e696cba7_dc230a5f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 4
@@ -541,6 +565,30 @@
       "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8f543d7_269a1281",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-01T18:00:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4753b639_b12618e4",
+      "range": {
+        "startLine": 15,
+        "startChar": 54,
+        "endLine": 15,
+        "endChar": 58
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {

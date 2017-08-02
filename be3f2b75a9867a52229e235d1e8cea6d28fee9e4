@@ -427,6 +427,30 @@
     },
     {
       "key": {
+        "uuid": "c5eb7bca_f8156f00",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-02T17:56:15Z",
+      "side": 1,
+      "message": "does not work for me, still doesn\u0027t show Exception\u0027s trace. Also as we are abstracting update so clients can throw any exception, so why are we not logging them all? What is wrong with it. It will save us countless hours of debugging(I actually spent an hr to debug this while writing code). Also as this same code is going to be used for jiri, i don\u0027t want to spend my time debugging it if some goes wrong in GoB.\n\nAlso how is it different than catching some exceptions and logging them?",
+      "parentUuid": "07b9f75d_c65436ab",
+      "range": {
+        "startLine": 241,
+        "startChar": 52,
+        "endLine": 241,
+        "endChar": 71
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e696cba7_dc230a5f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 4

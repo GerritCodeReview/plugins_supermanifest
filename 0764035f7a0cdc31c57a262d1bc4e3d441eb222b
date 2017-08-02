@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ce7a1de_9b26d348",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-02T09:33:40Z",
+      "side": 1,
+      "message": "Strings.nullToEmpty( .. )",
+      "range": {
+        "startLine": 73,
+        "startChar": 22,
+        "endLine": 73,
+        "endChar": 25
+      },
+      "revId": "0764035f7a0cdc31c57a262d1bc4e3d441eb222b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "013f4834_47cb13ea",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-02T09:33:40Z",
+      "side": 1,
+      "message": "print the offending tooltype.",
+      "range": {
+        "startLine": 83,
+        "startChar": 79,
+        "endLine": 83,
+        "endChar": 87
+      },
+      "revId": "0764035f7a0cdc31c57a262d1bc4e3d441eb222b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b0c37f6_9564943e",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-02T09:33:40Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 15,
+        "startChar": 54,
+        "endLine": 15,
+        "endChar": 58
+      },
+      "revId": "0764035f7a0cdc31c57a262d1bc4e3d441eb222b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba728b4e_5a8ede61",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/repo/RepoUpdater.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-02T09:33:40Z",
+      "side": 1,
+      "message": "drop unused.",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 34,
+        "endChar": 5
+      },
+      "revId": "0764035f7a0cdc31c57a262d1bc4e3d441eb222b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

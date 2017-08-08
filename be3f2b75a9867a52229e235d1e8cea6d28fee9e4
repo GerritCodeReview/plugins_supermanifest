@@ -451,6 +451,30 @@
     },
     {
       "key": {
+        "uuid": "918cb5f0_5d7a4e53",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-08T21:21:49Z",
+      "side": 1,
+      "message": "you can get debug traces by changing the logger,\n\nhttp://blogs.collab.net/git/scm/gerrit-productivity-hacks-flexible-logging-set-debug-level-logging-without-gerrit-restart#.WYopPDCGN48\n\nI looked again at this code, and I\u0027m retracting my objections. Sorry for giving you a hard time over this.",
+      "parentUuid": "c5eb7bca_f8156f00",
+      "range": {
+        "startLine": 241,
+        "startChar": 52,
+        "endLine": 241,
+        "endChar": 71
+      },
+      "revId": "be3f2b75a9867a52229e235d1e8cea6d28fee9e4",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e696cba7_dc230a5f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 4

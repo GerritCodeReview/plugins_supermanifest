@@ -24,16 +24,17 @@ import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
 
-enum ToolType {
-  Repo
-}
-
 public class ConfigEntry {
   public static final String SECTION_NAME = "superproject";
 
   Project.NameKey srcRepoKey;
   String srcRef;
   URI baseUri;
+
+  enum ToolType {
+    Repo
+  };
+
   ToolType toolType;
   String xmlPath;
   Project.NameKey destRepoKey;

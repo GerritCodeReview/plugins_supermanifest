@@ -211,56 +211,59 @@ public class SuperManifestRefUpdatedListener
   }
 
   @Override
-  public synchronized void onGitReferenceUpdated(Event event) {
-    if (event.getProjectName().equals(allProjectsName.get())) {
-      if (event.getRefName().equals("refs/meta/config")) {
+  public void onGitReferenceUpdated(Event event) {
+    try {
+      update(event.getProjectName(), event.getRefName());
+    } catch (Exception e) {
+      // We only want the trace up to here. We could recurse into the exception, but this at least
+      // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
+      StackTraceElement here = Thread.currentThread().getStackTrace()[1];
+      e.setStackTrace(trimStack(e.getStackTrace(), here));
+
+      // We are in an asynchronously called listener, so there is no user action to give
+      // feedback to. We log the error, but it would be nice if we could surface these logs
+      // somewhere.  Perhaps we could store these as commits in some special branch (but in
+      // what repo?).
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      e.printStackTrace(pw);
+      error("update for %s (ref %s) failed: %s", event.getProjectName(), event.getRefName(), sw);
+    }
+  }
+
+  public synchronized void update(String projectName, String refName)
+      throws ConfigInvalidException, IOException, GitAPIException {
+    if (projectName.equals(allProjectsName.get())) {
+      if (refName.equals("refs/meta/config")) {
         updateConfiguration();
       }
       return;
     }
 
     for (ConfigEntry c : config) {
-      if (!c.srcRepoKey.get().equals(event.getProjectName())) {
+      if (!c.srcRepoKey.get().equals(projectName)) {
         continue;
       }
 
-      if (!(c.destBranch.equals("*") || c.srcRef.equals(event.getRefName()))) {
+      if (!(c.destBranch.equals("*") || c.srcRef.equals(refName))) {
         continue;
       }
 
-      if (c.destBranch.equals("*") && !event.getRefName().startsWith(REFS_HEADS)) {
+      if (c.destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
         continue;
       }
 
-      try {
-        SubModuleUpdater subModuleUpdater;
-        switch (c.getToolType()) {
-          case Repo:
-            subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
-            break;
-          default:
-            throw new ConfigInvalidException(
-                String.format("invalid toolType: %s", c.getToolType().name()));
-        }
-        try (GerritRemoteReader reader = new GerritRemoteReader()) {
-          subModuleUpdater.update(reader, c, event.getRefName());
-        }
-      } catch (
-          Exception
-              e) { //catch all exceptions as gerrit doesn't print stack trace for thrown Exception
-        // We only want the trace up to here. We could recurse into the exception, but this at least
-        // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
-        StackTraceElement here = Thread.currentThread().getStackTrace()[1];
-        e.setStackTrace(trimStack(e.getStackTrace(), here));
-
-        // We are in an asynchronously called listener, so there is no user action to give
-        // feedback to. We log the error, but it would be nice if we could surface these logs
-        // somewhere.  Perhaps we could store these as commits in some special branch (but in
-        // what repo?).
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        error("update for %s (ref %s) failed: %s", c.toString(), event.getRefName(), sw);
+      SubModuleUpdater subModuleUpdater;
+      switch (c.getToolType()) {
+        case Repo:
+          subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
+          break;
+        default:
+          throw new ConfigInvalidException(
+              String.format("invalid toolType: %s", c.getToolType().name()));
+      }
+      try (GerritRemoteReader reader = new GerritRemoteReader()) {
+        subModuleUpdater.update(reader, c, refName);
       }
     }
   }

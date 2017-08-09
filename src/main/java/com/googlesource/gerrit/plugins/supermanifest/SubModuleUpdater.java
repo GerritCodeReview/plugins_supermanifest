@@ -15,9 +15,12 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
+import java.io.IOException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 public interface SubModuleUpdater {
 
   /** Reads manifest and generates sub modules */
-  void update(GerritRemoteReader reader, ConfigEntry c, String srcRef) throws Exception;
+  void update(GerritRemoteReader reader, ConfigEntry c, String srcRef)
+      throws IOException, GitAPIException;
 }

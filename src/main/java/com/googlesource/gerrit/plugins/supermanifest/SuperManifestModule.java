@@ -15,6 +15,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.inject.Scopes.SINGLETON;
+import static com.google.gerrit.server.project.BranchResource.BRANCH_KIND;
 
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
@@ -32,5 +33,7 @@ public class SuperManifestModule extends RestApiModule {
     DynamicSet.bind(binder(), LifecycleListener.class)
         .to(SuperManifestRefUpdatedListener.class)
         .in(SINGLETON);
+    post(BRANCH_KIND, "update_manifest").to(SuperManifestRefUpdatedListener.class).in(SINGLETON);
+
   }
 }

@@ -18,16 +18,23 @@ import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gerrit.extensions.annotations.PluginName;
+import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
+import com.google.gerrit.extensions.restapi.Response;
+import com.google.gerrit.extensions.restapi.RestModifyView;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.config.AllProjectsName;
 import com.google.gerrit.server.config.CanonicalWebUrl;
 import com.google.gerrit.server.config.PluginConfigFactory;
 import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.server.project.BranchResource;
+import com.google.gerrit.server.project.DeleteTag;
+import com.google.gerrit.server.project.DeleteTag.Input;
 import com.google.gerrit.server.project.NoSuchProjectException;
 import com.google.gerrit.server.project.ProjectCache;
+import com.google.gerrit.server.project.TagResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.googlesource.gerrit.plugins.supermanifest.repo.RepoUpdater;
@@ -63,7 +70,7 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class SuperManifestRefUpdatedListener
-    implements GitReferenceUpdatedListener, LifecycleListener {
+    implements GitReferenceUpdatedListener, LifecycleListener, RestModifyView<BranchResource, BranchInput> {
   private static final Logger log = LoggerFactory.getLogger(SuperManifestRefUpdatedListener.class);
 
   private final GitRepositoryManager repoManager;
@@ -229,6 +236,13 @@ public class SuperManifestRefUpdatedListener
       e.printStackTrace(pw);
       error("update for %s (ref %s) failed: %s", event.getProjectName(), event.getRefName(), sw);
     }
+  }
+
+  @Override
+  public Response<?> apply(BranchResource resource, BranchInput input)
+      throws IOException, ConfigInvalidException, GitAPIException {
+    update(resource.getProjectState().getProject().getName(), resource.getRef());
+    return Response.none();
   }
 
   public synchronized void update(String projectName, String refName)

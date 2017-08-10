@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "448896c5_93b153cd",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-10T21:11:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "972c871a_b1cf50e8",
+      "range": {
+        "startLine": 100,
+        "startChar": 12,
+        "endLine": 100,
+        "endChar": 21
+      },
+      "revId": "4eb1b0156a81605bb1e414d01862f3188ef6645d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63730e39_4fee2425",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-10T21:08:21Z",
       "side": 1,
       "message": "what is this for?",
+      "range": {
+        "startLine": 158,
+        "startChar": 9,
+        "endLine": 158,
+        "endChar": 20
+      },
+      "revId": "4eb1b0156a81605bb1e414d01862f3188ef6645d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18bc938c_8d2985ea",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-10T21:11:22Z",
+      "side": 1,
+      "message": "oh i was using this in old code, when i was testing my implementation, by mistake left it.",
+      "parentUuid": "63730e39_4fee2425",
       "range": {
         "startLine": 158,
         "startChar": 9,

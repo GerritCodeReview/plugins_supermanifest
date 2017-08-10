@@ -22,6 +22,30 @@
       "revId": "3955503d47f2d32baafe53f7c182229e64438488",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53c60b2b_608f963f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-10T22:21:22Z",
+      "side": 1,
+      "message": "sry forgot to git add that file",
+      "parentUuid": "7add1990_f4ef5ab0",
+      "range": {
+        "startLine": 64,
+        "startChar": 29,
+        "endLine": 64,
+        "endChar": 0
+      },
+      "revId": "3955503d47f2d32baafe53f7c182229e64438488",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

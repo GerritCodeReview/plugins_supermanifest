@@ -94,6 +94,30 @@
       "revId": "f1ca95ac0131e0e5664f7e6ed5146d6704cbad4f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da7708b3_2b3c2ca6",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-10T19:19:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52755179_eff2fe7a",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 17
+      },
+      "revId": "f1ca95ac0131e0e5664f7e6ed5146d6704cbad4f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

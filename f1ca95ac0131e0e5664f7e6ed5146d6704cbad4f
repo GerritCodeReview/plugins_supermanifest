@@ -70,6 +70,30 @@
       "revId": "f1ca95ac0131e0e5664f7e6ed5146d6704cbad4f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52755179_eff2fe7a",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-10T19:08:09Z",
+      "side": 1,
+      "message": "we follow the google java style guide\n\n https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class\n\nregarding clutter: we use IDEs to jump around, so the actual directory contents are not that interesting.\n\nYou can use inner classes if you want to group things within a file.",
+      "parentUuid": "d8f87ef2_8d647925",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 17
+      },
+      "revId": "f1ca95ac0131e0e5664f7e6ed5146d6704cbad4f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

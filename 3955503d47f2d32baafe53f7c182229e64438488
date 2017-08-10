@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7add1990_f4ef5ab0",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-10T21:39:15Z",
+      "side": 1,
+      "message": "/plugins/supermanifest$ bazel test ...\nINFO: Found 1 test target...\nERROR: /home/hanwen/vc/gerrit/plugins/supermanifest/BUILD:4:1: Building plugins/supermanifest/libsupermanifest__plugin-class.jar (10 source files) failed: Worker process sent response with exit code: 1.\nplugins/supermanifest/src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java:36: error: cannot find symbol\n    buf.append(StringUtil.addTab(imports.toString()));\n               ^\n  symbol:   variable StringUtil\n  location: class JiriManifest",
+      "range": {
+        "startLine": 64,
+        "startChar": 29,
+        "endLine": 64,
+        "endChar": 0
+      },
+      "revId": "3955503d47f2d32baafe53f7c182229e64438488",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

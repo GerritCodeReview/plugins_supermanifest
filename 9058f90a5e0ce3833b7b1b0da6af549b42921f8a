@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9a53ea5_2c1afd9b",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-10T23:20:59Z",
+      "side": 0,
+      "message": "you should add a test that verifies that you are creating relative URLs in your .gitmodules.",
+      "range": {
+        "startLine": 389,
+        "startChar": 41,
+        "endLine": 389,
+        "endChar": 51
+      },
+      "revId": "9058f90a5e0ce3833b7b1b0da6af549b42921f8a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

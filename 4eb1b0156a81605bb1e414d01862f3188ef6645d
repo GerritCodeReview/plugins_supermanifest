@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "972c871a_b1cf50e8",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-10T21:08:21Z",
+      "side": 1,
+      "message": "can you create the string directly ?",
+      "range": {
+        "startLine": 100,
+        "startChar": 12,
+        "endLine": 100,
+        "endChar": 21
+      },
+      "revId": "4eb1b0156a81605bb1e414d01862f3188ef6645d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63730e39_4fee2425",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-08-10T21:08:21Z",
+      "side": 1,
+      "message": "what is this for?",
+      "range": {
+        "startLine": 158,
+        "startChar": 9,
+        "endLine": 158,
+        "endChar": 20
+      },
+      "revId": "4eb1b0156a81605bb1e414d01862f3188ef6645d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

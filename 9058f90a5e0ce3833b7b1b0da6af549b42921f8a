@@ -22,6 +22,30 @@
       "revId": "9058f90a5e0ce3833b7b1b0da6af549b42921f8a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95b973a1_7e93bc6d",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-08-11T00:31:02Z",
+      "side": 0,
+      "message": "hey we don\u0027t want to create relative urls as we want to be able to use that as a normal git submodule project from anywhere, also gerrit supports it if url starts with canonical web url\nhttps://gerrit-review.googlesource.com/Documentation/user-submodules.html",
+      "parentUuid": "e9a53ea5_2c1afd9b",
+      "range": {
+        "startLine": 389,
+        "startChar": 41,
+        "endLine": 389,
+        "endChar": 51
+      },
+      "revId": "9058f90a5e0ce3833b7b1b0da6af549b42921f8a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "2c0c3147_91650cd9",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2017-08-14T15:33:55Z",
+      "side": 1,
+      "message": "Yeah, having now reviewed the following change, this looks like it belongs there.",
+      "parentUuid": "58014072_c079cd8d",
+      "range": {
+        "startLine": 24,
+        "startChar": 41,
+        "endLine": 24,
+        "endChar": 54
+      },
+      "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e193abea_0f919434",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 1

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcfa4b27_b1f9d69e",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2017-08-14T15:33:29Z",
+      "side": 1,
+      "message": "Nit: long line.",
+      "revId": "e2adf788691d73e234ba4590ea491760c9e41ecc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aabcca2_cc9a82ac",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2017-08-14T15:33:29Z",
+      "side": 1,
+      "message": "Do you want to require a particular capability for users to do this? I think the default is to allow plugin REST API endpoint access for all users.",
+      "revId": "e2adf788691d73e234ba4590ea491760c9e41ecc",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

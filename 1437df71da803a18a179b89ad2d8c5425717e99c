@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef8c6e74_010e3c5e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2017-08-14T15:32:12Z",
+      "side": 1,
+      "message": "Java does support this. Historical blaze/whatever bugs aside, the Google Java Style Guide is what disallows it:\nhttps://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class",
+      "range": {
+        "startLine": 9,
+        "startChar": 44,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58014072_c079cd8d",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2017-08-14T15:32:12Z",
+      "side": 1,
+      "message": "Unrelated?",
+      "range": {
+        "startLine": 24,
+        "startChar": 41,
+        "endLine": 24,
+        "endChar": 54
+      },
+      "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e193abea_0f919434",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2017-08-14T15:32:12Z",
+      "side": 1,
+      "message": "This is a behavior change: previously, you would get one log per failed ConfigEntry, but would continue attempting the other ConfigEntrys afterwards. Is that intentional/ok?",
+      "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

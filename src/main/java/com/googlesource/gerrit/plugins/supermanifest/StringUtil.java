@@ -19,8 +19,7 @@ import org.apache.commons.lang.StringUtils;
 class StringUtil {
   public static String addTab(String str) {
     StringBuffer buf = new StringBuffer("");
-    String arr[] = str.split("\n");
-    for (String s : arr) {
+    for (String s : str.split("\n")) {
       if (!s.trim().isEmpty()) {
         buf.append("\t" + s + " \n");
       }
@@ -28,8 +27,9 @@ class StringUtil {
     return buf.toString();
   }
 
-  public static String stripAndaddCharsAtEnd(String str, String chs) {
-    StringUtils.stripEnd(str, chs);
-    return str + chs;
+  public static String stripAndAddCharsAtEnd(String str, String chs) {
+    return StringUtils.stripEnd(str, chs) + chs;
   }
+
+  private StringUtil() {}
 }

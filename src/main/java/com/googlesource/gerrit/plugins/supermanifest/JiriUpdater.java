@@ -1,13 +1,10 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
-import static com.google.gerrit.reviewdb.client.RefNames.REFS_TAGS;
 
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
 import java.net.URI;
 import java.text.MessageFormat;
-import java.util.Map;
-import org.eclipse.jgit.api.LsRemoteCommand;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.dircache.DirCache;
@@ -22,7 +19,6 @@ import org.eclipse.jgit.lib.FileMode;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectInserter;
 import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
@@ -62,8 +58,8 @@ class JiriUpdater implements SubModuleUpdater {
         String path = proj.getPath();
         String nameUri = proj.getRemote();
         if (parent != null) {
-          String p1 = StringUtil.stripAndaddCharsAtEnd(path, "/");
-          String p2 = StringUtil.stripAndaddCharsAtEnd(parent, "/");
+          String p1 = StringUtil.stripAndAddCharsAtEnd(path, "/");
+          String p2 = StringUtil.stripAndAddCharsAtEnd(parent, "/");
           if (p1.startsWith(p2)) {
             warn(
                 "Skipping project %s(%s) as git doesn't support nested submodules",
@@ -161,7 +157,7 @@ class JiriUpdater implements SubModuleUpdater {
   public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef) throws Exception {
     Repository srcRepo = reader.openRepository(c.getSrcRepoKey().toString());
     Repository destRepo = reader.openRepository(c.getDestRepoKey().toString());
-    JiriProjects projects = JiriManifestParser.GetProjects(srcRepo, srcRef, c.getXmlPath());
+    JiriProjects projects = JiriManifestParser.getProjects(srcRepo, srcRef, c.getXmlPath());
     String targetRef = c.getDestBranch().equals("*") ? srcRef : REFS_HEADS + c.getDestBranch();
     updateSubmodules(destRepo, targetRef, projects, reader);
   }

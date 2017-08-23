@@ -16,7 +16,6 @@ package com.googlesource.gerrit.plugins.supermanifest;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,11 +23,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
 import org.eclipse.jgit.lib.Repository;
 
 class JiriManifestParser {
-  public static JiriProjects GetProjects(Repository repo, String ref, String manifest)
+  public static JiriProjects getProjects(Repository repo, String ref, String manifest)
       throws Exception {
     Queue<String> q = new LinkedList<>();
     q.add(manifest);
@@ -72,12 +74,15 @@ class JiriManifestParser {
   }
 
   private static JiriManifest parseManifest(Repository repo, String ref, String file)
-      throws JAXBException, IOException {
-    byte b[] = Utils.readBlob(repo, ref + ":" + file);
+      throws JAXBException, IOException, XMLStreamException {
+    byte[] b = Utils.readBlob(repo, ref + ":" + file);
     JAXBContext jc = JAXBContext.newInstance(JiriManifest.class);
-    Unmarshaller unmarshaller = jc.createUnmarshaller();
-    InputStream is = new ByteArrayInputStream(b);
-    JiriManifest manifest = (JiriManifest) unmarshaller.unmarshal(is);
-    return manifest;
+
+    XMLInputFactory inf = XMLInputFactory.newFactory();
+    inf.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+    inf.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+    XMLStreamReader sr = inf.createXMLStreamReader(new StreamSource(new ByteArrayInputStream(b)));
+
+    return (JiriManifest) jc.createUnmarshaller().unmarshal(sr);
   }
 }

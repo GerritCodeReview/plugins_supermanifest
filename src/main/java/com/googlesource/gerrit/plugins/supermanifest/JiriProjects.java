@@ -179,8 +179,8 @@ class JiriProjects {
   static class SortbyPath implements Comparator<Project> {
     @Override
     public int compare(Project a, Project b) {
-      String p1 = StringUtil.stripAndaddCharsAtEnd(a.getPath(), "/");
-      String p2 = StringUtil.stripAndaddCharsAtEnd(b.getPath(), "/");
+      String p1 = StringUtil.stripAndAddCharsAtEnd(a.getPath(), "/");
+      String p2 = StringUtil.stripAndAddCharsAtEnd(b.getPath(), "/");
       return p1.compareTo(p2);
     }
   }

@@ -3,13 +3,16 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
+import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
 import org.eclipse.jgit.dircache.DirCacheEntry;
+import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.gitrepo.internal.RepoText;
 import org.eclipse.jgit.internal.JGitText;
 import org.eclipse.jgit.lib.CommitBuilder;
@@ -45,8 +48,7 @@ class JiriUpdater implements SubModuleUpdater {
 
   private void updateSubmodules(
       Repository repo, String targetRef, JiriProjects projects, GerritRemoteReader reader)
-      throws Exception {
-
+      throws IOException, GitAPIException {
     DirCache index = DirCache.newInCore();
     DirCacheBuilder builder = index.builder();
     ObjectInserter inserter = repo.newObjectInserter();
@@ -154,7 +156,8 @@ class JiriUpdater implements SubModuleUpdater {
   }
 
   @Override
-  public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef) throws Exception {
+  public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef)
+      throws IOException, GitAPIException, ConfigInvalidException {
     Repository srcRepo = reader.openRepository(c.getSrcRepoKey().toString());
     Repository destRepo = reader.openRepository(c.getDestRepoKey().toString());
     JiriProjects projects = JiriManifestParser.getProjects(srcRepo, srcRef, c.getXmlPath());

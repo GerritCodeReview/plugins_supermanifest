@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,11 +28,13 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Repository;
 
 class JiriManifestParser {
   public static JiriProjects getProjects(Repository repo, String ref, String manifest)
-      throws Exception {
+      throws ConfigInvalidException, IOException {
     Queue<String> q = new LinkedList<>();
     q.add(manifest);
     HashSet<String> processedFiles = new HashSet<>();
@@ -43,9 +46,14 @@ class JiriManifestParser {
         continue;
       }
       processedFiles.add(file);
-      JiriManifest m = parseManifest(repo, ref, file);
+      JiriManifest m;
+      try {
+        m = parseManifest(repo, ref, file);
+      } catch (JAXBException | XMLStreamException e) {
+        throw new ConfigInvalidException("XML parse error", e);
+      }
       if (m.imports.getImports().length != 0) {
-        throw new Exception(
+        throw new ConfigInvalidException(
             String.format("Manifest %s contains remote imports which are not supported", file));
       }
 
@@ -53,7 +61,7 @@ class JiriManifestParser {
         project.fillDefault();
         if (projectMap.containsKey(project.Key())) {
           if (!projectMap.get(project.Key()).equals(project))
-            throw new Exception(
+            throw new ConfigInvalidException(
                 String.format(
                     "Duplicate conflicting project %s in manifest %s\n%s\n%s",
                     project.Key(),
@@ -65,7 +73,12 @@ class JiriManifestParser {
         }
       }
 
-      URI parentURI = new URI(file);
+      URI parentURI;
+      try {
+        parentURI = new URI(file);
+      } catch (URISyntaxException e) {
+        throw new ConfigInvalidException("Invalid parent URI", e);
+      }
       for (JiriManifest.LocalImport l : m.imports.getLocalImports()) {
         q.add(parentURI.resolve(l.getFile()).getPath());
       }

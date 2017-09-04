@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.gitrepo.ManifestParser;
 import org.eclipse.jgit.gitrepo.RepoCommand;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -34,7 +35,8 @@ class RepoUpdater implements SubModuleUpdater {
   }
 
   @Override
-  public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef) throws Exception {
+  public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef) throws
+      IOException, GitAPIException {
     Repository destRepo = reader.openRepository(c.getDestRepoKey().toString());
     Repository srcRepo = reader.openRepository(c.getSrcRepoKey().toString());
 

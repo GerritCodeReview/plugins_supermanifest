@@ -14,14 +14,15 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
+import static com.google.gerrit.server.project.BranchResource.BRANCH_KIND;
 import static com.google.inject.Scopes.SINGLETON;
 
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.registration.DynamicSet;
-import com.google.inject.AbstractModule;
+import com.google.gerrit.extensions.restapi.RestApiModule;
 
-public class SuperManifestModule extends AbstractModule {
+public class SuperManifestModule extends RestApiModule {
   SuperManifestModule() {}
 
   @Override
@@ -32,5 +33,6 @@ public class SuperManifestModule extends AbstractModule {
     DynamicSet.bind(binder(), LifecycleListener.class)
         .to(SuperManifestRefUpdatedListener.class)
         .in(SINGLETON);
+    post(BRANCH_KIND, "update_manifest").to(SuperManifestRefUpdatedListener.class).in(SINGLETON);
   }
 }

@@ -232,24 +232,8 @@ public class SuperManifestRefUpdatedListener
       }
 
       try {
-        SubModuleUpdater subModuleUpdater;
-        switch (c.getToolType()) {
-          case Repo:
-            subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
-            break;
-          case Jiri:
-            subModuleUpdater = new JiriUpdater(serverIdent, canonicalWebUrl);
-            break;
-          default:
-            throw new ConfigInvalidException(
-                String.format("invalid toolType: %s", c.getToolType().name()));
-        }
-        try (GerritRemoteReader reader = new GerritRemoteReader()) {
-          subModuleUpdater.update(reader, c, event.getRefName());
-        }
-      } catch (
-          Exception
-              e) { //catch all exceptions as gerrit doesn't print stack trace for thrown Exception
+        updateForConfig(c, event);
+      } catch (Exception e) {
         // We only want the trace up to here. We could recurse into the exception, but this at least
         // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
         StackTraceElement here = Thread.currentThread().getStackTrace()[1];
@@ -264,6 +248,24 @@ public class SuperManifestRefUpdatedListener
         e.printStackTrace(pw);
         error("update for %s (ref %s) failed: %s", c.toString(), event.getRefName(), sw);
       }
+    }
+  }
+
+  private void updateForConfig(ConfigEntry c, Event event) throws ConfigInvalidException, IOException, GitAPIException {
+    SubModuleUpdater subModuleUpdater;
+    switch (c.getToolType()) {
+      case Repo:
+        subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
+        break;
+      case Jiri:
+        subModuleUpdater = new JiriUpdater(serverIdent, canonicalWebUrl);
+        break;
+      default:
+        throw new ConfigInvalidException(
+            String.format("invalid toolType: %s", c.getToolType().name()));
+    }
+    try (GerritRemoteReader reader = new GerritRemoteReader()) {
+      subModuleUpdater.update(reader, c, event.getRefName());
     }
   }
 

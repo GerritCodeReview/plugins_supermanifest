@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f36f9392_217abc42",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-09-04T11:58:14Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ef8c6e74_010e3c5e",
+      "range": {
+        "startLine": 9,
+        "startChar": 44,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "58014072_c079cd8d",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
         "patchSetId": 1
@@ -69,6 +93,30 @@
       "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "036510d2_3b0a744e",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-09-04T11:58:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c0c3147_91650cd9",
+      "range": {
+        "startLine": 24,
+        "startChar": 41,
+        "endLine": 24,
+        "endChar": 54
+      },
+      "revId": "1437df71da803a18a179b89ad2d8c5425717e99c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {

@@ -18,17 +18,27 @@ import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gerrit.extensions.annotations.PluginName;
+import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
+import com.google.gerrit.extensions.restapi.AuthException;
+import com.google.gerrit.extensions.restapi.Response;
+import com.google.gerrit.extensions.restapi.RestModifyView;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.server.GerritPersonIdent;
+import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;
 import com.google.gerrit.server.config.CanonicalWebUrl;
 import com.google.gerrit.server.config.PluginConfigFactory;
 import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.server.permissions.GlobalPermission;
+import com.google.gerrit.server.permissions.PermissionBackend;
+import com.google.gerrit.server.permissions.PermissionBackendException;
+import com.google.gerrit.server.project.BranchResource;
 import com.google.gerrit.server.project.NoSuchProjectException;
 import com.google.gerrit.server.project.ProjectCache;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import java.io.Closeable;
 import java.io.IOException;
@@ -62,7 +72,9 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class SuperManifestRefUpdatedListener
-    implements GitReferenceUpdatedListener, LifecycleListener {
+    implements GitReferenceUpdatedListener,
+        LifecycleListener,
+        RestModifyView<BranchResource, BranchInput> {
   private static final Logger log = LoggerFactory.getLogger(SuperManifestRefUpdatedListener.class);
 
   private final GitRepositoryManager repoManager;
@@ -72,6 +84,8 @@ public class SuperManifestRefUpdatedListener
   private final AllProjectsName allProjectsName;
   private final ProjectCache projectCache;
   private final PersonIdent serverIdent;
+  private final Provider<IdentifiedUser> identifiedUser;
+  private final PermissionBackend permissionBackend;
 
   // Mutable.
   private Set<ConfigEntry> config;
@@ -84,7 +98,10 @@ public class SuperManifestRefUpdatedListener
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
       @GerritPersonIdent PersonIdent serverIdent,
-      GitRepositoryManager repoManager) {
+      GitRepositoryManager repoManager,
+      Provider<IdentifiedUser> identifiedUser,
+      PermissionBackend permissionBackend) {
+
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
@@ -97,6 +114,8 @@ public class SuperManifestRefUpdatedListener
 
     this.cfgFactory = cfgFactory;
     this.projectCache = projectCache;
+    this.identifiedUser = identifiedUser;
+    this.permissionBackend = permissionBackend;
   }
 
   private void warn(String formatStr, Object... args) {
@@ -217,24 +236,48 @@ public class SuperManifestRefUpdatedListener
       }
       return;
     }
+    try {
+      update(event.getProjectName(), event.getRefName(), true);
+    } catch (Exception e) {
+      // no exceptions since we set logException = true.
+    }
+  }
 
+  @Override
+  public Response<?> apply(BranchResource resource, BranchInput input)
+      throws IOException, ConfigInvalidException, GitAPIException, AuthException,
+          PermissionBackendException {
+    permissionBackend.user(identifiedUser).check(GlobalPermission.ADMINISTRATE_SERVER);
+    update(resource.getProjectState().getProject().getName(), resource.getRef(), false);
+    return Response.none();
+  }
+
+  /**
+   * Updates projects in response to update in given project/ref. Only throws exceptions if
+   * logException is false.
+   */
+  private void update(String project, String refName, boolean logException)
+      throws IOException, GitAPIException, ConfigInvalidException {
     for (ConfigEntry c : config) {
-      if (!c.srcRepoKey.get().equals(event.getProjectName())) {
+      if (!c.srcRepoKey.get().equals(project)) {
         continue;
       }
 
-      if (!(c.destBranch.equals("*") || c.srcRef.equals(event.getRefName()))) {
+      if (!(c.destBranch.equals("*") || c.srcRef.equals(refName))) {
         continue;
       }
 
-      if (c.destBranch.equals("*") && !event.getRefName().startsWith(REFS_HEADS)) {
+      if (c.destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
         continue;
       }
 
       try {
-        updateForConfig(c, event);
+        updateForConfig(c, refName);
       } catch (ConfigInvalidException | IOException | GitAPIException e) {
-        // We only want the trace up to here. We could recurse into the exception, but this at least
+        if (!logException) {
+          throw e;
+        }
+       // We only want the trace up to here. We could recurse into the exception, but this at least
         // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
         StackTraceElement here = Thread.currentThread().getStackTrace()[1];
         e.setStackTrace(trimStack(e.getStackTrace(), here));
@@ -246,12 +289,13 @@ public class SuperManifestRefUpdatedListener
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
-        error("update for %s (ref %s) failed: %s", c.toString(), event.getRefName(), sw);
+        error("update for %s (ref %s) failed: %s", c.toString(), refName, sw);
       }
     }
   }
 
-  private void updateForConfig(ConfigEntry c, Event event) throws ConfigInvalidException, IOException, GitAPIException {
+  private void updateForConfig(ConfigEntry c, String refName)
+      throws ConfigInvalidException, IOException, GitAPIException {
     SubModuleUpdater subModuleUpdater;
     switch (c.getToolType()) {
       case Repo:
@@ -265,7 +309,7 @@ public class SuperManifestRefUpdatedListener
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
     try (GerritRemoteReader reader = new GerritRemoteReader()) {
-      subModuleUpdater.update(reader, c, event.getRefName());
+      subModuleUpdater.update(reader, c, refName);
     }
   }
 

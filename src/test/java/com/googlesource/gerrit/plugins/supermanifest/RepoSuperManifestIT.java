@@ -21,6 +21,7 @@ import static org.junit.Assert.fail;
 import com.google.gerrit.acceptance.GitUtil;
 import com.google.gerrit.acceptance.LightweightPluginDaemonTest;
 import com.google.gerrit.acceptance.PushOneCommit;
+import com.google.gerrit.acceptance.RestResponse;
 import com.google.gerrit.acceptance.TestPlugin;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
@@ -164,6 +165,54 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     branch = gApi.projects().name(superKey.get()).branch("refs/heads/other");
     assertThat(branch.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
+
+  @Test
+  public void httpEndpoint() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    Project.NameKey manifestKey = createProject("manifest");
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = createProject("superproject");
+    cloneProject(superKey, admin);
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    // Push config after XML. Needs a manual trigger to create the destination.
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    RestResponse r = userRestSession.post("/projects/"  + manifestKey + "/branches/srcbranch/update_manifest");
+    r.assertForbidden();
+    r = adminRestSession.post("/projects/"  + manifestKey + "/branches/srcbranch/update_manifest");
+    r.assertNoContent();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
 
   private void outer() {

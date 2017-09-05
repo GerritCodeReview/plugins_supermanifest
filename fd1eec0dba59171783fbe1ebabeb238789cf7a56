@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7970dc30_25f8f311",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-09-05T11:16:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37fc0618_aec413e9",
+      "range": {
+        "startLine": 7,
+        "startChar": 29,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "fd1eec0dba59171783fbe1ebabeb238789cf7a56",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d0b900e_c57d2aa5",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 2

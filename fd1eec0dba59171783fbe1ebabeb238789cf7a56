@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37fc0618_aec413e9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-09-05T11:04:01Z",
+      "side": 1,
+      "message": "nit: no punctuation",
+      "range": {
+        "startLine": 7,
+        "startChar": 29,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "fd1eec0dba59171783fbe1ebabeb238789cf7a56",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d0b900e_c57d2aa5",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-09-05T11:04:01Z",
+      "side": 1,
+      "message": "Please keep the comment about why we are catching the generic Exception here.\n\nAlternatively, list all caught exceptions: \"catch (ConfigInvalidException | IOException | GitAPIException | RuntimeException e) {\"",
+      "range": {
+        "startLine": 236,
+        "startChar": 15,
+        "endLine": 236,
+        "endChar": 24
+      },
+      "revId": "fd1eec0dba59171783fbe1ebabeb238789cf7a56",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

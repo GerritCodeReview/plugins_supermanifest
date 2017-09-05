@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01c9cd78_e8bb28a7",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-09-05T04:55:50Z",
+      "side": 1,
+      "message": "If this block is intentionally empty, add a comment?",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 243,
+        "endChar": 5
+      },
+      "revId": "c7daf045c22a82d1fb0e910ffb583e6ca1c3054b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36c41a31_551159ff",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2017-09-05T04:55:50Z",
+      "side": 1,
+      "message": "private?",
+      "range": {
+        "startLine": 255,
+        "startChar": 2,
+        "endLine": 255,
+        "endChar": 8
+      },
+      "revId": "c7daf045c22a82d1fb0e910ffb583e6ca1c3054b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

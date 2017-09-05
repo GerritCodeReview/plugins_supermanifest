@@ -22,6 +22,30 @@
       "revId": "7b23bc89b342975b79aab91b2b381d01bd32f996",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71a5aaf8_1307e5ea",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-09-05T14:06:29Z",
+      "side": 1,
+      "message": "After a short offline chat I see that we want to continue on errors here instead of directly throwing.\n\nCan we rename \u0027logException\u0027 to \u0027continueOnError\u0027 to make this more clear for readers?",
+      "parentUuid": "e0e7d58f_3639cdd0",
+      "range": {
+        "startLine": 259,
+        "startChar": 54,
+        "endLine": 259,
+        "endChar": 74
+      },
+      "revId": "7b23bc89b342975b79aab91b2b381d01bd32f996",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

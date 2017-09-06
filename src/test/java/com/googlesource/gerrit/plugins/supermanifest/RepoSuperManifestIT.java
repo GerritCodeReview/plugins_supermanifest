@@ -206,9 +206,10 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "  srcRef = refs/heads/srcbranch\n"
             + "  srcPath = default.xml\n");
 
-    RestResponse r = userRestSession.post("/projects/"  + manifestKey + "/branches/srcbranch/update_manifest");
+    RestResponse r =
+        userRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
     r.assertForbidden();
-    r = adminRestSession.post("/projects/"  + manifestKey + "/branches/srcbranch/update_manifest");
+    r = adminRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
     r.assertNoContent();
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
@@ -388,9 +389,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
     Project.NameKey superKey = createProject("superproject");
-
-    TestRepository<InMemoryRepository> superRepo = cloneProject(superKey, admin);
-
     pushConfig(
         "[superproject \""
             + superKey.get()

@@ -35,8 +35,8 @@ class RepoUpdater implements SubModuleUpdater {
   }
 
   @Override
-  public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef) throws
-      IOException, GitAPIException {
+  public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef)
+      throws IOException, GitAPIException {
     Repository destRepo = reader.openRepository(c.getDestRepoKey().toString());
     Repository srcRepo = reader.openRepository(c.getSrcRepoKey().toString());
 

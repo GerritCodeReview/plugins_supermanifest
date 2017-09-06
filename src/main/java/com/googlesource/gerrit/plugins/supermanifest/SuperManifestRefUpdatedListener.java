@@ -277,7 +277,7 @@ public class SuperManifestRefUpdatedListener
         if (!continueOnError) {
           throw e;
         }
-       // We only want the trace up to here. We could recurse into the exception, but this at least
+        // We only want the trace up to here. We could recurse into the exception, but this at least
         // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
         StackTraceElement here = Thread.currentThread().getStackTrace()[1];
         e.setStackTrace(trimStack(e.getStackTrace(), here));

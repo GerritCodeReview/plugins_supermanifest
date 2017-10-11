@@ -15,6 +15,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.fail;
 
 import com.google.gerrit.acceptance.GitUtil;
@@ -24,10 +25,14 @@ import com.google.gerrit.acceptance.TestPlugin;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.gerrit.reviewdb.client.Project.NameKey;
+import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.RefNames;
+import java.net.URI;
 import java.util.Arrays;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
+import org.eclipse.jgit.lib.BlobBasedConfig;
+import org.eclipse.jgit.lib.Config;
 import org.junit.Test;
 
 @TestPlugin(
@@ -267,6 +272,81 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     } catch (ResourceNotFoundException e) {
       // all fine.
     }
+  }
+  
+  @Test
+  public void relativeFetch() throws Exception {
+    // Test the setup that Android uses, where the "fetch" field is relative to the location of the
+    // manifest repo.
+    setupTestRepos("platform/project");
+
+    String realPrefix = testRepoKeys[0].get().split("/")[0];
+
+    Project.NameKey manifestKey = createProject(realPrefix + "/manifest");
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = createProject("superproject");
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default\n"
+            + "  toolType = jiri\n");
+
+    String url = canonicalWebUrl.get();
+    
+    // XML change will trigger commit to superproject.
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<projects>\n"
+            + "<project name=\""
+            + testRepoKeys[0].get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+             + "<project name=\"external\""
+            + " remote=\"https://external/repo\""
+            + " revision=\"c438d02cdf08a08fe29550cb11cb6ae8190919f1\""
+            + " path=\"project2\" />\n"
+            + "</projects>\n</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("project2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+
+    Config base = new Config();
+    BlobBasedConfig cfg =
+        new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes(UTF_8));
+
+    String subUrl = cfg.getString("submodule", "project1", "url");
+
+    // URL is valid.
+    URI.create(subUrl);
+
+    // The suburls must be interpreted as relative to the parent project as a directory, i.e.
+    // to go from superproject/ to platform/project0, you have to do ../platform/project0
+
+    // URL is clean.
+    assertThat(subUrl).isEqualTo("../" + realPrefix + "/project0");
+    
+    subUrl = cfg.getString("submodule", "project2", "url");
+
+    // URL is valid.
+    URI.create(subUrl);
+
+    // The suburls must be absolute as this is external repo
+
+    assertThat(subUrl).isEqualTo("https://external/repo");
   }
 
   @Test

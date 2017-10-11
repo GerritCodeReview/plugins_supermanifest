@@ -6,6 +6,7 @@ import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedList
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.StringJoiner;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -13,6 +14,7 @@ import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
 import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.errors.ConfigInvalidException;
+import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.gitrepo.internal.RepoText;
 import org.eclipse.jgit.internal.JGitText;
 import org.eclipse.jgit.lib.CommitBuilder;
@@ -47,7 +49,11 @@ class JiriUpdater implements SubModuleUpdater {
   }
 
   private void updateSubmodules(
-      Repository repo, String targetRef, JiriProjects projects, GerritRemoteReader reader)
+      Repository repo,
+      String targetRef,
+      URI targetURI,
+      JiriProjects projects,
+      GerritRemoteReader reader)
       throws IOException, GitAPIException {
     DirCache index = DirCache.newInCore();
     DirCacheBuilder builder = index.builder();
@@ -95,9 +101,20 @@ class JiriUpdater implements SubModuleUpdater {
           }
         }
 
-        nameUri = URI.create(nameUri).toString();
+        URI submodUrl = URI.create(nameUri);
+
+        //check if repo exists locally then relativize its URL
+        try {
+          String repoName = submodUrl.getPath();
+          while (repoName.startsWith("/")) {
+            repoName = repoName.substring(1);
+          }
+          reader.openRepository(repoName);
+          submodUrl = relativize(targetURI, URI.create(repoName));
+        } catch (RepositoryNotFoundException e) {
+        }
         cfg.setString("submodule", path, "path", path);
-        cfg.setString("submodule", path, "url", nameUri);
+        cfg.setString("submodule", path, "url", submodUrl.toString());
 
         // create gitlink
         DirCacheEntry dcEntry = new DirCacheEntry(path);
@@ -155,6 +172,73 @@ class JiriUpdater implements SubModuleUpdater {
     }
   }
 
+  private static final String SLASH = "/";
+  /*
+   * Copied from https://github.com/eclipse/jgit/blob/e9fb111182b55cc82c530d82f13176c7a85cd958/org.eclipse.jgit/src/org/eclipse/jgit/gitrepo/RepoCommand.java#L729
+   */
+  static URI relativize(URI current, URI target) {
+    // We only handle bare paths for now.
+    if (!target.toString().equals(target.getPath())) {
+      return target;
+    }
+    if (!current.toString().equals(current.getPath())) {
+      return target;
+    }
+
+    String cur = current.normalize().getPath();
+    String dest = target.normalize().getPath();
+
+    if (cur.startsWith(SLASH) != dest.startsWith(SLASH)) {
+      return target;
+    }
+
+    while (cur.startsWith(SLASH)) {
+      cur = cur.substring(1);
+    }
+    while (dest.startsWith(SLASH)) {
+      dest = dest.substring(1);
+    }
+
+    if (cur.indexOf('/') == -1 || dest.indexOf('/') == -1) {
+      // Avoid having to special-casing in the next two ifs.
+      String prefix = "prefix/";
+      cur = prefix + cur;
+      dest = prefix + dest;
+    }
+
+    if (!cur.endsWith(SLASH)) {
+      // The current file doesn't matter.
+      int lastSlash = cur.lastIndexOf('/');
+      cur = cur.substring(0, lastSlash);
+    }
+    String destFile = "";
+    if (!dest.endsWith(SLASH)) {
+      // We always have to provide the destination file.
+      int lastSlash = dest.lastIndexOf('/');
+      destFile = dest.substring(lastSlash + 1, dest.length());
+      dest = dest.substring(0, dest.lastIndexOf('/'));
+    }
+
+    String[] cs = cur.split(SLASH);
+    String[] ds = dest.split(SLASH);
+
+    int common = 0;
+    while (common < cs.length && common < ds.length && cs[common].equals(ds[common])) {
+      common++;
+    }
+
+    StringJoiner j = new StringJoiner(SLASH);
+    for (int i = common; i < cs.length; i++) {
+      j.add("..");
+    }
+    for (int i = common; i < ds.length; i++) {
+      j.add(ds[i]);
+    }
+
+    j.add(destFile);
+    return URI.create(j.toString());
+  }
+
   @Override
   public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef)
       throws IOException, GitAPIException, ConfigInvalidException {
@@ -162,6 +246,7 @@ class JiriUpdater implements SubModuleUpdater {
     Repository destRepo = reader.openRepository(c.getDestRepoKey().toString());
     JiriProjects projects = JiriManifestParser.getProjects(srcRepo, srcRef, c.getXmlPath());
     String targetRef = c.getDestBranch().equals("*") ? srcRef : REFS_HEADS + c.getDestBranch();
-    updateSubmodules(destRepo, targetRef, projects, reader);
+    updateSubmodules(
+        destRepo, targetRef, URI.create(c.getDestRepoKey().toString() + "/"), projects, reader);
   }
 }

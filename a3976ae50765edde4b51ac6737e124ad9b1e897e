@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73e4ed8a_880d13bc",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-10-12T08:32:29Z",
+      "side": 1,
+      "message": "add the source of the cut \u0026 paste.\n\nalso copy its unittest",
+      "revId": "a3976ae50765edde4b51ac6737e124ad9b1e897e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccc19510_f5553beb",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-10-12T08:32:29Z",
+      "side": 1,
+      "message": "use a test case that represents your usecase, which is not Android.",
+      "range": {
+        "startLine": 279,
+        "startChar": 27,
+        "endLine": 279,
+        "endChar": 34
+      },
+      "revId": "a3976ae50765edde4b51ac6737e124ad9b1e897e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

@@ -35,6 +35,7 @@ class ConfigEntry {
   String xmlPath;
   Project.NameKey destRepoKey;
   boolean recordSubmoduleLabels;
+  boolean ignoreRemoteFailures;
 
   // destBranch can be "*" in which case srcRef is ignored.
   String destBranch;
@@ -110,6 +111,7 @@ class ConfigEntry {
     destBranch = destRef.substring(REFS_HEADS.length());
 
     recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
+    ignoreRemoteFailures = cfg.getBoolean(SECTION_NAME, name, "ignoreRemoteFailures", false);
 
     try {
       // http://foo/platform/manifest => http://foo/platform/

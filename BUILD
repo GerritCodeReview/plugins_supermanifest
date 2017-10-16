@@ -27,5 +27,6 @@ junit_tests(
         "//gerrit-acceptance-framework:lib",
         "//gerrit-plugin-api:lib",
         "//lib/bouncycastle:bcprov",
+        "//lib/jetty:http",
     ],
 )

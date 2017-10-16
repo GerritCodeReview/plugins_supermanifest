@@ -54,6 +54,7 @@ class RepoUpdater implements SubModuleUpdater {
     cmd.setAuthor(serverIdent)
         .setRecordRemoteBranch(true)
         .setRecordSubmoduleLabels(c.isRecordSubmoduleLabels())
+        .setIgnoreRemoteFailures(c.ignoreRemoteFailures)
         .setInputStream(manifestStream)
         .setRecommendShallow(true)
         .setRemoteReader(reader)

@@ -29,6 +29,7 @@ import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.RefNames;
 import java.net.URI;
 import java.util.Arrays;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;
@@ -215,6 +216,70 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
+
+  @Test
+  public void testIgnoreRemoteFailure() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    Project.NameKey manifestKey = createProject("manifest");
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = createProject("superproject");
+    cloneProject(superKey, admin);
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + " <remote fetch=\"https://example.invalid/\" name=\"invalid\" /> "
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "  <project name=\"unavailable\" remote=\"invalid\" path=\"invalid\" />"
+            + "</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    // Push config after XML. Needs a manual trigger to create the destination.
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    RestResponse r = adminRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
+    r.assertStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n"
+            + "  ignoreRemoteFailures = true\n"
+    );
+
+    r = adminRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
+    r.assertNoContent();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
+
 
   private void outer() {
     inner();

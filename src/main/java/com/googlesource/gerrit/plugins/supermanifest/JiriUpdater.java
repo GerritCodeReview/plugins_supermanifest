@@ -6,6 +6,7 @@ import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedList
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.StringJoiner;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -142,8 +143,14 @@ class JiriUpdater implements SubModuleUpdater {
       CommitBuilder commit = new CommitBuilder();
       commit.setTreeId(treeId);
       if (headId != null) commit.setParentIds(headId);
-      commit.setAuthor(serverIdent);
-      commit.setCommitter(serverIdent);
+      PersonIdent author =
+          new PersonIdent(
+              serverIdent.getName(),
+              serverIdent.getEmailAddress(),
+              new Date(),
+              serverIdent.getTimeZone());
+      commit.setAuthor(author);
+      commit.setCommitter(author);
       commit.setMessage(RepoText.get().repoCommitMessage);
 
       ObjectId commitId = inserter.insert(commit);

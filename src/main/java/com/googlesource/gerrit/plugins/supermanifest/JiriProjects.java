@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import org.apache.commons.lang.StringUtils;
 
 class JiriProjects {
   @XmlElement(name = "project")
@@ -172,7 +173,12 @@ class JiriProjects {
     }
 
     public String Key() {
-      return name + "=" + remote;
+      return name + "=" + StringUtils.strip(remote, "/");
+    }
+
+    /** @param revision the revision to set */
+    public void setRevision(String revision) {
+      this.revision = revision;
     }
   }
 

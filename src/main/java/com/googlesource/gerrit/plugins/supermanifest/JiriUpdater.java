@@ -249,11 +249,13 @@ class JiriUpdater implements SubModuleUpdater {
   @Override
   public void update(GerritRemoteReader reader, ConfigEntry c, String srcRef)
       throws IOException, GitAPIException, ConfigInvalidException {
-    Repository srcRepo = reader.openRepository(c.getSrcRepoKey().toString());
-    Repository destRepo = reader.openRepository(c.getDestRepoKey().toString());
-    JiriProjects projects = JiriManifestParser.getProjects(srcRepo, srcRef, c.getXmlPath());
-    String targetRef = c.getDestBranch().equals("*") ? srcRef : REFS_HEADS + c.getDestBranch();
-    updateSubmodules(
-        destRepo, targetRef, URI.create(c.getDestRepoKey().toString() + "/"), projects, reader);
+    try (Repository destRepo = reader.openRepository(c.getDestRepoKey().toString())) {
+      JiriProjects projects =
+          JiriManifestParser.getProjects(
+              reader, c.getSrcRepoKey().toString(), srcRef, c.getXmlPath());
+      String targetRef = c.getDestBranch().equals("*") ? srcRef : REFS_HEADS + c.getDestBranch();
+      updateSubmodules(
+          destRepo, targetRef, URI.create(c.getDestRepoKey().toString() + "/"), projects, reader);
+    }
   }
 }

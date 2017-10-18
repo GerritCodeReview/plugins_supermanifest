@@ -20,6 +20,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.google.gerrit.acceptance.GitUtil;
 import com.google.gerrit.acceptance.LightweightPluginDaemonTest;
 import com.google.gerrit.acceptance.PushOneCommit;
+import com.google.gerrit.acceptance.PushOneCommit.Result;
 import com.google.gerrit.acceptance.TestPlugin;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
@@ -32,6 +33,7 @@ import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;
 import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
 @TestPlugin(
@@ -170,6 +172,275 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
 
     branch = gApi.projects().name(superKey.get()).branch("refs/heads/other");
     assertThat(branch.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
+
+  @Test
+  public void ImportTagWorks() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    NameKey manifest1Key = createProject("manifest1");
+    TestRepository<InMemoryRepository> manifest1Repo = cloneProject(manifest1Key, admin);
+
+    NameKey manifest2Key = createProject("manifest2");
+    TestRepository<InMemoryRepository> manifest2Repo = cloneProject(manifest2Key, admin);
+
+    NameKey superKey = createProject("superproject");
+    cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifest1Key.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default\n"
+            + "  toolType = jiri\n");
+
+    // XML change will trigger commit to superproject.
+    String xml1 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<imports>\n"
+            + "<import name=\""
+            + manifest2Key.get()
+            + "\" manifest=\"default\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" />\n</imports>"
+            + "<projects>\n"
+            + "<project name=\""
+            + testRepoKeys[0].get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</projects>\n</manifest>\n";
+
+    String xml2 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<projects>\n"
+            + "<project name=\""
+            + manifest2Key.get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" path=\"manifest2\" />\n"
+            + "</projects>\n</manifest>\n";
+    pushFactory
+        .create(db, admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .to("refs/heads/master")
+        .assertOkStatus();
+    pushFactory
+        .create(db, admin.getIdent(), manifest1Repo, "Subject", "default", xml1)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("manifest2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
+
+  @Test
+  public void ImportTagWithRevisionWorks() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    NameKey manifest1Key = createProject("manifest1");
+    TestRepository<InMemoryRepository> manifest1Repo = cloneProject(manifest1Key, admin);
+
+    NameKey manifest2Key = createProject("manifest2");
+    TestRepository<InMemoryRepository> manifest2Repo = cloneProject(manifest2Key, admin);
+
+    NameKey superKey = createProject("superproject");
+    cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifest1Key.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default\n"
+            + "  toolType = jiri\n");
+
+    String xml2 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<projects>\n"
+            + "<project name=\""
+            + manifest2Key.get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" path=\"manifest2\" />\n"
+            + "</projects>\n</manifest>\n";
+    Result c =
+        pushFactory
+            .create(db, admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+            .to("refs/heads/master");
+    c.assertOkStatus();
+    RevCommit commit = c.getCommit();
+
+    // Add new project, that should not be imported
+    xml2 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<projects>\n"
+            + "<project name=\""
+            + manifest2Key.get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" path=\"manifest2\" />\n"
+            + "<project name=\""
+            + testRepoKeys[1].get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + testRepoKeys[1].get()
+            + "\" path=\"project2\" />\n"
+            + "</projects>\n</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .to("refs/heads/master")
+        .assertOkStatus();
+
+    // XML change will trigger commit to superproject.
+    String xml1 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<imports>\n"
+            + "<import name=\""
+            + manifest2Key.get()
+            + "\" manifest=\"default\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" revision=\""
+            + commit.name()
+            + "\"/>\n</imports>"
+            + "<projects>\n"
+            + "<project name=\""
+            + testRepoKeys[0].get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</projects>\n</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifest1Repo, "Subject", "default", xml1)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("manifest2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("manifest2").asString()).contains(commit.name());
+    try {
+      branch.file("project2");
+      fail("wanted exception");
+    } catch (ResourceNotFoundException e) {
+      // all fine.
+    }
+  }
+
+  @Test
+  public void ImportTagWithRemoteBranchWorks() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    NameKey manifest1Key = createProject("manifest1");
+    TestRepository<InMemoryRepository> manifest1Repo = cloneProject(manifest1Key, admin);
+
+    NameKey manifest2Key = createProject("manifest2");
+    TestRepository<InMemoryRepository> manifest2Repo = cloneProject(manifest2Key, admin);
+
+    NameKey superKey = createProject("superproject");
+    cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifest1Key.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default\n"
+            + "  toolType = jiri\n");
+
+    String xml2 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<projects>\n"
+            + "<project name=\""
+            + manifest2Key.get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" path=\"manifest2\" />\n"
+            + "</projects>\n</manifest>\n";
+    pushFactory
+        .create(db, admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .to("refs/heads/b1")
+        .assertOkStatus();
+
+    // Add new project, that should not be imported
+    xml2 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<projects>\n"
+            + "<project name=\""
+            + manifest2Key.get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" path=\"manifest2\" />\n"
+            + "<project name=\""
+            + testRepoKeys[1].get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + testRepoKeys[1].get()
+            + "\" path=\"project2\" />\n"
+            + "</projects>\n</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .to("refs/heads/master")
+        .assertOkStatus();
+
+    // XML change will trigger commit to superproject.
+    String xml1 =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n<imports>\n"
+            + "<import name=\""
+            + manifest2Key.get()
+            + "\" manifest=\"default\" remote=\""
+            + canonicalWebUrl.get()
+            + manifest2Key.get()
+            + "\" remotebranch=\"b1\" />\n</imports>"
+            + "<projects>\n"
+            + "<project name=\""
+            + testRepoKeys[0].get()
+            + "\" remote=\""
+            + canonicalWebUrl.get()
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</projects>\n</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifest1Repo, "Subject", "default", xml1)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("manifest2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    try {
+      branch.file("project2");
+      fail("wanted exception");
+    } catch (ResourceNotFoundException e) {
+      // all fine.
+    }
   }
 
   private void outer() throws Exception {

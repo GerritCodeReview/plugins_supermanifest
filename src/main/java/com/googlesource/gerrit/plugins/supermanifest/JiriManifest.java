@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang.StringUtils;
 
 /** Refer https://fuchsia.googlesource.com/jiri/+/HEAD/manifest.md for manifest specification. */
 @XmlRootElement(name = "manifest")
@@ -54,7 +55,63 @@ class JiriManifest {
   }
 
   static class Import {
-    // Don't need all fields, as we don't use it
+    @XmlAttribute(required = true)
+    String manifest;
+
+    @XmlAttribute(required = true)
+    String name;
+
+    @XmlAttribute(required = true)
+    String remote;
+
+    @XmlAttribute String
+    revision;
+
+    @XmlAttribute String
+    remotebranch;
+
+    public Import() {
+      manifest = "";
+      name = "";
+      remote = "";
+      revision = "";
+      remotebranch = "";
+    }
+
+    public void fillDefault() {
+      if (remotebranch.isEmpty()) {
+        remotebranch = "master";
+      }
+    }
+
+    public String Key() {
+      return name + "=" + StringUtils.strip(remote, "/");
+    }
+
+    /** @return the manifest */
+    public String getManifest() {
+      return manifest;
+    }
+
+    /** @return the name */
+    public String getName() {
+      return name;
+    }
+
+    /** @return the remote */
+    public String getRemote() {
+      return remote;
+    }
+
+    /** @return the revision */
+    public String getRevision() {
+      return revision;
+    }
+
+    /** @return the remotebranch */
+    public String getRemotebranch() {
+      return remotebranch;
+    }
   }
 
   static class Imports {

@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1da596b_5dc2a6cb",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-10-23T13:48:39Z",
+      "side": 1,
+      "message": "this name doesn\u0027t make sense on itself. Please add some more more comments.",
+      "range": {
+        "startLine": 55,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 15
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c3837ca_f8b7e03f",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-10-23T13:48:39Z",
+      "side": 1,
+      "message": "shouldn\u0027t you check that l.getFile() is relative?",
+      "range": {
+        "startLine": 120,
+        "startChar": 36,
+        "endLine": 120,
+        "endChar": 43
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2be1066_e67d3c08",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-10-23T13:48:39Z",
+      "side": 1,
+      "message": "\u0027commit\u0027 is a commit on manifest2Repo which contains an XML file.\n\nIsn\u0027t the objective of the plugin to make sure the SuperProject doesn\u0027t contain XML files, but their equivalent submodules?",
+      "range": {
+        "startLine": 340,
+        "startChar": 61,
+        "endLine": 340,
+        "endChar": 67
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

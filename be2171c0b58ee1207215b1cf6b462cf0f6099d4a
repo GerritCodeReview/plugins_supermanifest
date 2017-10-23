@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dfebb461_ebb0584a",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-23T17:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1da596b_5dc2a6cb",
+      "range": {
+        "startLine": 55,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 15
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c3837ca_f8b7e03f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
         "patchSetId": 1
@@ -48,6 +72,47 @@
     },
     {
       "key": {
+        "uuid": "647ac8ff_384fbe47",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-23T17:56:55Z",
+      "side": 1,
+      "message": "it is always relative to current manifest, we don\u0027t have concept of absolute part in jiri manifest",
+      "parentUuid": "4c3837ca_f8b7e03f",
+      "range": {
+        "startLine": 120,
+        "startChar": 36,
+        "endLine": 120,
+        "endChar": 43
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ce87a78_d58d6498",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-23T17:56:55Z",
+      "side": 1,
+      "message": "i am also importing manifest2 as project",
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a2be1066_e67d3c08",
         "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
         "patchSetId": 1
@@ -59,6 +124,30 @@
       "writtenOn": "2017-10-23T13:48:39Z",
       "side": 1,
       "message": "\u0027commit\u0027 is a commit on manifest2Repo which contains an XML file.\n\nIsn\u0027t the objective of the plugin to make sure the SuperProject doesn\u0027t contain XML files, but their equivalent submodules?",
+      "range": {
+        "startLine": 340,
+        "startChar": 61,
+        "endLine": 340,
+        "endChar": 67
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4784b7e8_07c0a8cd",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-23T17:56:55Z",
+      "side": 1,
+      "message": "but in jiri we can have projects contain manifest in themselves, so here manifest2 acts as manifest and project at the same time.",
+      "parentUuid": "a2be1066_e67d3c08",
       "range": {
         "startLine": 340,
         "startChar": 61,

@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "11029ac1_84c6e391",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-24T17:55:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69ec630c_14a68443",
+      "range": {
+        "startLine": 55,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 15
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c3837ca_f8b7e03f",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
         "patchSetId": 1
@@ -196,6 +220,30 @@
       "side": 1,
       "message": "sure you can, but you don\u0027t have code doing something different if a subproject is a manifest project to, or did I miss that?",
       "parentUuid": "4784b7e8_07c0a8cd",
+      "range": {
+        "startLine": 340,
+        "startChar": 61,
+        "endLine": 340,
+        "endChar": 67
+      },
+      "revId": "be2171c0b58ee1207215b1cf6b462cf0f6099d4a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53b7150c_829633d5",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-24T17:55:39Z",
+      "side": 1,
+      "message": "here is the code\nhttps://gerrit-review.googlesource.com/c/plugins/supermanifest/+/134550/1/src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java#94",
+      "parentUuid": "34b86ce7_a9fa3727",
       "range": {
         "startLine": 340,
         "startChar": 61,

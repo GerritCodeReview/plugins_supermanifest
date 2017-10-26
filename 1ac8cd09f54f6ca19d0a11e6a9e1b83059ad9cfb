@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "24411a69_3af6063d",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-26T17:53:54Z",
+      "side": 1,
+      "message": "format tool did that, no idea why fixed.",
+      "parentUuid": "79d73b64_11b86803",
+      "range": {
+        "startLine": 67,
+        "startChar": 17,
+        "endLine": 67,
+        "endChar": 24
+      },
+      "revId": "1ac8cd09f54f6ca19d0a11e6a9e1b83059ad9cfb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61e43999_dedd63fc",
         "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java",
         "patchSetId": 4
@@ -68,6 +92,30 @@
       "revId": "1ac8cd09f54f6ca19d0a11e6a9e1b83059ad9cfb",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efb50685_7a8a4c7d",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1030417
+      },
+      "writtenOn": "2017-10-26T17:53:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "336ec118_c0c5aaa0",
+      "range": {
+        "startLine": 40,
+        "startChar": 15,
+        "endLine": 40,
+        "endChar": 19
+      },
+      "revId": "1ac8cd09f54f6ca19d0a11e6a9e1b83059ad9cfb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

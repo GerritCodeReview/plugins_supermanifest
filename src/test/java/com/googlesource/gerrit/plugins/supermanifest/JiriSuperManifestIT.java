@@ -24,8 +24,8 @@ import com.google.gerrit.acceptance.PushOneCommit;
 import com.google.gerrit.acceptance.TestPlugin;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
-import com.google.gerrit.reviewdb.client.Project.NameKey;
 import com.google.gerrit.reviewdb.client.Project;
+import com.google.gerrit.reviewdb.client.Project.NameKey;
 import com.google.gerrit.reviewdb.client.RefNames;
 import java.net.URI;
 import java.util.Arrays;
@@ -173,7 +173,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     assertThat(branch.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
 
-  private void outer() {
+  private void outer() throws Exception {
     inner();
   }
 
@@ -181,7 +181,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     throw new IllegalStateException();
   }
 
-  private void innerTest() {
+  private void innerTest() throws Exception {
     try {
       outer();
       fail("should throw");
@@ -470,7 +470,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
   /*
    * Copied test from https://github.com/eclipse/jgit/blob/e9fb111182b55cc82c530d82f13176c7a85cd958/org.eclipse.jgit.test/tst/org/eclipse/jgit/gitrepo/RepoCommandTest.java#L1105
    */
-  void testRelative(String a, String b, String want) {
+  void testRelative(String a, String b, String want) throws Exception {
     String got = JiriUpdater.relativize(URI.create(a), URI.create(b)).toString();
 
     if (!got.equals(want)) {
@@ -479,7 +479,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
   }
 
   @Test
-  public void relative() {
+  public void relative() throws Exception {
     testRelative("a/b/", "a/", "../");
     // Normalization:
     testRelative("a/p/..//b/", "a/", "../");

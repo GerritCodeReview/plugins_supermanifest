@@ -16,7 +16,6 @@ package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.fail;
 
 import com.google.gerrit.acceptance.GitUtil;
 import com.google.gerrit.acceptance.LightweightPluginDaemonTest;
@@ -280,7 +279,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
 
-  private void outer() {
+  private void outer() throws Exception {
     inner();
   }
 
@@ -288,7 +287,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     throw new IllegalStateException();
   }
 
-  private void innerTest() {
+  private void innerTest() throws Exception {
     try {
       outer();
       fail("should throw");

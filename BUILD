@@ -17,16 +17,16 @@ junit_tests(
     name = "supermanifest_tests",
     size = "large",
     srcs = glob(["src/test/java/**/*IT.java"]),
+    resources = glob(["src/test/resources/**"]),
     tags = [
         "supermanifest-plugin",
     ],
-    resources = glob(["src/test/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
         ":supermanifest__plugin",
-        "//gerrit-acceptance-framework:lib",
-        "//gerrit-plugin-api:lib",
+        "//java/com/google/gerrit/acceptance:lib",
         "//lib/bouncycastle:bcprov",
         "//lib/jetty:http",
+        "//plugins:plugin-lib",
     ],
 )

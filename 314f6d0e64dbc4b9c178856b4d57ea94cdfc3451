@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f48d0308_dafe6e5a",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifestParser.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2017-11-09T21:19:39Z",
+      "side": 1,
+      "message": "The repositories in this map must be closed before the method returns, otherwise the resource handles are leaked and we run into memory leaks and log messages triggered out of finalizers.",
+      "range": {
+        "startLine": 71,
+        "startChar": 58,
+        "endLine": 71,
+        "endChar": 0
+      },
+      "revId": "314f6d0e64dbc4b9c178856b4d57ea94cdfc3451",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38e43051_d5660023",
+        "filename": "src/main/java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2017-11-09T21:19:39Z",
+      "side": 1,
+      "message": "Looks like destRepo is never closed?  This should be explicitly closed to prevent resource leaks.",
+      "range": {
+        "startLine": 252,
+        "startChar": 79,
+        "endLine": 252,
+        "endChar": 0
+      },
+      "revId": "314f6d0e64dbc4b9c178856b4d57ea94cdfc3451",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

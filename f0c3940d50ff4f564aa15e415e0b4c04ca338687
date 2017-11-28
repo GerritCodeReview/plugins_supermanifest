@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b1f0035_fc109f05",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/RepoSuperManifestIT.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2017-11-28T16:07:09Z",
+      "side": 1,
+      "message": "nit: We never use standalone brackets for scoping in Gerrit.",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 5
+      },
+      "revId": "f0c3940d50ff4f564aa15e415e0b4c04ca338687",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

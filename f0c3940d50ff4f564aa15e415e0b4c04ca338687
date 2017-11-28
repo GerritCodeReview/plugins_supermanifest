@@ -22,6 +22,30 @@
       "revId": "f0c3940d50ff4f564aa15e415e0b4c04ca338687",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfa32e76_e51e4915",
+        "filename": "src/test/java/com/googlesource/gerrit/plugins/supermanifest/RepoSuperManifestIT.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2017-11-28T16:08:42Z",
+      "side": 1,
+      "message": "maybe we should :-)",
+      "parentUuid": "6b1f0035_fc109f05",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 5
+      },
+      "revId": "f0c3940d50ff4f564aa15e415e0b4c04ca338687",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

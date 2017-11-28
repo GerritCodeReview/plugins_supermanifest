@@ -56,10 +56,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.errors.ConfigInvalidException;
+import org.eclipse.jgit.errors.InvalidObjectIdException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.gitrepo.RepoCommand;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectInserter;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -352,6 +354,12 @@ public class SuperManifestRefUpdatedListener
       String repoName = url.getPath();
       while (repoName.startsWith("/")) {
         repoName = repoName.substring(1);
+      }
+
+      // This is a (mis)feature of JGit, which ignores SHA1s but only if ignoreRemoteFailures
+      // is set.
+      if (ObjectId.isId(refName)) {
+        return ObjectId.fromString(refName);
       }
 
       try {

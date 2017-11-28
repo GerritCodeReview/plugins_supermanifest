@@ -354,6 +354,12 @@ public class SuperManifestRefUpdatedListener
         repoName = repoName.substring(1);
       }
 
+      // This is a (mis)feature of JGit, which ignores SHA1s but only if ignoreRemoteFailures
+      // is set.
+      if (ObjectId.isId(refName)) {
+        return ObjectId.fromString(refName);
+      }
+
       try {
         Repository repo = openRepository(repoName);
         Ref ref = repo.findRef(refName);

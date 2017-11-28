@@ -20,6 +20,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.google.gerrit.acceptance.GitUtil;
 import com.google.gerrit.acceptance.LightweightPluginDaemonTest;
 import com.google.gerrit.acceptance.PushOneCommit;
+import com.google.gerrit.acceptance.PushOneCommit.Result;
 import com.google.gerrit.acceptance.RestResponse;
 import com.google.gerrit.acceptance.TestPlugin;
 import com.google.gerrit.extensions.api.projects.BranchApi;
@@ -41,9 +42,11 @@ import org.junit.Test;
 )
 public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   Project.NameKey[] testRepoKeys;
+  String[] testRepoCommits;
 
   void setupTestRepos(String prefix) throws Exception {
     testRepoKeys = new Project.NameKey[2];
+    testRepoCommits = new String[2];
     for (int i = 0; i < 2; i++) {
       testRepoKeys[i] = createProject(prefix + i);
 
@@ -51,7 +54,10 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
       PushOneCommit push =
           pushFactory.create(db, admin.getIdent(), repo, "Subject", "file" + i, "file");
-      push.to("refs/heads/master").assertOkStatus();
+
+      Result r = push.to("refs/heads/master");
+      r.assertOkStatus();
+      testRepoCommits[i] = r.getCommit().getName();
     }
   }
 
@@ -214,6 +220,68 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
+
+  @Test
+  public void rawSha1Ref() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    Project.NameKey manifestKey = createProject("manifest");
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = createProject("superproject");
+    cloneProject(superKey, admin);
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\""
+            + " revision=\""
+            + testRepoCommits[0]
+            + "\" />\n"
+            + "</manifest>\n";
+
+    pushFactory
+        .create(db, admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    // Push config after XML. Needs a manual trigger to create the destination.
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n"
+            + "  ignoreRemoteFailures = true\n"
+            + "");
+
+    { // Advance head, but the manifest refers to the previous one.
+      TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[0], admin);
+      PushOneCommit push =
+          pushFactory.create(db, admin.getIdent(), repo, "Subject", "file3", "file");
+
+      Result r = push.to("refs/heads/master");
+      r.assertOkStatus();
+    }
+
+    adminRestSession
+        .post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest")
+        .assertNoContent();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("project1").asString()).isEqualTo(testRepoCommits[0]);
   }
 
   @Test

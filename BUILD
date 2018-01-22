@@ -3,7 +3,7 @@ load("//tools/bzl:plugin.bzl", "gerrit_plugin")
 
 gerrit_plugin(
     name = "supermanifest",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = glob(["java/**/*.java"]),
     manifest_entries = [
         "Gerrit-PluginName: supermanifest",
         "Gerrit-Module: com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule",
@@ -16,7 +16,7 @@ gerrit_plugin(
 junit_tests(
     name = "supermanifest_tests",
     size = "large",
-    srcs = glob(["src/test/java/**/*IT.java"]),
+    srcs = glob(["javatests/**/*IT.java"]),
     resources = glob(["src/test/resources/**"]),
     tags = [
         "supermanifest-plugin",

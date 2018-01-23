@@ -138,13 +138,10 @@ public class SuperManifestRefUpdatedListener
         srcRef = refs/heads/nyc
         srcPath = manifest.xml
   */
-  private Set<ConfigEntry> parseConfiguration(PluginConfigFactory cfgFactory, String name) {
-    Config cfg;
-    try {
-      cfg = cfgFactory.getProjectPluginConfig(allProjectsName, name);
-    } catch (NoSuchProjectException e) {
-      throw new IllegalStateException(e);
-    }
+  private Set<ConfigEntry> parseConfiguration(PluginConfigFactory cfgFactory, String name)
+      throws NoSuchProjectException {
+    Config cfg = cfgFactory.getProjectPluginConfig(allProjectsName, name);
+
 
     Set<ConfigEntry> newConf = new HashSet<>();
     Set<String> destinations = new HashSet<>();
@@ -196,7 +193,11 @@ public class SuperManifestRefUpdatedListener
 
   @Override
   public void start() {
-    updateConfiguration();
+    try {
+      updateConfiguration();
+    } catch (NoSuchProjectException e) {
+      warn("can't read configuration: %s", e.getMessage());
+    }
   }
 
   /** for debugging. */
@@ -210,7 +211,7 @@ public class SuperManifestRefUpdatedListener
     return b.toString();
   }
 
-  private void updateConfiguration() {
+  private void updateConfiguration() throws NoSuchProjectException {
     Set<ConfigEntry> entries = parseConfiguration(cfgFactory, pluginName);
 
     Set<ConfigEntry> filtered = new HashSet<>();
@@ -232,7 +233,11 @@ public class SuperManifestRefUpdatedListener
   public synchronized void onGitReferenceUpdated(Event event) {
     if (event.getProjectName().equals(allProjectsName.get())) {
       if (event.getRefName().equals("refs/meta/config")) {
-        updateConfiguration();
+        try {
+          updateConfiguration();
+        } catch (NoSuchProjectException e) {
+          throw new IllegalStateException(e);
+        }
       }
       return;
     }

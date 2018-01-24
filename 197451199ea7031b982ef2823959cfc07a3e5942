@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0db5f2e_aca14ac3",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2018-01-24T16:51:33Z",
+      "side": 1,
+      "message": "nit: All other docs seem to not start with a blank line but have text directly.",
+      "revId": "197451199ea7031b982ef2823959cfc07a3e5942",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

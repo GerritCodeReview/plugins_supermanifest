@@ -10,14 +10,14 @@ gerrit_plugin(
         "Implementation-Title: Supermanifest plugin",
         "Implementation-URL: https://gerrit-review.googlesource.com/#/todo",
     ],
-    resources = glob(["src/main/**/*"]),
+    resources = glob(["java/Documentation/**/*.md"]),
 )
 
 junit_tests(
     name = "supermanifest_tests",
     size = "large",
     srcs = glob(["javatests/**/*IT.java"]),
-    resources = glob(["src/test/resources/**"]),
+    resources = glob(["javatests/**/*.properties"]),
     tags = [
         "supermanifest-plugin",
     ],

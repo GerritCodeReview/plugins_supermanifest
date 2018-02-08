@@ -35,6 +35,24 @@
       "revId": "ffe9bb2abe8c97892889a7ded67f90657fae37be",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38773abc_0d6d0b79",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2018-02-08T13:39:51Z",
+      "side": 1,
+      "message": "Yeah, as long as this change already works (and PS3 should), I\u0027m fine doing cleanup later.",
+      "parentUuid": "9a3c6e42_20e33a5c",
+      "revId": "ffe9bb2abe8c97892889a7ded67f90657fae37be",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

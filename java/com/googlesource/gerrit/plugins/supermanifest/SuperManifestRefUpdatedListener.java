@@ -225,7 +225,6 @@ public class SuperManifestRefUpdatedListener
     }
 
     config = filtered;
-    info("loaded new configuration: %s", configurationToString());
   }
 
   @Override

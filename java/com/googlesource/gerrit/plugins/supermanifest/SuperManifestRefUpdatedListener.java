@@ -253,6 +253,9 @@ public class SuperManifestRefUpdatedListener
       throws IOException, ConfigInvalidException, GitAPIException, AuthException,
           PermissionBackendException {
     permissionBackend.user(identifiedUser).check(GlobalPermission.ADMINISTRATE_SERVER);
+    log.info("manual trigger for %s:%s by %d. Config: %s", resource.getBranchKey().getParentKey().get(),
+        resource.getBranchKey().get(), identifiedUser.get().getAccountId().get(), configurationToString());
+
     update(resource.getProjectState().getProject().getName(), resource.getRef(), false);
     return Response.none();
   }

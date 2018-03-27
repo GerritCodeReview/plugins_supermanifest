@@ -250,7 +250,7 @@ public class SuperManifestRefUpdatedListener
   public Response<?> apply(BranchResource resource, BranchInput input)
       throws IOException, ConfigInvalidException, GitAPIException, AuthException,
           PermissionBackendException {
-    permissionBackend.user(identifiedUser).check(GlobalPermission.ADMINISTRATE_SERVER);
+    permissionBackend.currentUser().check(GlobalPermission.ADMINISTRATE_SERVER);
     info(
         "manual trigger for %s:%s by %d. Config: %s",
         resource.getBranchKey().getParentKey().get(),

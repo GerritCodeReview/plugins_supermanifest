@@ -83,7 +83,7 @@ public class SuperManifestRefUpdatedListener
   private final String pluginName;
   private final AllProjectsName allProjectsName;
   private final ProjectCache projectCache;
-  private final PersonIdent serverIdent;
+  private final Provider<PersonIdent> serverIdent;
   private final Provider<IdentifiedUser> identifiedUser;
   private final PermissionBackend permissionBackend;
 
@@ -97,7 +97,7 @@ public class SuperManifestRefUpdatedListener
       @PluginName String pluginName,
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
-      @GerritPersonIdent PersonIdent serverIdent,
+      @GerritPersonIdent Provider<PersonIdent> serverIdent,
       GitRepositoryManager repoManager,
       Provider<IdentifiedUser> identifiedUser,
       PermissionBackend permissionBackend) {
@@ -309,10 +309,10 @@ public class SuperManifestRefUpdatedListener
     SubModuleUpdater subModuleUpdater;
     switch (c.getToolType()) {
       case Repo:
-        subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
+        subModuleUpdater = new RepoUpdater(serverIdent.get(), canonicalWebUrl);
         break;
       case Jiri:
-        subModuleUpdater = new JiriUpdater(serverIdent, canonicalWebUrl);
+        subModuleUpdater = new JiriUpdater(serverIdent.get(), canonicalWebUrl);
         break;
       default:
         throw new ConfigInvalidException(

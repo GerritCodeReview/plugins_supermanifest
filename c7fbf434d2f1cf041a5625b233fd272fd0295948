@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e34a5140_392104c0",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2018-07-11T11:05:13Z",
+      "side": 1,
+      "message": "I think this would also work if you would just use a Provider\u003cPersonIdent\u003e here.",
+      "revId": "c7fbf434d2f1cf041a5625b233fd272fd0295948",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

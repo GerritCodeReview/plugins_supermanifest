@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
@@ -75,7 +76,7 @@ public class SuperManifestRefUpdatedListener
     implements GitReferenceUpdatedListener,
         LifecycleListener,
         RestModifyView<BranchResource, BranchInput> {
-  private static final Logger log = LoggerFactory.getLogger(SuperManifestRefUpdatedListener.class);
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private final GitRepositoryManager repoManager;
   private final URI canonicalWebUrl;
@@ -121,15 +122,15 @@ public class SuperManifestRefUpdatedListener
   private void warn(String formatStr, Object... args) {
     // The docs claim that log.warn() uses format strings, but it doesn't seem to work, so we do it
     // explicitly.
-    log.warn(canonicalWebUrl + " : " + String.format(formatStr, args));
+    logger.atWarning().log(canonicalWebUrl + " : " + formatStr, args);
   }
 
   private void error(String formatStr, Object... args) {
-    log.error(canonicalWebUrl + " : " + String.format(formatStr, args));
+    logger.atSevere().log(canonicalWebUrl + " : " + formatStr, args);
   }
 
   private void info(String formatStr, Object... args) {
-    log.info(canonicalWebUrl + " : " + String.format(formatStr, args));
+    logger.atInfo().log(canonicalWebUrl + " : " + formatStr, args);
   }
 
   /*

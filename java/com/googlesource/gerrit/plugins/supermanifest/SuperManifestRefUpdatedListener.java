@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.gerrit.common.TimeUtil;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
@@ -309,10 +310,10 @@ public class SuperManifestRefUpdatedListener
     SubModuleUpdater subModuleUpdater;
     switch (c.getToolType()) {
       case Repo:
-        subModuleUpdater = new RepoUpdater(serverIdent, canonicalWebUrl);
+        subModuleUpdater = new RepoUpdater(newServerIdent(), canonicalWebUrl);
         break;
       case Jiri:
-        subModuleUpdater = new JiriUpdater(serverIdent, canonicalWebUrl);
+        subModuleUpdater = new JiriUpdater(newServerIdent(), canonicalWebUrl);
         break;
       default:
         throw new ConfigInvalidException(
@@ -418,6 +419,14 @@ public class SuperManifestRefUpdatedListener
       }
       repos.clear();
     }
+  }
+
+  private PersonIdent newServerIdent() {
+    return new PersonIdent(
+        serverIdent.getName(),
+        serverIdent.getEmailAddress(),
+        TimeUtil.nowTs(),
+        serverIdent.getTimeZone());
   }
 
   @VisibleForTesting

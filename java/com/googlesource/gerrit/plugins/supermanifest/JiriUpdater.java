@@ -104,7 +104,7 @@ class JiriUpdater implements SubModuleUpdater {
 
         URI submodUrl = URI.create(nameUri);
 
-        //check if repo exists locally then relativize its URL
+        // check if repo exists locally then relativize its URL
         try {
           String repoName = submodUrl.getPath();
           while (repoName.startsWith("/")) {

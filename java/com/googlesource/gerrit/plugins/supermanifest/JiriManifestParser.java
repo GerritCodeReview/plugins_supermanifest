@@ -68,7 +68,7 @@ class JiriManifestParser {
     @Override
     public void close() {
       for (Repository repo : this.values()) {
-          repo.close();
+        repo.close();
       }
     }
   }

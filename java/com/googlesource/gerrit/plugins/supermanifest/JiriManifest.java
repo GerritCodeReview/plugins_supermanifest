@@ -64,11 +64,9 @@ class JiriManifest {
     @XmlAttribute(required = true)
     String remote;
 
-    @XmlAttribute
-    String revision;
+    @XmlAttribute String revision;
 
-    @XmlAttribute
-    String remotebranch;
+    @XmlAttribute String remotebranch;
 
     public Import() {
       manifest = "";

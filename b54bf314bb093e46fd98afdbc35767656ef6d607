@@ -39,6 +39,24 @@
       "revId": "b54bf314bb093e46fd98afdbc35767656ef6d607",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0af2eb3_d66cec01",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/RepoUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2018-07-18T07:04:58Z",
+      "side": 1,
+      "message": "that\u0027s ok, though.\n\nhttps://eclipse.googlesource.com/jgit/jgit/+/e4774f45c4190ee0c5ec4f5f575d9d4df1df4959/org.eclipse.jgit/src/org/eclipse/jgit/gitrepo/ManifestParser.java#144",
+      "parentUuid": "116e1d9b_825126be",
+      "revId": "b54bf314bb093e46fd98afdbc35767656ef6d607",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

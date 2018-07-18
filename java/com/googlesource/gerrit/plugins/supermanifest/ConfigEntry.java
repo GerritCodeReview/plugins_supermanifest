@@ -14,9 +14,9 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
-import com.google.common.base.Strings;
 import com.google.gerrit.reviewdb.client.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,6 +34,7 @@ class ConfigEntry {
   ToolType toolType;
   String xmlPath;
   Project.NameKey destRepoKey;
+  String repoGroups;
   boolean recordSubmoduleLabels;
   boolean ignoreRemoteFailures;
 
@@ -68,7 +69,7 @@ class ConfigEntry {
     // TODO(hanwen): sanity check repo names.
     srcRepoKey = new Project.NameKey(srcRepo);
 
-    String toolType = Strings.nullToEmpty(cfg.getString(SECTION_NAME, name, "toolType"));
+    String toolType = nullToEmpty(cfg.getString(SECTION_NAME, name, "toolType"));
 
     switch (toolType) {
       case "":
@@ -110,6 +111,7 @@ class ConfigEntry {
     // The external format is chosen so we can support copying over tags as well.
     destBranch = destRef.substring(REFS_HEADS.length());
 
+    repoGroups = nullToEmpty(cfg.getString(SECTION_NAME, name, "groups"));
     recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
     ignoreRemoteFailures = cfg.getBoolean(SECTION_NAME, name, "ignoreRemoteFailures", false);
 
@@ -186,6 +188,11 @@ class ConfigEntry {
   /** @return the recordSubmoduleLabels */
   public boolean isRecordSubmoduleLabels() {
     return recordSubmoduleLabels;
+  }
+
+  /** @return group restriction suitable for passing to {@code repo init -g} */
+  public String getGroupsParameter() {
+    return repoGroups;
   }
 
   /** @return the destBranch */

@@ -38,6 +38,9 @@ default to `repo`.
 
 The plugin supports the following options:
 
+*  `groups` (defaults to `default`). Sets the groups setting for JGit's
+   RepoCommand
+
 *  `recordSubmoduleLabels` (defaults to false). Sets recordSubmoduleLabels
    setting for JGit's RepoCommand
 

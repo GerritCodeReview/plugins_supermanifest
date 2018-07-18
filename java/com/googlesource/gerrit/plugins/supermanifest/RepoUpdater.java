@@ -52,6 +52,7 @@ class RepoUpdater implements SubModuleUpdater {
         new ByteArrayInputStream(Utils.readBlob(srcRepo, srcRef + ":" + c.getXmlPath()));
 
     cmd.setAuthor(serverIdent)
+        .setGroups(c.getGroupsParameter())
         .setRecordRemoteBranch(true)
         .setRecordSubmoduleLabels(c.isRecordSubmoduleLabels())
         .setIgnoreRemoteFailures(c.ignoreRemoteFailures)

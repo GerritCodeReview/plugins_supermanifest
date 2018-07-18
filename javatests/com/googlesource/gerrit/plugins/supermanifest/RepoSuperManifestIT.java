@@ -37,9 +37,8 @@ import org.eclipse.jgit.lib.Config;
 import org.junit.Test;
 
 @TestPlugin(
-  name = "supermanifest",
-  sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule"
-)
+    name = "supermanifest",
+    sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule")
 public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   Project.NameKey[] testRepoKeys;
   String[] testRepoCommits;

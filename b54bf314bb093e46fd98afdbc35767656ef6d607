@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e5a7bdf_926477c9",
+        "filename": "java/Documentation/about.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1030482
+      },
+      "writtenOn": "2018-07-18T03:52:23Z",
+      "side": 1,
+      "message": "Is the empty string equivalent to that? or am I missing something else?",
+      "range": {
+        "startLine": 41,
+        "startChar": 26,
+        "endLine": 41,
+        "endChar": 33
+      },
+      "revId": "b54bf314bb093e46fd98afdbc35767656ef6d607",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "116e1d9b_825126be",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/RepoUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1030482
+      },
+      "writtenOn": "2018-07-18T03:52:23Z",
+      "side": 1,
+      "message": "If I understand the code in ConfigEntry, this is an empty string when no value is specified …",
+      "revId": "b54bf314bb093e46fd98afdbc35767656ef6d607",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}

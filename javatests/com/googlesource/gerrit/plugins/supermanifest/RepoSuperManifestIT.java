@@ -554,7 +554,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     BlobBasedConfig cfg =
         new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes(UTF_8));
 
-    String subUrl = cfg.getString("submodule", "path1", "url");
+    String subUrl = cfg.getString("submodule", testRepoKeys[0].get(), "url");
 
     // URL is valid.
     URI.create(subUrl);

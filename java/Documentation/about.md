@@ -72,7 +72,7 @@ call
 
 ```sh
 curl -X POST
-  http://HOST/a/projects/codesearch/branches/master/update_manifest
+  http://HOST/a/projects/platform%2Fmanifest/branches/master/update_manifest
 ```
 
 

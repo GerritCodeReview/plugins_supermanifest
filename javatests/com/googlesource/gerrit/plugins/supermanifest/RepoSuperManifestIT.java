@@ -551,10 +551,11 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     assertThat(branch.file("path1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
 
     Config base = new Config();
+    String gitmodule = branch.file(".gitmodules").asString();
     BlobBasedConfig cfg =
-        new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes(UTF_8));
+        new BlobBasedConfig(base, gitmodule.getBytes(UTF_8));
 
-    String subUrl = cfg.getString("submodule", "path1", "url");
+    String subUrl = cfg.getString("submodule", testRepoKeys[0].get(), "url");
 
     // URL is valid.
     URI.create(subUrl);

@@ -118,17 +118,15 @@ public class SuperManifestRefUpdatedListener
   }
 
   private void warn(String formatStr, Object... args) {
-    // The docs claim that log.warn() uses format strings, but it doesn't seem to work, so we do it
-    // explicitly.
-    logger.atWarning().log(canonicalWebUrl + " : " + formatStr, args);
+    logger.atWarning().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
   private void error(String formatStr, Object... args) {
-    logger.atSevere().log(canonicalWebUrl + " : " + formatStr, args);
+    logger.atSevere().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
   private void info(String formatStr, Object... args) {
-    logger.atInfo().log(canonicalWebUrl + " : " + formatStr, args);
+    logger.atInfo().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
   /*

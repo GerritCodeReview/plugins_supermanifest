@@ -58,12 +58,16 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
+import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.gitrepo.RepoCommand;
+import org.eclipse.jgit.gitrepo.RepoCommand.RemoteFile;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 /**
  * This plugin will listen for changes to XML files in manifest repositories. When it finds such
@@ -390,11 +394,19 @@ public class SuperManifestRefUpdatedListener
     }
 
     @Override
-    public byte[] readFile(String repoName, String ref, String path)
+    public RemoteFile readFileWithMode(String repoName, String ref, String path)
         throws GitAPIException, IOException {
-      Repository repo;
-      repo = openRepository(repoName);
-      return Utils.readBlob(repo, ref + ":" + path);
+      Repository repo = openRepository(repoName);
+      Ref r = repo.findRef(ref);
+      if (r == null || r.getObjectId() == null) {
+        throw new RevisionSyntaxException(
+            String.format("repo %s does not have ref %s", repo.toString(), ref), ref);
+      }
+      RevCommit commit = repo.parseCommit(r.getObjectId());
+      TreeWalk tw = TreeWalk.forPath(repo, path, commit.getTree());
+      return new RemoteFile(
+          tw.getObjectReader().open(tw.getObjectId(0)).getCachedBytes(Integer.MAX_VALUE),
+          tw.getFileMode(0));
     }
 
     public Repository openRepository(String name) throws IOException {

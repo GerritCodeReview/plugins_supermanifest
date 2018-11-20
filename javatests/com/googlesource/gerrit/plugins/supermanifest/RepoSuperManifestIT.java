@@ -23,12 +23,15 @@ import com.google.gerrit.acceptance.PushOneCommit;
 import com.google.gerrit.acceptance.PushOneCommit.Result;
 import com.google.gerrit.acceptance.RestResponse;
 import com.google.gerrit.acceptance.TestPlugin;
+import com.google.gerrit.acceptance.testsuite.project.ProjectOperations;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.RefNames;
+import com.google.inject.Inject;
 import java.net.URI;
 import java.util.Arrays;
+import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
@@ -43,11 +46,18 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   Project.NameKey[] testRepoKeys;
   String[] testRepoCommits;
 
+  @Inject private ProjectOperations projectOperations;
+
   void setupTestRepos(String prefix) throws Exception {
     testRepoKeys = new Project.NameKey[2];
     testRepoCommits = new String[2];
     for (int i = 0; i < 2; i++) {
-      testRepoKeys[i] = createProject(prefix + i);
+      testRepoKeys[i] =
+          projectOperations
+              .newProject()
+              .name(RandomStringUtils.randomAlphabetic(8) + prefix + i)
+              .withEmptyCommit()
+              .create();
 
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[i], admin);
 
@@ -552,8 +562,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     Config base = new Config();
     String gitmodule = branch.file(".gitmodules").asString();
-    BlobBasedConfig cfg =
-        new BlobBasedConfig(base, gitmodule.getBytes(UTF_8));
+    BlobBasedConfig cfg = new BlobBasedConfig(base, gitmodule.getBytes(UTF_8));
 
     String subUrl = cfg.getString("submodule", testRepoKeys[0].get(), "url");
 

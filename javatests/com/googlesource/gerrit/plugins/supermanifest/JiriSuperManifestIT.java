@@ -22,13 +22,16 @@ import com.google.gerrit.acceptance.LightweightPluginDaemonTest;
 import com.google.gerrit.acceptance.PushOneCommit;
 import com.google.gerrit.acceptance.PushOneCommit.Result;
 import com.google.gerrit.acceptance.TestPlugin;
+import com.google.gerrit.acceptance.testsuite.project.ProjectOperations;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.Project.NameKey;
 import com.google.gerrit.reviewdb.client.RefNames;
+import com.google.inject.Inject;
 import java.net.URI;
 import java.util.Arrays;
+import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;
@@ -42,10 +45,17 @@ import org.junit.Test;
 public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
   NameKey[] testRepoKeys;
 
+  @Inject private ProjectOperations projectOperations;
+
   void setupTestRepos(String prefix) throws Exception {
     testRepoKeys = new NameKey[2];
     for (int i = 0; i < 2; i++) {
-      testRepoKeys[i] = createProject(prefix + i);
+      testRepoKeys[i] =
+          projectOperations
+              .newProject()
+              .name(RandomStringUtils.randomAlphabetic(8) + prefix + i)
+              .withEmptyCommit()
+              .create();
 
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[i], admin);
 

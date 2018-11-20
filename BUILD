@@ -26,6 +26,7 @@ junit_tests(
         ":supermanifest__plugin",
         "//java/com/google/gerrit/acceptance:lib",
         "//lib/bouncycastle:bcprov",
+        "//lib/commons:lang3",
         "//lib/jetty:http",
         "//plugins:plugin-lib",
     ],

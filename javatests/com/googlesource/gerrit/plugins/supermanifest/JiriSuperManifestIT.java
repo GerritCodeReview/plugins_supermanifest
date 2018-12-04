@@ -54,7 +54,6 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
           projectOperations
               .newProject()
               .name(RandomStringUtils.randomAlphabetic(8) + prefix + i)
-              .withEmptyCommit()
               .create();
 
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[i], admin);
@@ -82,10 +81,10 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
-    NameKey manifestKey = createProject("manifest");
+    NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
-    NameKey superKey = createProject("superproject");
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     cloneProject(superKey, admin);
 
     pushConfig(
@@ -188,13 +187,13 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
-    NameKey manifest1Key = createProject("manifest1");
+    NameKey manifest1Key = projectOperations.newProject().name(name("manifest1")).create();
     TestRepository<InMemoryRepository> manifest1Repo = cloneProject(manifest1Key, admin);
 
-    NameKey manifest2Key = createProject("manifest2");
+    NameKey manifest2Key = projectOperations.newProject().name(name("manifest2")).create();
     TestRepository<InMemoryRepository> manifest2Repo = cloneProject(manifest2Key, admin);
 
-    NameKey superKey = createProject("superproject");
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     cloneProject(superKey, admin);
 
     pushConfig(
@@ -256,13 +255,13 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
-    NameKey manifest1Key = createProject("manifest1");
+    NameKey manifest1Key = projectOperations.newProject().name(name("manifest1")).create();
     TestRepository<InMemoryRepository> manifest1Repo = cloneProject(manifest1Key, admin);
 
-    NameKey manifest2Key = createProject("manifest2");
+    NameKey manifest2Key = projectOperations.newProject().name(name("manifest2")).create();
     TestRepository<InMemoryRepository> manifest2Repo = cloneProject(manifest2Key, admin);
 
-    NameKey superKey = createProject("superproject");
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     cloneProject(superKey, admin);
 
     pushConfig(
@@ -359,13 +358,13 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
-    NameKey manifest1Key = createProject("manifest1");
+    NameKey manifest1Key = projectOperations.newProject().name(name("manifest1")).create();
     TestRepository<InMemoryRepository> manifest1Repo = cloneProject(manifest1Key, admin);
 
-    NameKey manifest2Key = createProject("manifest2");
+    NameKey manifest2Key = projectOperations.newProject().name(name("manifest2")).create();
     TestRepository<InMemoryRepository> manifest2Repo = cloneProject(manifest2Key, admin);
 
-    NameKey superKey = createProject("superproject");
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     cloneProject(superKey, admin);
 
     pushConfig(
@@ -484,10 +483,10 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     setupTestRepos("project");
 
     // Make sure the manifest exists so the configuration loads successfully.
-    NameKey manifestKey = createProject("manifest");
+    NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
-    NameKey superKey = createProject("superproject");
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     cloneProject(superKey, admin);
 
     pushConfig(
@@ -561,10 +560,11 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
 
     String realPrefix = testRepoKeys[0].get().split("/")[0];
 
-    Project.NameKey manifestKey = createProject(realPrefix + "/manifest");
+    Project.NameKey manifestKey =
+        projectOperations.newProject().name(name(realPrefix + "/manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
-    Project.NameKey superKey = createProject("superproject");
+    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     pushConfig(
         "[superproject \""
             + superKey.get()
@@ -641,7 +641,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project1\" />\n"
             + "</projects>\n</manifest>\n";
 
-    NameKey manifestKey = createProject("manifest");
+    NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
     pushFactory
         .create(db, admin.getIdent(), manifestRepo, "Subject", "default", xml)
@@ -659,7 +659,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
         .to("refs/heads/master")
         .assertOkStatus();
 
-    NameKey superKey = createProject("superproject");
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     cloneProject(superKey, admin);
 
     pushConfig(
@@ -700,8 +700,8 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project1\" />\n"
             + "</projects>\n</manifest>\n";
 
-    NameKey manifestKey = createProject("manifest");
-    NameKey superKey = createProject("superproject");
+    NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
+    NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
 
     cloneProject(superKey, admin);
 

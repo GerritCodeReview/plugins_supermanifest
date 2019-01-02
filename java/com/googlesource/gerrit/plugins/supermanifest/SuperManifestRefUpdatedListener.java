@@ -20,6 +20,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
+import com.google.gerrit.extensions.config.DownloadScheme;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.restapi.AuthException;
@@ -35,6 +36,7 @@ import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.server.permissions.GlobalPermission;
 import com.google.gerrit.server.permissions.PermissionBackend;
 import com.google.gerrit.server.permissions.PermissionBackendException;
+import com.google.gerrit.server.plugincontext.PluginMapContext;
 import com.google.gerrit.server.project.BranchResource;
 import com.google.gerrit.server.project.NoSuchProjectException;
 import com.google.gerrit.server.project.ProjectCache;
@@ -89,6 +91,7 @@ public class SuperManifestRefUpdatedListener
   private final Provider<PersonIdent> serverIdent;
   private final Provider<IdentifiedUser> identifiedUser;
   private final PermissionBackend permissionBackend;
+  private final PluginMapContext<DownloadScheme> downloadScheme;
 
   // Mutable.
   private Set<ConfigEntry> config;
@@ -98,6 +101,7 @@ public class SuperManifestRefUpdatedListener
       AllProjectsName allProjectsName,
       @CanonicalWebUrl String canonicalWebUrl,
       @PluginName String pluginName,
+      PluginMapContext<DownloadScheme> downloadScheme,
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
@@ -115,6 +119,7 @@ public class SuperManifestRefUpdatedListener
       throw new IllegalArgumentException(e);
     }
 
+    this.downloadScheme = downloadScheme;
     this.cfgFactory = cfgFactory;
     this.projectCache = projectCache;
     this.identifiedUser = identifiedUser;
@@ -313,7 +318,7 @@ public class SuperManifestRefUpdatedListener
         subModuleUpdater = new RepoUpdater(serverIdent.get(), canonicalWebUrl);
         break;
       case Jiri:
-        subModuleUpdater = new JiriUpdater(serverIdent.get(), canonicalWebUrl);
+        subModuleUpdater = new JiriUpdater(serverIdent.get(), canonicalWebUrl, downloadScheme);
         break;
       default:
         throw new ConfigInvalidException(

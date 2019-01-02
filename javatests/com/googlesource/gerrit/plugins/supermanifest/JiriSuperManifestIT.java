@@ -24,11 +24,15 @@ import com.google.gerrit.acceptance.PushOneCommit.Result;
 import com.google.gerrit.acceptance.TestPlugin;
 import com.google.gerrit.acceptance.testsuite.project.ProjectOperations;
 import com.google.gerrit.extensions.api.projects.BranchApi;
+import com.google.gerrit.extensions.config.DownloadScheme;
+import com.google.gerrit.extensions.registration.DynamicMap;
+import com.google.gerrit.extensions.registration.PrivateInternals_DynamicMapImpl;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.reviewdb.client.Project.NameKey;
 import com.google.gerrit.reviewdb.client.RefNames;
 import com.google.inject.Inject;
+import com.google.inject.util.Providers;
 import java.net.URI;
 import java.util.Arrays;
 import org.apache.commons.lang.RandomStringUtils;
@@ -46,8 +50,15 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
   NameKey[] testRepoKeys;
 
   @Inject private ProjectOperations projectOperations;
+  @Inject private DynamicMap<DownloadScheme> downloadScheme;
 
   void setupTestRepos(String prefix) throws Exception {
+    // Set up download schemes for test repos.
+    PrivateInternals_DynamicMapImpl<DownloadScheme> downloadSchemeImpl =
+        (PrivateInternals_DynamicMapImpl<DownloadScheme>) downloadScheme;
+    String host = URI.create(canonicalWebUrl.get()).getHost();
+    downloadSchemeImpl.put("supermanifest", "https", Providers.of(new TestDownloadScheme(host)));
+
     testRepoKeys = new NameKey[2];
     for (int i = 0; i < 2; i++) {
       testRepoKeys[i] =
@@ -586,10 +597,16 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + canonicalWebUrl.get()
             + testRepoKeys[0].get()
             + "\" path=\"project1\" />\n"
-            + "<project name=\"external\""
+            + "<project name=\"external1\""
             + " remote=\"https://external/repo\""
             + " revision=\"c438d02cdf08a08fe29550cb11cb6ae8190919f1\""
             + " path=\"project2\" />\n"
+            + "<project name=\"external2\""
+            + " remote=\"https://external/"
+            + testRepoKeys[1].get()
+            + "\""
+            + " revision=\"c438d02cdf08a08fe29550cb11cb6ae8190919f1\""
+            + " path=\"project3\" />\n"
             + "</projects>\n</manifest>\n";
 
     pushFactory
@@ -624,6 +641,15 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     // The suburl must be absolute as this is external repo
 
     assertThat(subUrl).isEqualTo("https://external/repo");
+
+    subUrl = cfg.getString("submodule", "project3", "url");
+
+    // URL is valid.
+    URI.create(subUrl);
+
+    // Though the this project has the same name as a local repo, the subUrl must be absolute
+    // as this is an external repo.
+    assertThat(subUrl).isEqualTo("https://external/" + testRepoKeys[1].get());
   }
 
   @Test
@@ -771,5 +797,35 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     testRelative("abc", "/bcd", "/bcd");
     testRelative("http://a", "a/b", "a/b");
     testRelative("http://base.com/a/", "http://child.com/a/b", "http://child.com/a/b");
+  }
+
+  // Modified from com.google.gerrit.acceptance.api.accounts.GeneralPreferencesIT.TestDownloadScheme
+  private static class TestDownloadScheme extends DownloadScheme {
+
+    private String host;
+
+    public TestDownloadScheme(String host) {
+      this.host = host;
+    }
+
+    @Override
+    public String getUrl(String project) {
+      return "https://" + this.host +"/" + project;
+    }
+
+    @Override
+    public boolean isAuthRequired() {
+      return false;
+    }
+
+    @Override
+    public boolean isAuthSupported() {
+      return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+      return true;
+    }
   }
 }

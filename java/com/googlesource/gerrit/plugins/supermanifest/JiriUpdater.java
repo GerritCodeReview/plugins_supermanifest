@@ -104,15 +104,18 @@ class JiriUpdater implements SubModuleUpdater {
 
         URI submodUrl = URI.create(nameUri);
 
-        // check if repo exists locally then relativize its URL
-        try {
-          String repoName = submodUrl.getPath();
-          while (repoName.startsWith("/")) {
-            repoName = repoName.substring(1);
+        // check if repo is local by matching hostnames
+        if (submodUrl.getHost().equals(this.canonicalWebUrl.getHost())) {
+          // relativize submodUrl only if it is found locally
+          try {
+            String repoName = submodUrl.getPath();
+            while (repoName.startsWith("/")) {
+              repoName = repoName.substring(1);
+            }
+            reader.openRepository(repoName);
+            submodUrl = relativize(targetURI, URI.create(repoName));
+          } catch (RepositoryNotFoundException e) {
           }
-          reader.openRepository(repoName);
-          submodUrl = relativize(targetURI, URI.create(repoName));
-        } catch (RepositoryNotFoundException e) {
         }
         cfg.setString("submodule", path, "path", path);
         cfg.setString("submodule", path, "url", submodUrl.toString());

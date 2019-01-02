@@ -2,11 +2,15 @@ package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
 
+import com.google.common.collect.Lists;
+import com.google.gerrit.extensions.config.DownloadScheme;
+import com.google.gerrit.server.plugincontext.PluginMapContext;
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.StringJoiner;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -35,10 +39,15 @@ import org.slf4j.LoggerFactory;
 class JiriUpdater implements SubModuleUpdater {
   PersonIdent serverIdent;
   URI canonicalWebUrl;
+  private final PluginMapContext<DownloadScheme> downloadScheme;
 
-  public JiriUpdater(PersonIdent serverIdent, URI canonicalWebUrl) {
+  public JiriUpdater(
+      PersonIdent serverIdent,
+      URI canonicalWebUrl,
+      PluginMapContext<DownloadScheme> downloadScheme) {
     this.serverIdent = serverIdent;
     this.canonicalWebUrl = canonicalWebUrl;
+    this.downloadScheme = downloadScheme;
   }
 
   private static final Logger log = LoggerFactory.getLogger(SuperManifestRefUpdatedListener.class);
@@ -104,16 +113,16 @@ class JiriUpdater implements SubModuleUpdater {
 
         URI submodUrl = URI.create(nameUri);
 
-        // check if repo exists locally then relativize its URL
-        try {
-          String repoName = submodUrl.getPath();
-          while (repoName.startsWith("/")) {
-            repoName = repoName.substring(1);
-          }
-          reader.openRepository(repoName);
-          submodUrl = relativize(targetURI, URI.create(repoName));
-        } catch (RepositoryNotFoundException e) {
+        // check if repo is local by matching hostnames
+        String repoName = submodUrl.getPath();
+        while (repoName.startsWith("/")) {
+          repoName = repoName.substring(1);
         }
+        URI localURI = getLocalURI(repoName);
+        if (localURI != null && localURI.getHost().equals(submodUrl.getHost())) {
+          submodUrl = relativize(targetURI, URI.create(repoName));
+        }
+
         cfg.setString("submodule", path, "path", path);
         cfg.setString("submodule", path, "url", submodUrl.toString());
 
@@ -177,6 +186,22 @@ class JiriUpdater implements SubModuleUpdater {
                   JGitText.get().updatingRefFailed, targetRef, commitId.name(), rc));
       }
     }
+  }
+
+  private URI getLocalURI(String projectName) {
+    List<URI> uriList = Lists.newArrayList();
+    downloadScheme.runEach(extension -> {
+      DownloadScheme scheme = extension.get();
+      if (scheme.isEnabled() && scheme.getUrl(projectName) != null) {
+        String url = scheme.getUrl(projectName);
+        uriList.add(URI.create(url));
+      }
+    });
+    if (uriList.isEmpty()) {
+      return null;
+    }
+    // uriList should contain uri for different schemes, but we just need one
+    return uriList.get(0);
   }
 
   private static final String SLASH = "/";

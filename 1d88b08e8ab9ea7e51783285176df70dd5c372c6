@@ -45,6 +45,30 @@
       "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54c60cc5_192eb621",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1074841
+      },
+      "writtenOn": "2019-01-07T19:38:15Z",
+      "side": 1,
+      "message": "RE1: I don\u0027t know canonicalWebUrl for googlesource.com is different from its public hostname. Sorry about that. What is the best practice here to get the public hostnames for gerrit managed repositories here? Can I use @GerritInstanceName? I saw the web UI can reliably retrieve the clone address of each repo using a REST API call. But I don\u0027t quite understand the node.js code and could not reproduce that result in the supermanifest plugin. \n\nRE2: Do you mean we should use relative repo path in Jiri manifest? Well in Jiri, projects (which points to a remote git repo) are not nested according to where they are hosted. A project declaration may be imported by multiple manifest files across different gerrit instances which make it hard to relativize the path. Another option would be drop the relative path in jiri supermanifest plugin completely if the hostname cannot be retrieved reliably. If you mean I should not perform an extra read at line 115, I can fix that in next patch.",
+      "parentUuid": "4ef255db_971e490b",
+      "range": {
+        "startLine": 108,
+        "startChar": 44,
+        "endLine": 108,
+        "endChar": 59
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

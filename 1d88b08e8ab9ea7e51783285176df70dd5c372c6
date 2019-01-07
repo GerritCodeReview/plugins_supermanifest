@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32206df5_e7936225",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-01-07T11:28:05Z",
+      "side": 1,
+      "message": "patch",
+      "range": {
+        "startLine": 9,
+        "startChar": 12,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ef255db_971e490b",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-01-07T11:28:05Z",
+      "side": 1,
+      "message": "This is fragile: for googlesource.com, the canonicalWebUrl is xxx-review.gs.com, but the project is usually referenced as xxx.gs.com\n\nWhy don\u0027t you make the submodule references in the manifest be relative if they\u0027re meant to be host local?",
+      "range": {
+        "startLine": 108,
+        "startChar": 44,
+        "endLine": 108,
+        "endChar": 59
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

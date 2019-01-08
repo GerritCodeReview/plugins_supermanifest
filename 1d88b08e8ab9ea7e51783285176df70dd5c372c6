@@ -117,6 +117,30 @@
       "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d06c017_02b66078",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-01-08T18:55:47Z",
+      "side": 1,
+      "message": "Thanks for the more detailed explanation. \n\nI regret having allowed the Jiri extension in the past, but you\u0027re right I shouldn\u0027t take it out on you. Sorry for that.\n\nSo, my tip is to get \n\n  PluginMapContext\u003cDownloadScheme\u003e \n\ninjected. Then you can iterate over them, and do\n\n   scheme.getUrl(proj.getName())\n\nthis should give you a set of Strings holding URLs, that differ by their scheme (HTTP, ssh). You could extract the hostname from that URL, and use that to match against the submodule\u0027s host name.",
+      "parentUuid": "347c4589_fc691f47",
+      "range": {
+        "startLine": 108,
+        "startChar": 44,
+        "endLine": 108,
+        "endChar": 59
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

@@ -69,6 +69,30 @@
       "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20e8e77f_6e72ea18",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-01-08T10:35:18Z",
+      "side": 1,
+      "message": "RE1: To get at the clone URLs, have a look at how GetServerInfo uses DownloadScheme.\n\nRE2: repo manifests are relative so partners in the android ecosystem make a local fork of the project, by simply mirroring a gerrit instance, and then changing the relevant subprojects. It seems you are saying that the projects that use JIRI do not want to have an ecosystem with partner without jumping through extra hoops.\n\nI don\u0027t completely understand what you want to do, but we won\u0027t be supporting getting repos from other hosts in a gerrit plugin.",
+      "parentUuid": "54c60cc5_192eb621",
+      "range": {
+        "startLine": 108,
+        "startChar": 44,
+        "endLine": 108,
+        "endChar": 59
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

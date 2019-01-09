@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3fb80902_baf43e40",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1074841
+      },
+      "writtenOn": "2019-01-09T01:26:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32206df5_e7936225",
+      "range": {
+        "startLine": 9,
+        "startChar": 12,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ef255db_971e490b",
         "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
         "patchSetId": 1
@@ -141,6 +165,30 @@
       "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3efeb06f_1e287bc3",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1074841
+      },
+      "writtenOn": "2019-01-09T01:26:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d06c017_02b66078",
+      "range": {
+        "startLine": 108,
+        "startChar": 44,
+        "endLine": 108,
+        "endChar": 59
+      },
+      "revId": "1d88b08e8ab9ea7e51783285176df70dd5c372c6",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

@@ -22,6 +22,30 @@
       "revId": "af0d1b66b56e11c3b0e4f1c20dcb67250f354e6a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53e2fb2a_336929c0",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/JiriUpdater.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1074841
+      },
+      "writtenOn": "2019-01-09T23:10:12Z",
+      "side": 1,
+      "message": "I changed to pick either http or https. As the by default the gerrit docker image will only provide http URLs.",
+      "parentUuid": "1c07cdf5_c34e30a9",
+      "range": {
+        "startLine": 204,
+        "startChar": 19,
+        "endLine": 204,
+        "endChar": 22
+      },
+      "revId": "af0d1b66b56e11c3b0e4f1c20dcb67250f354e6a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

@@ -70,7 +70,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[i], admin);
 
       PushOneCommit push =
-          pushFactory.create(admin.getIdent(), repo, "Subject", "file" + i, "file");
+          pushFactory.create(admin.newIdent(), repo, "Subject", "file" + i, "file");
       push.to("refs/heads/master").assertOkStatus();
     }
   }
@@ -82,7 +82,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     allProjectRepo.reset("config");
     PushOneCommit push =
         pushFactory.create(
-            admin.getIdent(), allProjectRepo, "Subject", "supermanifest.config", config);
+            admin.newIdent(), allProjectRepo, "Subject", "supermanifest.config", config);
     PushOneCommit.Result res = push.to("refs/meta/config");
     res.assertOkStatus();
   }
@@ -122,7 +122,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -153,7 +153,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -185,7 +185,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -248,11 +248,11 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"manifest2\" />\n"
             + "</projects>\n</manifest>\n";
     pushFactory
-        .create(admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .create(admin.newIdent(), manifest2Repo, "Subject", "default", xml2)
         .to("refs/heads/master")
         .assertOkStatus();
     pushFactory
-        .create(admin.getIdent(), manifest1Repo, "Subject", "default", xml1)
+        .create(admin.newIdent(), manifest1Repo, "Subject", "default", xml1)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -298,7 +298,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
     Result c =
         pushFactory
-            .create(admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+            .create(admin.newIdent(), manifest2Repo, "Subject", "default", xml2)
             .to("refs/heads/master");
     c.assertOkStatus();
     RevCommit commit = c.getCommit();
@@ -322,7 +322,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .create(admin.newIdent(), manifest2Repo, "Subject", "default", xml2)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -348,7 +348,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifest1Repo, "Subject", "default", xml1)
+        .create(admin.newIdent(), manifest1Repo, "Subject", "default", xml1)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -400,7 +400,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"manifest2\" />\n"
             + "</projects>\n</manifest>\n";
     pushFactory
-        .create(admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .create(admin.newIdent(), manifest2Repo, "Subject", "default", xml2)
         .to("refs/heads/b1")
         .assertOkStatus();
 
@@ -423,7 +423,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifest2Repo, "Subject", "default", xml2)
+        .create(admin.newIdent(), manifest2Repo, "Subject", "default", xml2)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -447,7 +447,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifest1Repo, "Subject", "default", xml1)
+        .create(admin.newIdent(), manifest1Repo, "Subject", "default", xml1)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -524,7 +524,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/src1")
         .assertOkStatus();
 
@@ -540,7 +540,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/src2")
         .assertOkStatus();
 
@@ -610,7 +610,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</projects>\n</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -670,7 +670,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -681,7 +681,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</imports>\n</manifest>";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "super", superXml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "super", superXml)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -703,7 +703,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     // (rather than the one mentioned in srcPath), to double check that we don't try to be too
     // smart about eluding nops.
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml + " ")
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml + " ")
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -743,7 +743,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "  toolType = jiri\n");
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default", xml)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -759,7 +759,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
             + "</imports>\n</manifest>";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "super", superXml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "super", superXml)
         .to("refs/heads/master")
         .assertOkStatus();
 

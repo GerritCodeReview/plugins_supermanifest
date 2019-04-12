@@ -61,7 +61,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[i], admin);
 
       PushOneCommit push =
-          pushFactory.create(admin.getIdent(), repo, "Subject", "file" + i, "file");
+          pushFactory.create(admin.newIdent(), repo, "Subject", "file" + i, "file");
 
       Result r = push.to("refs/heads/master");
       r.assertOkStatus();
@@ -76,7 +76,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     allProjectRepo.reset("config");
     PushOneCommit push =
         pushFactory.create(
-            admin.getIdent(), allProjectRepo, "Subject", "supermanifest.config", config);
+            admin.newIdent(), allProjectRepo, "Subject", "supermanifest.config", config);
     PushOneCommit.Result res = push.to("refs/meta/config");
     res.assertOkStatus();
   }
@@ -116,7 +116,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -143,7 +143,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -173,7 +173,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -205,7 +205,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -257,7 +257,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -276,7 +276,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     { // Advance head, but the manifest refers to the previous one.
       TestRepository<InMemoryRepository> repo = cloneProject(testRepoKeys[0], admin);
-      PushOneCommit push = pushFactory.create(admin.getIdent(), repo, "Subject", "file3", "file");
+      PushOneCommit push = pushFactory.create(admin.newIdent(), repo, "Subject", "file3", "file");
 
       Result r = push.to("refs/heads/master");
       r.assertOkStatus();
@@ -317,7 +317,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -368,7 +368,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
       fail("should throw");
     } catch (IllegalStateException e) {
       StackTraceElement[] trimmed =
-          SuperManifestRefUpdatedListener.trimStack(
+          com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.trimStack(
               e.getStackTrace(), Thread.currentThread().getStackTrace()[1]);
       String str = Arrays.toString(trimmed);
       assertThat(str).doesNotContain("trimStackTrace");
@@ -417,7 +417,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/src1")
         .assertOkStatus();
 
@@ -432,7 +432,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>\n";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/src2")
         .assertOkStatus();
 
@@ -474,7 +474,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -485,7 +485,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "</manifest>";
 
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "super.xml", superXml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "super.xml", superXml)
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -506,7 +506,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     // (rather than the one mentioned in srcPath), to double check that we don't try to be too
     // smart about eliding nops.
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml + " ")
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml + " ")
         .to("refs/heads/master")
         .assertOkStatus();
 
@@ -552,7 +552,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"path1\" />\n"
             + "</manifest>\n";
     pushFactory
-        .create(admin.getIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
@@ -579,12 +579,13 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   public void testToRepoKey() {
     URI base = URI.create("https://gerrit-review.googlesource.com");
     assertThat(
-            SuperManifestRefUpdatedListener.urlToRepoKey(
+            com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.urlToRepoKey(
                 base, "https://gerrit-review.googlesource.com/repo"))
         .isEqualTo("repo");
-    assertThat(SuperManifestRefUpdatedListener.urlToRepoKey(base, "repo")).isEqualTo("repo");
+    assertThat(com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener
+        .urlToRepoKey(base, "repo")).isEqualTo("repo");
     assertThat(
-            SuperManifestRefUpdatedListener.urlToRepoKey(
+            com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.urlToRepoKey(
                 URI.create("https://gerrit-review.googlesource.com/"),
                 "https://gerrit-review.googlesource.com/repo"))
         .isEqualTo("repo");

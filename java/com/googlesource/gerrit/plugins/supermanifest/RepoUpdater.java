@@ -20,7 +20,6 @@ import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedList
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.gitrepo.ManifestParser;
 import org.eclipse.jgit.gitrepo.RepoCommand;
@@ -30,7 +29,7 @@ import org.eclipse.jgit.lib.Repository;
 class RepoUpdater implements SubModuleUpdater {
   PersonIdent serverIdent;
 
-  public RepoUpdater(PersonIdent serverIdent, URI canonicalWebUrl) {
+  public RepoUpdater(PersonIdent serverIdent) {
     this.serverIdent = serverIdent;
   }
 

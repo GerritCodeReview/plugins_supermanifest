@@ -315,7 +315,7 @@ public class SuperManifestRefUpdatedListener
     SubModuleUpdater subModuleUpdater;
     switch (c.getToolType()) {
       case Repo:
-        subModuleUpdater = new RepoUpdater(serverIdent.get(), canonicalWebUrl);
+        subModuleUpdater = new RepoUpdater(serverIdent.get());
         break;
       case Jiri:
         subModuleUpdater = new JiriUpdater(serverIdent.get(), canonicalWebUrl, downloadScheme);

@@ -1,6 +1,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.Lists;
 import com.google.gerrit.extensions.config.DownloadScheme;
@@ -137,8 +138,7 @@ class JiriUpdater implements SubModuleUpdater {
 
       // create a new DirCacheEntry for .gitmodules file.
       final DirCacheEntry dcEntry = new DirCacheEntry(Constants.DOT_GIT_MODULES);
-      ObjectId objectId =
-          inserter.insert(Constants.OBJ_BLOB, content.getBytes(Constants.CHARACTER_ENCODING));
+      ObjectId objectId = inserter.insert(Constants.OBJ_BLOB, content.getBytes(UTF_8));
       dcEntry.setObjectId(objectId);
       dcEntry.setFileMode(FileMode.REGULAR_FILE);
       builder.add(dcEntry);

@@ -65,6 +65,8 @@ class JiriManifestParser {
   }
 
   static class RepoMap<K, V extends Repository> extends HashMap<K, V> implements AutoCloseable {
+    private static final long serialVersionUID = 1L;
+
     @Override
     public void close() {
       for (Repository repo : this.values()) {

@@ -179,6 +179,13 @@ class JiriUpdater implements SubModuleUpdater {
         case LOCK_FAILURE:
           throw new ConcurrentRefUpdateException(
               MessageFormat.format(JGitText.get().cannotLock, targetRef), ru.getRef(), rc);
+        case IO_FAILURE:
+        case NOT_ATTEMPTED:
+        case NO_CHANGE:
+        case REJECTED_CURRENT_BRANCH:
+        case REJECTED_MISSING_OBJECT:
+        case REJECTED_OTHER_REASON:
+        case RENAMED:
         default:
           throw new JGitInternalException(
               MessageFormat.format(

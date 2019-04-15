@@ -17,6 +17,24 @@
       "revId": "792d023e71eec323872a2ae5cf1be4ef7293865c",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b5164e9_fb793a8f",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2019-04-15T02:13:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "832c72e2_d001658e",
+      "revId": "792d023e71eec323872a2ae5cf1be4ef7293865c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

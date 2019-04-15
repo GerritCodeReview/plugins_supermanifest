@@ -384,7 +384,7 @@ public class SuperManifestRefUpdatedListener
           return null;
         }
 
-        ref = repo.peel(ref);
+        ref = repo.getRefDatabase().peel(ref);
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {

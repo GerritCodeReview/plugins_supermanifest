@@ -189,17 +189,19 @@ class JiriUpdater implements SubModuleUpdater {
 
   private URI getLocalURI(String projectName) {
     List<URI> uriList = Lists.newArrayList();
-    downloadScheme.runEach(extension -> {
-      DownloadScheme scheme = extension.get();
-      if (scheme.isEnabled() && scheme.getUrl(projectName) != null) {
-        String url = scheme.getUrl(projectName);
-        URI localURI = URI.create(url);
-        // Discard URIs whose scheme are not "http" or "https" as they may not contain full hostname
-        if (localURI.getScheme().equals("https") || localURI.getScheme().equals("http")) {
-          uriList.add(localURI);
-        }
-      }
-    });
+    downloadScheme.runEach(
+        extension -> {
+          DownloadScheme scheme = extension.get();
+          if (scheme.isEnabled() && scheme.getUrl(projectName) != null) {
+            String url = scheme.getUrl(projectName);
+            URI localURI = URI.create(url);
+            // Discard URIs whose scheme are not "http" or "https" as they may not contain full
+            // hostname
+            if (localURI.getScheme().equals("https") || localURI.getScheme().equals("http")) {
+              uriList.add(localURI);
+            }
+          }
+        });
     if (uriList.isEmpty()) {
       return null;
     }

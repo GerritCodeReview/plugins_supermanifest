@@ -810,7 +810,7 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
 
     @Override
     public String getUrl(String project) {
-      return "https://" + this.host +"/" + project;
+      return "https://" + this.host + "/" + project;
     }
 
     @Override

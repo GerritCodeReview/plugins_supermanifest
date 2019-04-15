@@ -16,6 +16,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import org.apache.commons.lang.StringUtils;
@@ -149,6 +150,11 @@ class JiriProjects {
       }
 
       return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(name, path, remote, remotebranch, revision);
     }
 
     public String toSubmodules() {

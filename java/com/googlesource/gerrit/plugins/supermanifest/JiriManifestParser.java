@@ -93,7 +93,7 @@ class JiriManifestParser {
         }
         HashSet<String> processedFiles = processedRepoFiles.get(mi.repoKey);
         if (processedFiles == null) {
-          processedFiles = new HashSet<String>();
+          processedFiles = new HashSet<>();
           processedRepoFiles.put(mi.repoKey, processedFiles);
         }
         if (processedFiles.contains(mi.manifest)) {

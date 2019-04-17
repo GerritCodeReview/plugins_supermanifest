@@ -259,8 +259,8 @@ public class SuperManifestRefUpdatedListener
     permissionBackend.currentUser().check(GlobalPermission.ADMINISTRATE_SERVER);
     info(
         "manual trigger for %s:%s by %d. Config: %s",
-        resource.getBranchKey().getParentKey().get(),
-        resource.getBranchKey().get(),
+        resource.getBranchKey().project().get(),
+        resource.getBranchKey().branch(),
         identifiedUser.get().getAccountId().get(),
         configurationToString());
 

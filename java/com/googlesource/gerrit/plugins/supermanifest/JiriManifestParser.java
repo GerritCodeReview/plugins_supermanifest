@@ -153,7 +153,7 @@ class JiriManifestParser {
           } catch (URISyntaxException e) {
             throw new ConfigInvalidException("Invalid URI", e);
           }
-          String iRepoKey = new Project.NameKey(StringUtils.strip(uri.getPath(), "/")).toString();
+          String iRepoKey = Project.nameKey(StringUtils.strip(uri.getPath(), "/")).toString();
           String iRef = i.getRevision();
           boolean revisionPinned = true;
           if (iRef.isEmpty()) {

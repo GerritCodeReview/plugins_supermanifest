@@ -420,7 +420,7 @@ public class SuperManifestRefUpdatedListener
         return repos.get(name);
       }
 
-      Repository repo = repoManager.openRepository(new Project.NameKey(name));
+      Repository repo = repoManager.openRepository(Project.nameKey(name));
       repos.put(name, repo);
       return repo;
     }

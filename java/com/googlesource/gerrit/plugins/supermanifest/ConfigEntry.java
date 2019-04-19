@@ -67,7 +67,7 @@ class ConfigEntry {
     }
 
     // TODO(hanwen): sanity check repo names.
-    srcRepoKey = new Project.NameKey(srcRepo);
+    srcRepoKey = Project.nameKey(srcRepo);
 
     String toolType = nullToEmpty(cfg.getString(SECTION_NAME, name, "toolType"));
 
@@ -106,7 +106,7 @@ class ConfigEntry {
       throw new ConfigInvalidException(String.format("entry %s did not specify srcPath", name));
     }
 
-    destRepoKey = new Project.NameKey(destRepo);
+    destRepoKey = Project.nameKey(destRepo);
 
     // The external format is chosen so we can support copying over tags as well.
     destBranch = destRef.substring(REFS_HEADS.length());

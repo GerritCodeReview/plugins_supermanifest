@@ -15,6 +15,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.gerrit.acceptance.GitUtil;
@@ -122,12 +123,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
-    try {
-      branch.file("project2");
-      fail("wanted exception");
-    } catch (ResourceNotFoundException e) {
-      // all fine.
-    }
+    assertThrows(ResourceNotFoundException.class, () -> branch.file("project2"));
 
     xml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -147,8 +143,8 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
-    branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
-    assertThat(branch.file("project2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch2.file("project2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
 
     // Make sure config change gets picked up.
     pushConfig(
@@ -177,8 +173,8 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         .to("refs/heads/srcbranch")
         .assertOkStatus();
 
-    branch = gApi.projects().name(superKey.get()).branch("refs/heads/other");
-    assertThat(branch.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    BranchApi branch3 = gApi.projects().name(superKey.get()).branch("refs/heads/other");
+    assertThat(branch3.file("project3").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
 
   @Test
@@ -363,17 +359,13 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   }
 
   private void innerTest() throws Exception {
-    try {
-      outer();
-      fail("should throw");
-    } catch (IllegalStateException e) {
-      StackTraceElement[] trimmed =
-          SuperManifestRefUpdatedListener.trimStack(
-              e.getStackTrace(), Thread.currentThread().getStackTrace()[1]);
-      String str = Arrays.toString(trimmed);
-      assertThat(str).doesNotContain("trimStackTrace");
-      assertThat(str).contains("innerTest");
-    }
+    IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> outer());
+    StackTraceElement[] trimmed =
+        SuperManifestRefUpdatedListener.trimStack(
+            thrown.getStackTrace(), Thread.currentThread().getStackTrace()[1]);
+    String str = Arrays.toString(trimmed);
+    assertThat(str).doesNotContain("trimStackTrace");
+    assertThat(str).contains("innerTest");
   }
 
   @Test
@@ -438,21 +430,11 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch1 = gApi.projects().name(superKey.get()).branch("refs/heads/src1");
     assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
-    try {
-      branch1.file("project2");
-      fail("wanted exception");
-    } catch (ResourceNotFoundException e) {
-      // all fine.
-    }
+    assertThrows(ResourceNotFoundException.class, () -> branch1.file("project2"));
 
     BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/src2");
     assertThat(branch2.file("project2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
-    try {
-      branch2.file("project1");
-      fail("wanted exception");
-    } catch (ResourceNotFoundException e) {
-      // all fine.
-    }
+    assertThrows(ResourceNotFoundException.class, () -> branch2.file("project1"));
   }
 
   @Test

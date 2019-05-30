@@ -22,6 +22,30 @@
       "revId": "07fbe2a4f4e0f266e2e58ba44f71980bbe752164",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3533c2eb_1a172af8",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/JiriSuperManifestIT.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2019-05-30T08:31:36Z",
+      "side": 1,
+      "message": "Done in: [1].\n\n* [1] https://gerrit-review.googlesource.com/c/plugins/supermanifest/+/226432",
+      "parentUuid": "da6917f4_e92cb216",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 50
+      },
+      "revId": "07fbe2a4f4e0f266e2e58ba44f71980bbe752164",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

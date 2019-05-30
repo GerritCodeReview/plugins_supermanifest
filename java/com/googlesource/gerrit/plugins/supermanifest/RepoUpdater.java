@@ -14,7 +14,7 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
+import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
 import java.io.ByteArrayInputStream;

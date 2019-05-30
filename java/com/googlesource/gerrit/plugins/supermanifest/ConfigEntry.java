@@ -15,9 +15,9 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.base.Strings.nullToEmpty;
-import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
+import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
-import com.google.gerrit.reviewdb.client.Project;
+import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;

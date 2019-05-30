@@ -14,10 +14,11 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
+import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.FluentLogger;
+import com.google.gerrit.entities.Project;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.config.DownloadScheme;
@@ -26,7 +27,6 @@ import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.restapi.AuthException;
 import com.google.gerrit.extensions.restapi.Response;
 import com.google.gerrit.extensions.restapi.RestModifyView;
-import com.google.gerrit.reviewdb.client.Project;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;

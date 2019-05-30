@@ -1,6 +1,6 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.reviewdb.client.RefNames.REFS_HEADS;
+import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.Lists;

@@ -15,7 +15,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assert_;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -740,15 +740,10 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     assertThrows(ResourceNotFoundException.class, () -> branch.file("project1"));
   }
 
-  /*
-   * Copied test from https://github.com/eclipse/jgit/blob/e9fb111182b55cc82c530d82f13176c7a85cd958/org.eclipse.jgit.test/tst/org/eclipse/jgit/gitrepo/RepoCommandTest.java#L1105
-   */
   void testRelative(String a, String b, String want) throws Exception {
     String got = JiriUpdater.relativize(URI.create(a), URI.create(b)).toString();
 
-    if (!got.equals(want)) {
-      assert_().fail("relative('%s', '%s') = '%s', want '%s'", a, b, got, want);
-    }
+    assertWithMessage("relative('%s', '%s')", a, b).that(got).isEqualTo(want);
   }
 
   @Test

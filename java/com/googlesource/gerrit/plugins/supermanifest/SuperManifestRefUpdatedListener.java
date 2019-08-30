@@ -400,14 +400,15 @@ public class SuperManifestRefUpdatedListener
 
     @Override
     public RemoteFile readFileWithMode(String repoName, String ref, String path)
-        throws GitAPIException, IOException {
+        throws IOException {
       Repository repo = openRepository(repoName);
       Ref r = repo.findRef(ref);
-      if (r == null || r.getObjectId() == null) {
+      ObjectId objectId = r == null ? repo.resolve(ref) : r.getObjectId();
+      if (objectId == null) {
         throw new RevisionSyntaxException(
             String.format("repo %s does not have ref %s", repo.toString(), ref), ref);
       }
-      RevCommit commit = repo.parseCommit(r.getObjectId());
+      RevCommit commit = repo.parseCommit(objectId);
       TreeWalk tw = TreeWalk.forPath(repo, path, commit.getTree());
       return new RemoteFile(
           tw.getObjectReader().open(tw.getObjectId(0)).getCachedBytes(Integer.MAX_VALUE),

@@ -38,6 +38,8 @@ import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;
 import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.junit.Test;
 
 @TestPlugin(
@@ -80,6 +82,41 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             admin.newIdent(), allProjectRepo, "Subject", "supermanifest.config", config);
     PushOneCommit.Result res = push.to("refs/meta/config");
     res.assertOkStatus();
+  }
+
+  @Test
+  public void getCommitIdUsingRefOrSha1() throws Exception {
+    setupTestRepos("project");
+    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
+    cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    // using Ref - works both ways
+    ObjectId objectId =
+        repo().resolve(repo().getRefDatabase().getRefs().get(0).getName() + "^{commit}");
+    assertThat(objectId).isNotNull();
+
+    Ref ref = repo().findRef(repo().getRefDatabase().getRefs().get(0).getName());
+    assertThat(ref.getObjectId()).isEqualTo(objectId);
+
+    // Using Sha1 - findRef won't work
+    objectId = repo().resolve(testRepoCommits[0]);
+    assertThat(objectId).isNotNull();
+
+    ref = repo().findRef(testRepoCommits[0]);
+    assertThat(ref).isNull();
   }
 
   @Test

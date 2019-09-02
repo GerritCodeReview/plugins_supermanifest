@@ -16,6 +16,24 @@
       "revId": "302f8acd9bca6b0af0e6749ed1b750ec89601e0b",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "560aea4f_a89cc5a2",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1085183
+      },
+      "writtenOn": "2019-09-02T08:49:40Z",
+      "side": 1,
+      "message": "I think you\u0027re right, it does return blob id. I see resolve(ref+ \"^{commit}\" is used somewhere and seems to in fact return the commit id.",
+      "parentUuid": "e949a583_e75cea54",
+      "revId": "302f8acd9bca6b0af0e6749ed1b750ec89601e0b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }

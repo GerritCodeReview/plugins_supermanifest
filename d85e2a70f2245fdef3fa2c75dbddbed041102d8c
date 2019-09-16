@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db7c5f97_d1ad7a64",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/RepoSuperManifestIT.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-09-16T11:18:46Z",
+      "side": 1,
+      "message": "I\u0027m confused. What is the supermanifest functionality you\u0027re testing here? I thought there\u0027d be a XML file with a bare SHA1 in this test.",
+      "range": {
+        "startLine": 106,
+        "startChar": 1,
+        "endLine": 119,
+        "endChar": 29
+      },
+      "revId": "d85e2a70f2245fdef3fa2c75dbddbed041102d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

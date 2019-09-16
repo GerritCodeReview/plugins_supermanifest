@@ -46,6 +46,30 @@
       "revId": "d85e2a70f2245fdef3fa2c75dbddbed041102d8c",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8037f2d_a013466a",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/RepoSuperManifestIT.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-09-16T12:13:32Z",
+      "side": 1,
+      "message": "you shouldnt call the function within the test, since it is not part of the API contract for the plugin. Find a way to reproduce the failure instead. Looking at the bugreport, I think you should make an XML file that exercises the faulty code.",
+      "parentUuid": "db85a33f_927bb52e",
+      "range": {
+        "startLine": 106,
+        "startChar": 1,
+        "endLine": 119,
+        "endChar": 29
+      },
+      "revId": "d85e2a70f2245fdef3fa2c75dbddbed041102d8c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "fmt:commitmsg-supermanifest": {
+      "state": "RUNNING",
+      "started": "2019-11-16T19:02:50Z",
+      "created": "2019-11-16T19:02:50Z",
+      "updated": "2019-11-16T19:02:50Z"
+    }
+  }
+}

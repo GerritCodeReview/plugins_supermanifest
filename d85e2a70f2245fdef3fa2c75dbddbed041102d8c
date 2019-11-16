@@ -1,5 +1,11 @@
 {
   "checks": {
+    "fmt:commitmsg-supermanifest": {
+      "state": "RUNNING",
+      "started": "2019-11-16T19:02:21Z",
+      "created": "2019-11-16T19:02:21Z",
+      "updated": "2019-11-16T19:02:21Z"
+    },
     "fmt:java-supermanifest": {
       "state": "SUCCESSFUL",
       "started": "2019-11-16T05:39:56Z",

@@ -84,7 +84,7 @@ public class SuperManifestRefUpdatedListener
 
   private final GitRepositoryManager repoManager;
   private final URI canonicalWebUrl;
-  private final PluginConfigFactory cfgFactory;
+  private final                    PluginConfigFactory cfgFactory;
   private final String pluginName;
   private final AllProjectsName allProjectsName;
   private final ProjectCache projectCache;

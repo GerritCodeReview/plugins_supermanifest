@@ -1,10 +1,11 @@
 {
   "checks": {
     "fmt:java-supermanifest": {
-      "state": "RUNNING",
+      "state": "FAILED",
+      "message": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java: found a difference",
       "started": "2019-11-16T05:39:52Z",
       "created": "2019-11-16T05:39:52Z",
-      "updated": "2019-11-16T05:39:52Z"
+      "updated": "2019-11-16T05:39:55Z"
     }
   }
 }

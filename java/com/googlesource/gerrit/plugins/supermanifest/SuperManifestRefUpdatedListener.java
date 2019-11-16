@@ -82,6 +82,7 @@ public class SuperManifestRefUpdatedListener
         RestModifyView<BranchResource, BranchInput> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
+  // A change.
   private final GitRepositoryManager repoManager;
   private final URI canonicalWebUrl;
   private final PluginConfigFactory cfgFactory;

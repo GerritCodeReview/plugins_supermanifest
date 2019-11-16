@@ -1,10 +1,11 @@
 {
   "checks": {
     "fmt:commitmsg-supermanifest": {
-      "state": "RUNNING",
+      "state": "FAILED",
+      "message": "/COMMIT_MSG: subject must not end in \u0027.\u0027",
       "started": "2019-11-16T19:02:50Z",
       "created": "2019-11-16T19:02:50Z",
-      "updated": "2019-11-16T19:02:50Z"
+      "updated": "2019-11-16T19:02:51Z"
     }
   }
 }

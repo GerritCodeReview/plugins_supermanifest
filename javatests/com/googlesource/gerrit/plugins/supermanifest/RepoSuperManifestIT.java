@@ -178,6 +178,102 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   }
 
   @Test
+  public void basicFunctionalityWorksWithCopyFile() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
+    cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+    // XML change will trigger commit to superproject.
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\">\n"
+            + "<copyfile src=\"file0\" dest=\"Hello\" />"
+            + "</project>\n"
+            + "</manifest>\n";
+
+    pushFactory
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThrows(ResourceNotFoundException.class, () -> branch.file("project2"));
+  }
+
+  @Test
+  public void basicFunctionalityWorksWithCopyFileWithBareSha1() throws Exception {
+    setupTestRepos("project");
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
+    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
+
+    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
+    cloneProject(superKey, admin);
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/destbranch\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = refs/heads/srcbranch\n"
+            + "  srcPath = default.xml\n");
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+    // XML change will trigger commit to superproject.
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + defaultXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\""
+            + " revision=\""
+            + testRepoCommits[0]
+            + "\""
+            + ">\n"
+            + "<copyfile src=\"file0\" dest=\"Hello\" />"
+            + "</project>\n"
+            + "</manifest>\n";
+
+    pushFactory
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/srcbranch")
+        .assertOkStatus();
+
+    BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
+    assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThrows(ResourceNotFoundException.class, () -> branch.file("project2"));
+  }
+
+  @Test
   public void httpEndpoint() throws Exception {
     setupTestRepos("project");
 

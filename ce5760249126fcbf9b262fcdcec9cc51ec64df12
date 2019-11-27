@@ -5,6 +5,12 @@
       "started": "2019-11-27T14:29:03Z",
       "created": "2019-11-27T14:29:04Z",
       "updated": "2019-11-27T14:29:06Z"
+    },
+    "fmt:java-supermanifest": {
+      "state": "RUNNING",
+      "started": "2019-11-27T14:29:06Z",
+      "created": "2019-11-27T14:29:06Z",
+      "updated": "2019-11-27T14:29:06Z"
     }
   }
 }

@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "4b581b59_99985855",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-11-27T20:06:27Z",
+      "side": 1,
+      "message": "\"use repo.resolve() rather than repo.ref() which accepts hex sha1s\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "ce5760249126fcbf9b262fcdcec9cc51ec64df12",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1b4dfa1_627f44b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-11-27T20:06:27Z",
+      "side": 1,
+      "message": "can you write this with the customer in mind? How will this impact them?",
+      "range": {
+        "startLine": 12,
+        "startChar": 1,
+        "endLine": 16,
+        "endChar": 13
+      },
+      "revId": "ce5760249126fcbf9b262fcdcec9cc51ec64df12",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "846c559d_a86f6747",
         "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/RepoSuperManifestIT.java",
         "patchSetId": 5

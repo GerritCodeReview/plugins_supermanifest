@@ -46,6 +46,9 @@ import org.junit.Test;
 public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   Project.NameKey[] testRepoKeys;
   String[] testRepoCommits;
+  Project.NameKey manifestKey;
+  TestRepository<InMemoryRepository> manifestRepo;
+  Project.NameKey superKey;
 
   @Inject private ProjectOperations projectOperations;
 
@@ -68,6 +71,13 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
       r.assertOkStatus();
       testRepoCommits[i] = r.getCommit().getName();
     }
+
+    // Make sure the manifest exists so the configuration loads successfully.
+    manifestKey = projectOperations.newProject().name(name("manifest")).create();
+    manifestRepo = cloneProject(manifestKey, admin);
+
+    superKey = projectOperations.newProject().name(name("superproject")).create();
+    cloneProject(superKey, admin);
   }
 
   void pushConfig(String config) throws Exception {
@@ -85,13 +95,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   @Test
   public void basicFunctionalityWorks() throws Exception {
     setupTestRepos("project");
-
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
 
     pushConfig(
         "[superproject \""
@@ -181,13 +184,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   public void basicFunctionalityWorksWithCopyFile() throws Exception {
     setupTestRepos("project");
 
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
-
     pushConfig(
         "[superproject \""
             + superKey.get()
@@ -227,13 +223,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   @Test
   public void basicFunctionalityWorksWithCopyFileWithBareSha1() throws Exception {
     setupTestRepos("project");
-
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
 
     pushConfig(
         "[superproject \""
@@ -279,13 +268,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   public void httpEndpoint() throws Exception {
     setupTestRepos("project");
 
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
-
     String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
     String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
     String xml =
@@ -327,13 +309,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   @Test
   public void rawSha1Ref() throws Exception {
     setupTestRepos("project");
-
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
 
     String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
     String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
@@ -388,13 +363,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   @Test
   public void testIgnoreRemoteFailure() throws Exception {
     setupTestRepos("project");
-
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
 
     String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
     String defaultXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
@@ -475,13 +443,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   public void wildcardDestBranchWorks() throws Exception {
     setupTestRepos("project");
 
-    // Make sure the manifest exists so the configuration loads successfully.
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
-
     pushConfig(
         "[superproject \""
             + superKey.get()
@@ -551,8 +512,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project1\" />\n"
             + "</manifest>\n";
 
-    Project.NameKey manifestKey = projectOperations.newProject().name(name("manifest")).create();
-    TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
     pushFactory
         .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/master")
@@ -568,9 +527,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         .create(admin.newIdent(), manifestRepo, "Subject", "super.xml", superXml)
         .to("refs/heads/master")
         .assertOkStatus();
-
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
 
     pushConfig(
         "[superproject \""
@@ -607,7 +563,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         projectOperations.newProject().name(name(realPrefix + "/manifest")).create();
     TestRepository<InMemoryRepository> manifestRepo = cloneProject(manifestKey, admin);
 
-    Project.NameKey superKey = projectOperations.newProject().name(name("superproject")).create();
     pushConfig(
         "[superproject \""
             + superKey.get()

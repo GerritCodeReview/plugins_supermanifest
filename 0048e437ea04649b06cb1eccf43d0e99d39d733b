@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e075881_3c8ace91",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/RepoSuperManifestIT.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2019-11-28T18:06:18Z",
+      "side": 1,
+      "message": "if you want, you can drop this test. I think it adds little value over the next one.",
+      "range": {
+        "startLine": 181,
+        "startChar": 14,
+        "endLine": 181,
+        "endChar": 49
+      },
+      "revId": "0048e437ea04649b06cb1eccf43d0e99d39d733b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}

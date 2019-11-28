@@ -7,10 +7,10 @@
       "updated": "2019-11-28T17:58:26Z"
     },
     "fmt:java-supermanifest": {
-      "state": "RUNNING",
+      "state": "SUCCESSFUL",
       "started": "2019-11-28T17:58:30Z",
       "created": "2019-11-28T17:58:30Z",
-      "updated": "2019-11-28T17:58:30Z"
+      "updated": "2019-11-28T17:58:32Z"
     }
   }
 }

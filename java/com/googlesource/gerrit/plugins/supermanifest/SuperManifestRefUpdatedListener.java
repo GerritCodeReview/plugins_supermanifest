@@ -238,6 +238,9 @@ public class SuperManifestRefUpdatedListener
     if (event.getProjectName().equals(allProjectsName.get())) {
       if (event.getRefName().equals("refs/meta/config")) {
         try {
+          // TODO: Remove, this is just band-aid.
+          // Evict project cache because this is called before that eviction is done in core
+          projectCache.evict(allProjectsName);
           updateConfiguration();
         } catch (NoSuchProjectException e) {
           throw new IllegalStateException(e);

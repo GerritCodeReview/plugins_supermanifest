@@ -82,7 +82,7 @@ public class SuperManifestRefUpdatedListener
         RestModifyView<BranchResource, BranchInput> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  private final GitRepositoryManager repoManager;
+  private final Provider<GerritRemoteReader> remoteReaderProvider;
   private final URI canonicalWebUrl;
   private final PluginConfigFactory cfgFactory;
   private final String pluginName;
@@ -105,14 +105,13 @@ public class SuperManifestRefUpdatedListener
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
-      GitRepositoryManager repoManager,
+      Provider<GerritRemoteReader> remoteReaderProvider,
       Provider<IdentifiedUser> identifiedUser,
       PermissionBackend permissionBackend) {
-
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
-    this.repoManager = repoManager;
+    this.remoteReaderProvider = remoteReaderProvider;
     try {
       this.canonicalWebUrl = new URI(canonicalWebUrl);
     } catch (URISyntaxException e) {
@@ -321,13 +320,15 @@ public class SuperManifestRefUpdatedListener
         subModuleUpdater = new RepoUpdater(serverIdent.get());
         break;
       case Jiri:
-        subModuleUpdater = new JiriUpdater(serverIdent.get(), canonicalWebUrl, downloadScheme);
+
+        subModuleUpdater = new RepoUpdater(serverIdent.get());
+        //subModuleUpdater = new JiriUpdater(serverIdent.get(), canonicalWebUrl, downloadScheme);
         break;
       default:
         throw new ConfigInvalidException(
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
-    try (GerritRemoteReader reader = new GerritRemoteReader()) {
+    try (GerritRemoteReader reader = remoteReaderProvider.get()) {
       subModuleUpdater.update(reader, c, refName);
     }
   }
@@ -350,12 +351,33 @@ public class SuperManifestRefUpdatedListener
     return trimmed.toArray(new StackTraceElement[trimmed.size()]);
   }
 
-  // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
-  class GerritRemoteReader implements RepoCommand.RemoteReader, Closeable {
-    private final Map<String, Repository> repos;
+  interface GerritRemoteReader extends RepoCommand.RemoteReader, Closeable {
+    /**
+     * @param name repository name relative to current host (e.g. "submodule" for
+     *     "gerrit.googlesource.com/submodule")
+     * @return the open repository. The reader keeps it cached, so the caller MUST not close it.
+     * @throws IOException error opening the repo.
+     */
+    Repository openRepository(String name) throws IOException;
+  }
 
-    GerritRemoteReader() {
+  // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
+  static class GerritRemoteReaderImpl implements GerritRemoteReader {
+    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private final Map<String, Repository> repos;
+    private final GitRepositoryManager repoManager;
+    private final URI canonicalWebUrl;
+
+    @Inject
+    GerritRemoteReaderImpl(
+        GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
       this.repos = new HashMap<>();
+      this.repoManager = repoManager;
+      try {
+        this.canonicalWebUrl = new URI(canonicalWebUrl);
+      } catch (URISyntaxException e) {
+        throw new IllegalArgumentException(e);
+      }
     }
 
     @Override
@@ -383,7 +405,8 @@ public class SuperManifestRefUpdatedListener
         Repository repo = openRepository(repoName);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
-          warn("in repo %s: cannot resolve ref %s", uriStr, refName);
+          logger.atWarning().log(
+              "%s: in repo %s: cannot resolve ref %s", canonicalWebUrl, uriStr, refName);
           return null;
         }
 
@@ -391,7 +414,8 @@ public class SuperManifestRefUpdatedListener
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        warn("failed to open repository %s: %s", repoName, e);
+        logger.atWarning().log(
+            "%s: failed to open repository %s: %s", canonicalWebUrl, repoName, e);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =
@@ -418,6 +442,7 @@ public class SuperManifestRefUpdatedListener
           tw.getFileMode(0));
     }
 
+    @Override
     public Repository openRepository(String name) throws IOException {
       name = urlToRepoKey(canonicalWebUrl, name);
       if (repos.containsKey(name)) {

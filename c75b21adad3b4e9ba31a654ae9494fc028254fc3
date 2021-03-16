@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "569d0403_7efeac07",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1011842
+      },
+      "writtenOn": "2021-03-16T03:21:46Z",
+      "side": 1,
+      "message": "Should this be something like\n\n  bind(GerritRemoteReader.class).to(GerritRemoteReaderImpl.class);\n\nsince there\u0027s only one instead of a set?",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "c75b21adad3b4e9ba31a654ae9494fc028254fc3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

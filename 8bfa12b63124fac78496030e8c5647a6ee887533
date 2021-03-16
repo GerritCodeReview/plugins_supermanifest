@@ -8,10 +8,11 @@
       "updated": "2021-03-16T16:05:02Z"
     },
     "fmt:java-supermanifest": {
-      "state": "RUNNING",
+      "state": "FAILED",
+      "message": "uuid \"fmt:java-supermanifest\" has unknown language",
       "started": "2021-03-16T16:05:03Z",
       "created": "2021-03-16T16:05:03Z",
-      "updated": "2021-03-16T16:05:03Z"
+      "updated": "2021-03-16T16:05:04Z"
     }
   }
 }

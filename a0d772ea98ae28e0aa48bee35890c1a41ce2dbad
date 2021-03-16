@@ -22,6 +22,23 @@
       },
       "revId": "a0d772ea98ae28e0aa48bee35890c1a41ce2dbad",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfb5b550_e8839c4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1085183
+      },
+      "writtenOn": "2021-03-16T09:30:09Z",
+      "side": 1,
+      "message": "re java formatting check that is failing:\n\nDownload google-java-format-1.7-all-deps.jar from here:\nhttps://github.com/google/google-java-format/releases/tag/google-java-format-1.7\n\nAnd then run this before comitting:\nalias format\u003d\u0027git ls-files | grep java$ | xargs java -jar ~/Downloads/google-java-format-1.7-all-deps.jar -i\u0027\n",
+      "revId": "a0d772ea98ae28e0aa48bee35890c1a41ce2dbad",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

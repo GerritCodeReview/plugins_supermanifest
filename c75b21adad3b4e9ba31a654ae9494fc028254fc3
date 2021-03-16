@@ -8,9 +8,10 @@
       "updated": "2021-03-15T23:59:43Z"
     },
     "fmt:java-supermanifest": {
-      "state": "NOT_STARTED",
+      "state": "RUNNING",
+      "started": "2021-03-16T00:01:13Z",
       "created": "2021-03-15T23:59:44Z",
-      "updated": "2021-03-16T00:01:11Z"
+      "updated": "2021-03-16T00:01:13Z"
     }
   }
 }

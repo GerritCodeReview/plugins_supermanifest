@@ -46,6 +46,30 @@
       },
       "revId": "c75b21adad3b4e9ba31a654ae9494fc028254fc3",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0aad075_e1141dfc",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestModule.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-03-16T06:12:34Z",
+      "side": 1,
+      "message": "Now I managed to run the unit tests, with the simple bind() they work (and not with the DynamicSet!).",
+      "parentUuid": "65d5fb99_262452c3",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "c75b21adad3b4e9ba31a654ae9494fc028254fc3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c590e59d_0038900d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-03-16T16:06:38Z",
+      "side": 1,
+      "message": "Done (new commit message)",
+      "parentUuid": "f1071b1c_1236c36c",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 0
+      },
+      "revId": "a0d772ea98ae28e0aa48bee35890c1a41ce2dbad",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "dfb5b550_e8839c4c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -37,6 +61,24 @@
       "writtenOn": "2021-03-16T09:30:09Z",
       "side": 1,
       "message": "re java formatting check that is failing:\n\nDownload google-java-format-1.7-all-deps.jar from here:\nhttps://github.com/google/google-java-format/releases/tag/google-java-format-1.7\n\nAnd then run this before comitting:\nalias format\u003d\u0027git ls-files | grep java$ | xargs java -jar ~/Downloads/google-java-format-1.7-all-deps.jar -i\u0027\n",
+      "revId": "a0d772ea98ae28e0aa48bee35890c1a41ce2dbad",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "718e40de_4e49f225",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-03-16T16:06:38Z",
+      "side": 1,
+      "message": "Is 1.7 the right version? I run it but it doesn\u0027t find anything wrong:\n\n$ git ls-files | grep java$ | xargs java -jar ~/Downloads/google-java-format-1.7-all-deps.jar -i\n$ git ls-files -m\n$\n\n(FWIW, I ran the command before the first upload and it fixed few lines, so it works)",
+      "parentUuid": "dfb5b550_e8839c4c",
       "revId": "a0d772ea98ae28e0aa48bee35890c1a41ce2dbad",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }

@@ -33,8 +33,6 @@ public class SuperManifestModule extends RestApiModule {
     DynamicSet.bind(binder(), LifecycleListener.class)
         .to(SuperManifestRefUpdatedListener.class)
         .in(SINGLETON);
-    bind(SuperManifestRefUpdatedListener.GerritRemoteReader.class)
-        .to(SuperManifestRefUpdatedListener.GerritRemoteReaderImpl.class);
     post(BRANCH_KIND, "update_manifest").to(SuperManifestRefUpdatedListener.class).in(SINGLETON);
   }
 }

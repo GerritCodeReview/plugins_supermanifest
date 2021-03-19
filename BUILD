@@ -21,7 +21,7 @@ gerrit_plugin(
 junit_tests(
     name = "supermanifest_tests",
     size = "large",
-    srcs = glob(["javatests/**/*IT.java"]),
+    srcs = glob(["javatests/**/*.java"]),
     resources = glob(["javatests/**/*.properties"]),
     tags = [
         "supermanifest-plugin",

@@ -544,7 +544,9 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + defaultXml
             + "  <project name=\""
             + testRepoKeys[0].get()
-            + "\" path=\"path1\" />\n"
+            + "\" path=\"path1\" >\n"
+            + "<copyfile src=\"file0\" dest=\"dest\" />\n"
+            + "</project>"
             + "</manifest>\n";
     pushFactory
         .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
@@ -553,6 +555,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("path1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file("dest").asString()).isEqualTo("file");
 
     Config base = new Config();
     String gitmodule = branch.file(".gitmodules").asString();
@@ -568,21 +571,6 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     // URL is clean.
     assertThat(subUrl).isEqualTo("../" + realPrefix + "/project0");
-  }
-
-  @Test
-  public void testToRepoKey() {
-    URI base = URI.create("https://gerrit-review.googlesource.com");
-    assertThat(
-            SuperManifestRefUpdatedListener.urlToRepoKey(
-                base, "https://gerrit-review.googlesource.com/repo"))
-        .isEqualTo("repo");
-    assertThat(SuperManifestRefUpdatedListener.urlToRepoKey(base, "repo")).isEqualTo("repo");
-    assertThat(
-            SuperManifestRefUpdatedListener.urlToRepoKey(
-                URI.create("https://gerrit-review.googlesource.com/"),
-                "https://gerrit-review.googlesource.com/repo"))
-        .isEqualTo("repo");
   }
 
   // TODO - should add tests for all the error handling in configuration parsing?

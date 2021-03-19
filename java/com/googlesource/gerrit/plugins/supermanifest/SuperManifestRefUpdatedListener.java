@@ -43,7 +43,6 @@ import com.google.gerrit.server.project.ProjectCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -82,7 +81,7 @@ public class SuperManifestRefUpdatedListener
         RestModifyView<BranchResource, BranchInput> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  private final Provider<GerritRemoteReader> remoteReaderProvider;
+  private final GitRepositoryManager repoManager;
   private final URI canonicalWebUrl;
   private final PluginConfigFactory cfgFactory;
   private final String pluginName;
@@ -105,14 +104,14 @@ public class SuperManifestRefUpdatedListener
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
-      Provider<GerritRemoteReader> remoteReaderProvider,
+      GitRepositoryManager repoManager,
       Provider<IdentifiedUser> identifiedUser,
       PermissionBackend permissionBackend) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
-    this.remoteReaderProvider = remoteReaderProvider;
+    this.repoManager = repoManager;
     try {
       this.canonicalWebUrl = new URI(canonicalWebUrl);
     } catch (URISyntaxException e) {
@@ -327,7 +326,8 @@ public class SuperManifestRefUpdatedListener
         throw new ConfigInvalidException(
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
-    try (GerritRemoteReader reader = remoteReaderProvider.get()) {
+    try (GerritRemoteReader reader =
+        new GerritRemoteReader(repoManager, canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
     }
   }
@@ -350,26 +350,14 @@ public class SuperManifestRefUpdatedListener
     return trimmed.toArray(new StackTraceElement[trimmed.size()]);
   }
 
-  interface GerritRemoteReader extends RepoCommand.RemoteReader, Closeable {
-    /**
-     * @param name repository name relative to current host (e.g. "submodule" for
-     *     "gerrit.googlesource.com/submodule")
-     * @return the open repository. The reader keeps it cached, so the caller MUST not close it.
-     * @throws IOException error opening the repo.
-     */
-    Repository openRepository(String name) throws IOException;
-  }
-
   // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
-  static class GerritRemoteReaderImpl implements GerritRemoteReader {
+  static class GerritRemoteReader implements RepoCommand.RemoteReader, AutoCloseable {
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
     private final Map<String, Repository> repos;
     private final GitRepositoryManager repoManager;
     private final URI canonicalWebUrl;
 
-    @Inject
-    GerritRemoteReaderImpl(
-        GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
+    GerritRemoteReader(GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
       this.repos = new HashMap<>();
       this.repoManager = repoManager;
       try {
@@ -441,7 +429,6 @@ public class SuperManifestRefUpdatedListener
           tw.getFileMode(0));
     }
 
-    @Override
     public Repository openRepository(String name) throws IOException {
       name = urlToRepoKey(canonicalWebUrl, name);
       if (repos.containsKey(name)) {

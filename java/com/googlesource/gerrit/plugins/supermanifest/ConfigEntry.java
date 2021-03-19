@@ -25,7 +25,7 @@ import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
 
-class ConfigEntry {
+public class ConfigEntry {
   public static final String SECTION_NAME = "superproject";
 
   Project.NameKey srcRepoKey;

@@ -43,7 +43,7 @@ import com.google.gerrit.server.project.ProjectCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import java.io.Closeable;
+import com.google.inject.assistedinject.Assisted;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -53,10 +53,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
@@ -82,7 +80,7 @@ public class SuperManifestRefUpdatedListener
         RestModifyView<BranchResource, BranchInput> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  private final Provider<GerritRemoteReader> remoteReaderProvider;
+  private final SuperManifestRepoManager.Factory repoManagerFactory;
   private final URI canonicalWebUrl;
   private final PluginConfigFactory cfgFactory;
   private final String pluginName;
@@ -105,14 +103,14 @@ public class SuperManifestRefUpdatedListener
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
-      Provider<GerritRemoteReader> remoteReaderProvider,
+      SuperManifestRepoManager.Factory repoManagerFactory,
       Provider<IdentifiedUser> identifiedUser,
       PermissionBackend permissionBackend) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
-    this.remoteReaderProvider = remoteReaderProvider;
+    this.repoManagerFactory = repoManagerFactory;
     try {
       this.canonicalWebUrl = new URI(canonicalWebUrl);
     } catch (URISyntaxException e) {
@@ -331,7 +329,8 @@ public class SuperManifestRefUpdatedListener
         throw new ConfigInvalidException(
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
-    try (GerritRemoteReader reader = remoteReaderProvider.get()) {
+    try (GerritRemoteReader reader =
+        new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
     }
   }
@@ -354,50 +353,20 @@ public class SuperManifestRefUpdatedListener
     return trimmed.toArray(new StackTraceElement[trimmed.size()]);
   }
 
-  interface GerritRemoteReader extends RepoCommand.RemoteReader, Closeable {
-    /**
-     * @param name repository name relative to current host (e.g. "submodule" for
-     *     "gerrit.googlesource.com/submodule")
-     * @return the open repository. The reader keeps it cached, so the caller MUST not close it.
-     * @throws IOException error opening the repo.
-     */
-    Repository openRepository(String name) throws IOException;
-  }
-
   // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
-  static class GerritRemoteReaderImpl implements GerritRemoteReader {
+  static class GerritRemoteReader implements RepoCommand.RemoteReader, AutoCloseable {
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-    private final Map<String, Repository> repos;
-    private final GitRepositoryManager repoManager;
-    private final URI canonicalWebUrl;
+    private final String canonicalWebUrl;
+    private final SuperManifestRepoManager repoManager;
 
-    @Inject
-    GerritRemoteReaderImpl(
-        GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
-      this.repos = new HashMap<>();
+    GerritRemoteReader(
+        SuperManifestRepoManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
       this.repoManager = repoManager;
-      try {
-        this.canonicalWebUrl = new URI(canonicalWebUrl);
-      } catch (URISyntaxException e) {
-        throw new IllegalArgumentException(e);
-      }
+      this.canonicalWebUrl = canonicalWebUrl;
     }
 
     @Override
     public ObjectId sha1(String uriStr, String refName) throws GitAPIException {
-      URI url;
-      try {
-        url = new URI(uriStr);
-      } catch (URISyntaxException e) {
-        // TODO(hanwen): is there a better exception for this?
-        throw new InvalidRemoteException(e.getMessage());
-      }
-
-      String repoName = url.getPath();
-      while (repoName.startsWith("/")) {
-        repoName = repoName.substring(1);
-      }
-
       // This is a (mis)feature of JGit, which ignores SHA1s but only if ignoreRemoteFailures
       // is set.
       if (ObjectId.isId(refName)) {
@@ -405,7 +374,12 @@ public class SuperManifestRefUpdatedListener
       }
 
       try {
-        Repository repo = openRepository(repoName);
+        // When the remote is fetch="<relative path>" the manifest parser uses a repoName as URI.
+        // Do a poor man's guessing if we have a repoName or URI
+        Repository repo =
+            uriStr.contains("://")
+                ? repoManager.openByUri(uriStr)
+                : repoManager.openByName(Project.nameKey(uriStr));
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
           logger.atWarning().log(
@@ -417,21 +391,25 @@ public class SuperManifestRefUpdatedListener
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        logger.atWarning().log(
-            "%s: failed to open repository %s: %s", canonicalWebUrl, repoName, e);
+        logger.atWarning().log("%s: failed to open repository %s: %s", canonicalWebUrl, uriStr, e);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =
-            new RefNotFoundException(String.format("cannot open %s to read %s", repoName, refName));
+            new RefNotFoundException(String.format("cannot open %s to read %s", uriStr, refName));
         e.initCause(io);
         throw e;
       }
     }
 
     @Override
-    public RemoteFile readFileWithMode(String repoName, String ref, String path)
+    public RemoteFile readFileWithMode(String uriStr, String ref, String path)
         throws GitAPIException, IOException {
-      Repository repo = openRepository(repoName);
+      // When the remote is fetch="<relative path>" the manifest parser uses a repoName as URI.
+      // Do a poor man's guessing if we have a repoName or URI
+      Repository repo =
+          uriStr.contains("://")
+              ? repoManager.openByUri(uriStr)
+              : repoManager.openByName(Project.nameKey(uriStr));
       Ref r = repo.findRef(ref);
       ObjectId objectId = r == null ? repo.resolve(ref) : r.getObjectId();
       if (objectId == null) {
@@ -445,16 +423,75 @@ public class SuperManifestRefUpdatedListener
           tw.getFileMode(0));
     }
 
-    @Override
     public Repository openRepository(String name) throws IOException {
-      name = urlToRepoKey(canonicalWebUrl, name);
+      return repoManager.openByName(Project.nameKey(name));
+    }
+
+    @Override
+    public void close() {
+      try {
+        repoManager.close();
+      } catch (Exception e) {
+        logger.atWarning().log("Error closing the repoManager");
+      }
+    }
+  }
+
+  // AutoCloseable so implementations can keep a cache
+  public interface SuperManifestRepoManager extends AutoCloseable {
+    Repository openByUri(String uriStr) throws IOException;
+
+    Repository openByName(Project.NameKey repoName) throws IOException;
+
+    interface Factory {
+      SuperManifestRepoManager create(ConfigEntry c);
+    }
+  }
+
+  static class GerritSuperManifestRepoManager implements SuperManifestRepoManager {
+    private final HashMap<Project.NameKey, Repository> repos;
+    private final GitRepositoryManager repoManager;
+    private final String canonicalWebUrl;
+
+    @Inject
+    GerritSuperManifestRepoManager(
+        GitRepositoryManager repoManager,
+        @CanonicalWebUrl String canonicalWebUrl,
+        @Assisted ConfigEntry e) {
+      this.repos = new HashMap<>();
+      this.repoManager = repoManager;
+      this.canonicalWebUrl = canonicalWebUrl;
+    }
+
+    @Override
+    public Repository openByName(Project.NameKey name) throws IOException {
       if (repos.containsKey(name)) {
         return repos.get(name);
       }
 
-      Repository repo = repoManager.openRepository(Project.nameKey(name));
+      Repository repo = repoManager.openRepository(name);
       repos.put(name, repo);
       return repo;
+    }
+
+    @Override
+    public Repository openByUri(String uriStr) throws IOException {
+      // A URL in this host is <canonicalWebUrl>/<repoName>.
+      if (!uriStr.startsWith(canonicalWebUrl)) {
+        // Cannot open repos in another host.
+        // InvalidRemoteException would stop the whole manifest processing. We rather ignore these
+        // entries.
+        throw new RepositoryNotFoundException(
+            "Manifest refers to repo in different host: " + uriStr);
+      }
+
+      // canonicalWebUrl can contain also a path part
+      String repoName = uriStr.substring(canonicalWebUrl.length());
+      while (repoName.startsWith("/")) {
+        repoName = repoName.substring(1);
+      }
+
+      return openByName(Project.nameKey(repoName));
     }
 
     @Override
@@ -464,18 +501,5 @@ public class SuperManifestRefUpdatedListener
       }
       repos.clear();
     }
-  }
-
-  @VisibleForTesting
-  static String urlToRepoKey(URI baseUri, String name) {
-    if (name.startsWith(baseUri.toString())) {
-      // It would be nice to parse the URL and do relativize on the Path, but
-      // I am lazy, and nio.Path considers the file system and symlinks.
-      name = name.substring(baseUri.toString().length());
-      while (name.startsWith("/")) {
-        name = name.substring(1);
-      }
-    }
-    return name;
   }
 }

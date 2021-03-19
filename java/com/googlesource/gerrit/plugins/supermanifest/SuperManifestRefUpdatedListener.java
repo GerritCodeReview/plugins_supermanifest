@@ -353,35 +353,18 @@ public class SuperManifestRefUpdatedListener
   // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
   static class GerritRemoteReader implements RepoCommand.RemoteReader, AutoCloseable {
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-    private final Map<String, Repository> repos;
+    private final Map<Project.NameKey, Repository> repos;
     private final GitRepositoryManager repoManager;
-    private final URI canonicalWebUrl;
+    private final String canonicalWebUrl;
 
     GerritRemoteReader(GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
       this.repos = new HashMap<>();
       this.repoManager = repoManager;
-      try {
-        this.canonicalWebUrl = new URI(canonicalWebUrl);
-      } catch (URISyntaxException e) {
-        throw new IllegalArgumentException(e);
-      }
+      this.canonicalWebUrl = canonicalWebUrl;
     }
 
     @Override
     public ObjectId sha1(String uriStr, String refName) throws GitAPIException {
-      URI url;
-      try {
-        url = new URI(uriStr);
-      } catch (URISyntaxException e) {
-        // TODO(hanwen): is there a better exception for this?
-        throw new InvalidRemoteException(e.getMessage());
-      }
-
-      String repoName = url.getPath();
-      while (repoName.startsWith("/")) {
-        repoName = repoName.substring(1);
-      }
-
       // This is a (mis)feature of JGit, which ignores SHA1s but only if ignoreRemoteFailures
       // is set.
       if (ObjectId.isId(refName)) {
@@ -389,7 +372,7 @@ public class SuperManifestRefUpdatedListener
       }
 
       try {
-        Repository repo = openRepository(repoName);
+        Repository repo = doOpenByUri(uriStr);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
           logger.atWarning().log(
@@ -401,21 +384,20 @@ public class SuperManifestRefUpdatedListener
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        logger.atWarning().log(
-            "%s: failed to open repository %s: %s", canonicalWebUrl, repoName, e);
+        logger.atWarning().log("%s: failed to open repository %s: %s", canonicalWebUrl, uriStr, e);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =
-            new RefNotFoundException(String.format("cannot open %s to read %s", repoName, refName));
+            new RefNotFoundException(String.format("cannot open %s to read %s", uriStr, refName));
         e.initCause(io);
         throw e;
       }
     }
 
     @Override
-    public RemoteFile readFileWithMode(String repoName, String ref, String path)
+    public RemoteFile readFileWithMode(String uriStr, String ref, String path)
         throws GitAPIException, IOException {
-      Repository repo = openRepository(repoName);
+      Repository repo = doOpenByUri(uriStr);
       Ref r = repo.findRef(ref);
       ObjectId objectId = r == null ? repo.resolve(ref) : r.getObjectId();
       if (objectId == null) {
@@ -430,14 +412,40 @@ public class SuperManifestRefUpdatedListener
     }
 
     public Repository openRepository(String name) throws IOException {
-      name = urlToRepoKey(canonicalWebUrl, name);
+      return doOpenByName(Project.nameKey(name));
+    }
+
+    private Repository doOpenByName(Project.NameKey name) throws IOException {
       if (repos.containsKey(name)) {
         return repos.get(name);
       }
 
-      Repository repo = repoManager.openRepository(Project.nameKey(name));
+      Repository repo = repoManager.openRepository(name);
       repos.put(name, repo);
       return repo;
+    }
+
+    private Repository doOpenByUri(String uriStr) throws IOException, InvalidRemoteException {
+      // A URL in this host is <canonicalWebUrl>/<repoName>, but canonicalWebUrl can contain also
+      // path
+      // If is is canonical, take the rest as repoName, otherwise take only the path
+      String repoName;
+      if (uriStr.startsWith(canonicalWebUrl)) {
+        repoName = uriStr.substring(canonicalWebUrl.length());
+      } else {
+        try {
+          repoName = new URI(uriStr).getPath();
+        } catch (URISyntaxException e) {
+          // TODO(hanwen): is there a better exception for this?
+          throw new InvalidRemoteException(e.getMessage());
+        }
+      }
+
+      while (repoName.startsWith("/")) {
+        repoName = repoName.substring(1);
+      }
+
+      return doOpenByName(Project.nameKey(repoName));
     }
 
     @Override
@@ -447,18 +455,5 @@ public class SuperManifestRefUpdatedListener
       }
       repos.clear();
     }
-  }
-
-  @VisibleForTesting
-  static String urlToRepoKey(URI baseUri, String name) {
-    if (name.startsWith(baseUri.toString())) {
-      // It would be nice to parse the URL and do relativize on the Path, but
-      // I am lazy, and nio.Path considers the file system and symlinks.
-      name = name.substring(baseUri.toString().length());
-      while (name.startsWith("/")) {
-        name = name.substring(1);
-      }
-    }
-    return name;
   }
 }

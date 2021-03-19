@@ -43,6 +43,7 @@ import com.google.gerrit.server.project.ProjectCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -80,7 +81,7 @@ public class SuperManifestRefUpdatedListener
         RestModifyView<BranchResource, BranchInput> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  private final GitRepositoryManager repoManager;
+  private final SuperManifestRepoManager.Factory repoManagerFactory;
   private final URI canonicalWebUrl;
   private final PluginConfigFactory cfgFactory;
   private final String pluginName;
@@ -103,14 +104,14 @@ public class SuperManifestRefUpdatedListener
       PluginConfigFactory cfgFactory,
       ProjectCache projectCache,
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
-      GitRepositoryManager repoManager,
+      SuperManifestRepoManager.Factory repoManagerFactory,
       Provider<IdentifiedUser> identifiedUser,
       PermissionBackend permissionBackend) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
-    this.repoManager = repoManager;
+    this.repoManagerFactory = repoManagerFactory;
     try {
       this.canonicalWebUrl = new URI(canonicalWebUrl);
     } catch (URISyntaxException e) {
@@ -326,9 +327,7 @@ public class SuperManifestRefUpdatedListener
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
     try (GerritRemoteReader reader =
-        new GerritRemoteReader(
-            new GerritSuperManifestRepoManager(repoManager, canonicalWebUrl.toString()),
-            canonicalWebUrl.toString())) {
+        new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
     }
   }
@@ -430,6 +429,10 @@ public class SuperManifestRefUpdatedListener
     Repository openByUri(String uriStr) throws IOException, InvalidRemoteException;
 
     Repository openByName(Project.NameKey repoName) throws IOException;
+
+    interface Factory {
+      SuperManifestRepoManager create(ConfigEntry c);
+    }
   }
 
   static class GerritSuperManifestRepoManager implements SuperManifestRepoManager {
@@ -437,8 +440,11 @@ public class SuperManifestRefUpdatedListener
     private final GitRepositoryManager repoManager;
     private final String canonicalWebUrl;
 
+    @Inject
     GerritSuperManifestRepoManager(
-        GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
+        GitRepositoryManager repoManager,
+        @CanonicalWebUrl String canonicalWebUrl,
+        @Assisted ConfigEntry e) {
       this.repos = new HashMap<>();
       this.repoManager = repoManager;
       this.canonicalWebUrl = canonicalWebUrl;

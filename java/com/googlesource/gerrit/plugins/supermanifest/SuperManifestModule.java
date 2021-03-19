@@ -21,6 +21,7 @@ import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.registration.DynamicSet;
 import com.google.gerrit.extensions.restapi.RestApiModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class SuperManifestModule extends RestApiModule {
   SuperManifestModule() {}
@@ -33,6 +34,12 @@ public class SuperManifestModule extends RestApiModule {
     DynamicSet.bind(binder(), LifecycleListener.class)
         .to(SuperManifestRefUpdatedListener.class)
         .in(SINGLETON);
+    install(
+        new FactoryModuleBuilder()
+            .implement(
+                SuperManifestRefUpdatedListener.SuperManifestRepoManager.class,
+                SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager.class)
+            .build(SuperManifestRefUpdatedListener.SuperManifestRepoManager.Factory.class));
     post(BRANCH_KIND, "update_manifest").to(SuperManifestRefUpdatedListener.class).in(SINGLETON);
   }
 }

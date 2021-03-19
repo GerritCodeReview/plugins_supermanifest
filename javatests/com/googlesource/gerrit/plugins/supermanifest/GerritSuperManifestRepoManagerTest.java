@@ -1,0 +1,47 @@
+package com.googlesource.gerrit.plugins.supermanifest;
+
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.gerrit.testing.GerritJUnit.assertThrows;
+
+import com.google.gerrit.entities.Project;
+import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.testing.InMemoryRepositoryManager;
+import java.io.IOException;
+import org.eclipse.jgit.errors.RepositoryNotFoundException;
+import org.eclipse.jgit.lib.Repository;
+import org.junit.Before;
+import org.junit.Test;
+
+public class GerritSuperManifestRepoManagerTest {
+  private static final String CANONICAL_WEB_URL = "https://example.com/gerrit/";
+
+  SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager superManifestRepoManager;
+
+  @Before
+  public void setUp() throws IOException {
+    GitRepositoryManager repoManager = new InMemoryRepositoryManager();
+    repoManager.createRepository(Project.nameKey("project/x"));
+    superManifestRepoManager =
+        new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
+            repoManager, CANONICAL_WEB_URL);
+  }
+
+  @Test
+  public void openByRepoName() throws Exception {
+    Repository repo = superManifestRepoManager.openByName(Project.nameKey("project/x"));
+    assertThat(repo).isNotNull();
+  }
+
+  @Test
+  public void openByUri_canonical_repoNameExcludingCanonical() throws Exception {
+    Repository repo = superManifestRepoManager.openByUri(CANONICAL_WEB_URL + "project/x");
+    assertThat(repo).isNotNull();
+  }
+
+  @Test
+  public void openByUri_nonCanonical_uriPathIsRepoName() {
+    assertThrows(
+        RepositoryNotFoundException.class,
+        () -> superManifestRepoManager.openByUri("https://otherhost.com/project/x"));
+  }
+}

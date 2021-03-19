@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -327,7 +326,9 @@ public class SuperManifestRefUpdatedListener
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
     try (GerritRemoteReader reader =
-        new GerritRemoteReader(repoManager, canonicalWebUrl.toString())) {
+        new GerritRemoteReader(
+            new GerritSuperManifestRepoManager(repoManager, canonicalWebUrl.toString()),
+            canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
     }
   }
@@ -353,12 +354,11 @@ public class SuperManifestRefUpdatedListener
   // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
   static class GerritRemoteReader implements RepoCommand.RemoteReader, AutoCloseable {
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-    private final Map<Project.NameKey, Repository> repos;
-    private final GitRepositoryManager repoManager;
     private final String canonicalWebUrl;
+    private final SuperManifestRepoManager repoManager;
 
-    GerritRemoteReader(GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
-      this.repos = new HashMap<>();
+    GerritRemoteReader(
+        SuperManifestRepoManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
       this.repoManager = repoManager;
       this.canonicalWebUrl = canonicalWebUrl;
     }
@@ -372,7 +372,7 @@ public class SuperManifestRefUpdatedListener
       }
 
       try {
-        Repository repo = doOpenByUri(uriStr);
+        Repository repo = repoManager.openByUri(uriStr);
         Ref ref = repo.findRef(refName);
         if (ref == null || ref.getObjectId() == null) {
           logger.atWarning().log(
@@ -397,7 +397,7 @@ public class SuperManifestRefUpdatedListener
     @Override
     public RemoteFile readFileWithMode(String uriStr, String ref, String path)
         throws GitAPIException, IOException {
-      Repository repo = doOpenByUri(uriStr);
+      Repository repo = repoManager.openByUri(uriStr);
       Ref r = repo.findRef(ref);
       ObjectId objectId = r == null ? repo.resolve(ref) : r.getObjectId();
       if (objectId == null) {
@@ -412,10 +412,40 @@ public class SuperManifestRefUpdatedListener
     }
 
     public Repository openRepository(String name) throws IOException {
-      return doOpenByName(Project.nameKey(name));
+      return repoManager.openByName(Project.nameKey(name));
     }
 
-    private Repository doOpenByName(Project.NameKey name) throws IOException {
+    @Override
+    public void close() {
+      try {
+        repoManager.close();
+      } catch (Exception e) {
+        logger.atWarning().log("Error closing the repoManager");
+      }
+    }
+  }
+
+  // AutoCloseable so implementations can keep a cache
+  public interface SuperManifestRepoManager extends AutoCloseable {
+    Repository openByUri(String uriStr) throws IOException, InvalidRemoteException;
+
+    Repository openByName(Project.NameKey repoName) throws IOException;
+  }
+
+  static class GerritSuperManifestRepoManager implements SuperManifestRepoManager {
+    private final HashMap<Project.NameKey, Repository> repos;
+    private final GitRepositoryManager repoManager;
+    private final String canonicalWebUrl;
+
+    GerritSuperManifestRepoManager(
+        GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
+      this.repos = new HashMap<>();
+      this.repoManager = repoManager;
+      this.canonicalWebUrl = canonicalWebUrl;
+    }
+
+    @Override
+    public Repository openByName(Project.NameKey name) throws IOException {
       if (repos.containsKey(name)) {
         return repos.get(name);
       }
@@ -425,7 +455,8 @@ public class SuperManifestRefUpdatedListener
       return repo;
     }
 
-    private Repository doOpenByUri(String uriStr) throws IOException, InvalidRemoteException {
+    @Override
+    public Repository openByUri(String uriStr) throws IOException, InvalidRemoteException {
       // A URL in this host is <canonicalWebUrl>/<repoName>, but canonicalWebUrl can contain also
       // path
       // If is is canonical, take the rest as repoName, otherwise take only the path
@@ -445,7 +476,7 @@ public class SuperManifestRefUpdatedListener
         repoName = repoName.substring(1);
       }
 
-      return doOpenByName(Project.nameKey(repoName));
+      return openByName(Project.nameKey(repoName));
     }
 
     @Override

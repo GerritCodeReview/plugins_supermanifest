@@ -20,8 +20,12 @@ public class GerritRemoteReaderTest {
   private static final String CANONICAL_WEB_URL = "https://example.com/gerrit";
 
   GitRepositoryManager repoManager = new InMemoryRepositoryManager();
+  SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager superManifestRepoManager =
+      new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
+          repoManager, CANONICAL_WEB_URL);
   SuperManifestRefUpdatedListener.GerritRemoteReader reader =
-      new SuperManifestRefUpdatedListener.GerritRemoteReader(repoManager, CANONICAL_WEB_URL);
+      new SuperManifestRefUpdatedListener.GerritRemoteReader(
+          superManifestRepoManager, CANONICAL_WEB_URL);
 
   @Test
   public void sha1_inCanonical_repoNameWithoutCanonicalPrefix() throws Exception {

@@ -21,7 +21,7 @@ public class GerritSuperManifestRepoManagerTest {
     repoManager.createRepository(Project.nameKey("project/x"));
     superManifestRepoManager =
         new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
-            repoManager, CANONICAL_WEB_URL);
+            repoManager, CANONICAL_WEB_URL, null);
   }
 
   @Test

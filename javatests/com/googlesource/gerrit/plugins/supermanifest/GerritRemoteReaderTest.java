@@ -23,7 +23,7 @@ public class GerritRemoteReaderTest {
   GitRepositoryManager repoManager = new InMemoryRepositoryManager();
   SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager superManifestRepoManager =
       new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
-          repoManager, CANONICAL_WEB_URL);
+          repoManager, CANONICAL_WEB_URL, null);
   SuperManifestRefUpdatedListener.GerritRemoteReader reader =
       new SuperManifestRefUpdatedListener.GerritRemoteReader(
           superManifestRepoManager, CANONICAL_WEB_URL);

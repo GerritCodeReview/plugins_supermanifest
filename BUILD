@@ -11,6 +11,9 @@ gerrit_plugin(
         "Implementation-URL: https://gerrit-review.googlesource.com/#/todo",
     ],
     resources = glob(["java/Documentation/**/*.md"]),
+    deps = [
+        "@jaxb-api//jar",
+    ],
 )
 
 junit_tests(

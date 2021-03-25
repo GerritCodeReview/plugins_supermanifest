@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4e01903_14ae45f8",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-03-25T17:29:56Z",
+      "side": 1,
+      "message": "this would be totally wrong if there were cross-host repos here, right? Could this throw an exception?",
+      "range": {
+        "startLine": 468,
+        "startChar": 7,
+        "endLine": 468,
+        "endChar": 47
+      },
+      "revId": "f6e81b77ef329ba2885498c35124b47beaa1bc34",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

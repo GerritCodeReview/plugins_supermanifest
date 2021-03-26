@@ -22,6 +22,30 @@
       },
       "revId": "f6e81b77ef329ba2885498c35124b47beaa1bc34",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cbf801d_4916667d",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-03-26T04:53:44Z",
+      "side": 1,
+      "message": "Correct. Changed to throw a RepositoryNotFound. Did it in the parent change that is about creating the openByUri/Name methods (this one is just about moving them to a different class).",
+      "parentUuid": "d4e01903_14ae45f8",
+      "range": {
+        "startLine": 468,
+        "startChar": 7,
+        "endLine": 468,
+        "endChar": 47
+      },
+      "revId": "f6e81b77ef329ba2885498c35124b47beaa1bc34",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

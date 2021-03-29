@@ -585,5 +585,55 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         .isEqualTo("repo");
   }
 
+  @Test
+  public void wildcardDestBranchWithExclusion() throws Exception {
+    setupTestRepos("project");
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/*\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = blablabla\n"
+            + "  srcPath = default.xml\n"
+            + "  exclude = refs/heads/src2,refs/heads/src3\n");
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String originXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+
+    // XML change will trigger commit to superproject.
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + originXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</manifest>\n";
+
+    for (String refName : Arrays.asList("src1", "src2", "src3", "src4")) {
+      pushFactory
+          .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+          .to("refs/heads/" + refName)
+          .assertOkStatus();
+    }
+
+    BranchApi branch1 = gApi.projects().name(superKey.get()).branch("refs/heads/src1");
+    assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+
+    // This branch should not exist
+    BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/src2");
+    assertThrows(ResourceNotFoundException.class, () -> branch2.file("project1"));
+
+    // This branch should not exist
+    BranchApi branch3 = gApi.projects().name(superKey.get()).branch("refs/heads/src3");
+    assertThrows(ResourceNotFoundException.class, () -> branch2.file("project1"));
+
+    BranchApi branch4 = gApi.projects().name(superKey.get()).branch("refs/heads/src4");
+    assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+  }
   // TODO - should add tests for all the error handling in configuration parsing?
 }

@@ -290,6 +290,10 @@ public class SuperManifestRefUpdatedListener
         continue;
       }
 
+      if (c.srcRefsExcluded.contains(refName)) {
+        continue;
+      }
+
       try {
         updateForConfig(c, refName);
       } catch (ConfigInvalidException | IOException | GitAPIException e) {

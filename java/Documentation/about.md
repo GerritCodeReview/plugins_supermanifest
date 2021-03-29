@@ -48,13 +48,17 @@ The plugin supports the following options:
    Setting it true will cause repos that are not accessible to be ignored.
 
 
-For the destination branch, you may also specify `*` to copy all
-branches in the manifest repository.
+For the destination branch, you may also specify `*` to copy all branches in the
+manifest repository. In this case the `srcRef` field is not required (it will be
+ignored if present). Specific branches can be excluded with the `exclude`
+option. `exclude` value is a comma-separated list of fully qualified refs
+(i.e. with the `refs/heads/` prefix).
 
 ```
 [superproject "submodules:*"]
    srcRepo = platforms/manifest
    srcPath = manifest.xml
+   exclude = refs/heads/test,refs/heads/ignoreme
 ```
 
 This plugin bypasses visibility restrictions, so edits to the manifest

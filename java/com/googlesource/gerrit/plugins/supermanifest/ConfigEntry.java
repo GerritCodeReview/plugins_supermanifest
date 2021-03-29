@@ -17,10 +17,13 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
+import com.google.common.collect.Sets;
 import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
@@ -35,6 +38,7 @@ class ConfigEntry {
   String xmlPath;
   Project.NameKey destRepoKey;
   String repoGroups;
+  Set<String> srcRefsExcluded;
   boolean recordSubmoduleLabels;
   boolean ignoreRemoteFailures;
 
@@ -100,6 +104,10 @@ class ConfigEntry {
         throw new ConfigInvalidException(String.format("entry %s did not specify srcRef", name));
       }
     }
+
+    srcRefsExcluded =
+        Sets.newHashSet(
+            Arrays.asList(nullToEmpty(cfg.getString(SECTION_NAME, name, "exclude")).split(",")));
 
     xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");
     if (xmlPath == null) {
@@ -198,6 +206,11 @@ class ConfigEntry {
   /** @return the destBranch */
   public String getDestBranch() {
     return destBranch;
+  }
+
+  /** @return the excluded (a comma-separated list of branches to ignore from the src set) */
+  public Set<String> getSrcRefsExcluded() {
+    return srcRefsExcluded;
   }
 
   enum ToolType {

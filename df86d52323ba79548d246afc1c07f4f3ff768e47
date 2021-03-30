@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1c6cd9b_bb969f4f",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-03-30T16:49:50Z",
+      "side": 1,
+      "message": "I guess you\u0027re adding it back again 😊",
+      "range": {
+        "startLine": 459,
+        "startChar": 9,
+        "endLine": 459,
+        "endChar": 24
+      },
+      "revId": "df86d52323ba79548d246afc1c07f4f3ff768e47",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "801adc02_eb620066",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-03-30T16:49:50Z",
+      "side": 1,
+      "message": "The entry is unused. Add a comment why it is here.",
+      "range": {
+        "startLine": 460,
+        "startChar": 18,
+        "endLine": 460,
+        "endChar": 29
+      },
+      "revId": "df86d52323ba79548d246afc1c07f4f3ff768e47",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

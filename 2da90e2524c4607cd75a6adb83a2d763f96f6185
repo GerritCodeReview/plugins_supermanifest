@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7458b00_373d0dce",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-03-30T16:46:58Z",
+      "side": 1,
+      "message": "remove annotation as well.",
+      "range": {
+        "startLine": 364,
+        "startChar": 58,
+        "endLine": 364,
+        "endChar": 73
+      },
+      "revId": "2da90e2524c4607cd75a6adb83a2d763f96f6185",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

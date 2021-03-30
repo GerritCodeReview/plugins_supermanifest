@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7502542b_d62e52f7",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/ConfigEntryTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-03-30T15:48:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a6025b2_0280be56",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "931b66e65fd2e8ba41f2e07c305dfc201e4a605f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "13de4a0a_bdc1ce0b",
         "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/ConfigEntryTest.java",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-30T08:48:41Z",
       "side": 1,
       "message": "I didn\u0027t do this because the config is implicitly covered by the functional tests.",
+      "range": {
+        "startLine": 10,
+        "startChar": 13,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "931b66e65fd2e8ba41f2e07c305dfc201e4a605f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3d3030a_fece3da7",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/ConfigEntryTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-03-30T15:48:55Z",
+      "side": 1,
+      "message": "It is still redundant. If you think it makes it a hassle, we can remove it.\n\nI think it still adds some value. It makes easier to work in the config parsing. The IT tests are too big and slow to test one-line string splitting.",
+      "parentUuid": "13de4a0a_bdc1ce0b",
       "range": {
         "startLine": 10,
         "startChar": 13,

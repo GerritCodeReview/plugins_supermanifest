@@ -93,6 +93,30 @@
       },
       "revId": "931b66e65fd2e8ba41f2e07c305dfc201e4a605f",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04699c45_5c5b1924",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/ConfigEntryTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-03-30T15:52:06Z",
+      "side": 1,
+      "message": "sure.",
+      "parentUuid": "b3d3030a_fece3da7",
+      "range": {
+        "startLine": 10,
+        "startChar": 13,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "931b66e65fd2e8ba41f2e07c305dfc201e4a605f",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

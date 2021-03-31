@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "fmt:java-supermanifest": {
+      "state": "RUNNING",
+      "started": "2021-03-31T00:53:56Z",
+      "created": "2021-03-31T00:53:56Z",
+      "updated": "2021-03-31T00:53:56Z"
+    }
+  }
+}

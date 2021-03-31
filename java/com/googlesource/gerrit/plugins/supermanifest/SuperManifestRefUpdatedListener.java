@@ -458,6 +458,8 @@ public class SuperManifestRefUpdatedListener
         GitRepositoryManager repoManager,
         @CanonicalWebUrl String canonicalWebUrl,
         @Assisted ConfigEntry e) {
+      // Add ConfigEntry (even when this implementation doesn't need it) so
+      // injection can bind the factory automatically
       this.repos = new HashMap<>();
       this.repoManager = repoManager;
       this.canonicalWebUrl = canonicalWebUrl;

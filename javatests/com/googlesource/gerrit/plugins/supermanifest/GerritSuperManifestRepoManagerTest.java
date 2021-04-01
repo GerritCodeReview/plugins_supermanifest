@@ -11,7 +11,10 @@ import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class GerritSuperManifestRepoManagerTest {
   private static final String CANONICAL_WEB_URL = "https://example.com/gerrit/";
 

@@ -18,6 +18,8 @@ import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.FluentLogger;
+import com.google.errorprone.annotations.FormatMethod;
+import com.google.errorprone.annotations.FormatString;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
@@ -124,15 +126,18 @@ public class SuperManifestRefUpdatedListener
     this.permissionBackend = permissionBackend;
   }
 
-  private void warn(String formatStr, Object... args) {
+  @FormatMethod
+  private void warn(@FormatString String formatStr, Object... args) {
     logger.atWarning().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
-  private void error(String formatStr, Object... args) {
+  @FormatMethod
+  private void error(@FormatString String formatStr, Object... args) {
     logger.atSevere().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
-  private void info(String formatStr, Object... args) {
+  @FormatMethod
+  private void info(@FormatString String formatStr, Object... args) {
     logger.atInfo().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 

@@ -618,10 +618,10 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     // This branch should not exist
     BranchApi branch3 = gApi.projects().name(superKey.get()).branch("refs/heads/src3");
-    assertThrows(ResourceNotFoundException.class, () -> branch2.file("project1"));
+    assertThrows(ResourceNotFoundException.class, () -> branch3.file("project1"));
 
     BranchApi branch4 = gApi.projects().name(superKey.get()).branch("refs/heads/src4");
-    assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch4.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
   }
   // TODO - should add tests for all the error handling in configuration parsing?
 }

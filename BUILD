@@ -12,9 +12,10 @@ gerrit_plugin(
     ],
     resources = glob(["java/Documentation/**/*.md"]),
     deps = [
+        "@error-prone-annotations//jar",
+        "@istack-commons-runtime//jar",
         "@jaxb-api//jar",
         "@jaxb-runtime//jar",
-        "@istack-commons-runtime//jar",
     ],
 )
 

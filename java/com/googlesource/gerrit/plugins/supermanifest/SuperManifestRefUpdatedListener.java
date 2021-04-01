@@ -396,7 +396,8 @@ public class SuperManifestRefUpdatedListener
         ObjectId id = ref.getPeeledObjectId();
         return id != null ? id : ref.getObjectId();
       } catch (RepositoryNotFoundException e) {
-        logger.atWarning().log("%s: failed to open repository %s: %s", canonicalWebUrl, uriStr, e);
+        logger.atWarning().withCause(e).log(
+            "%s: failed to open repository %s", canonicalWebUrl, uriStr);
         return null;
       } catch (IOException io) {
         RefNotFoundException e =
@@ -437,7 +438,7 @@ public class SuperManifestRefUpdatedListener
       try {
         repoManager.close();
       } catch (Exception e) {
-        logger.atWarning().log("Error closing the repoManager");
+        logger.atWarning().withCause(e).log("Error closing the repoManager");
       }
     }
   }

@@ -208,7 +208,11 @@ public class ConfigEntry {
     return destBranch;
   }
 
-  /** @return the excluded (a comma-separated list of branches to ignore from the src set) */
+  /**
+   * Refs that should not be copied
+   *
+   * @return the refs listed in the "exclude" option
+   */
   public Set<String> getSrcRefsExcluded() {
     return srcRefsExcluded;
   }

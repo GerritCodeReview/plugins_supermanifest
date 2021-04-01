@@ -6,6 +6,7 @@ import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.testing.InMemoryRepositoryManager;
+import java.nio.charset.StandardCharsets;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.gitrepo.RepoCommand;
@@ -27,20 +28,20 @@ public class GerritRemoteReaderTest {
   private static final String PROJECT_REPONAME = "project/x";
   private static final String PROJECT_URL = CANONICAL_WEB_URL + "/" + PROJECT_REPONAME;
 
-  private GitRepositoryManager repoManager = new InMemoryRepositoryManager();
-  SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager superManifestRepoManager =
-      new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
-          repoManager, CANONICAL_WEB_URL, null);
-  private SuperManifestRefUpdatedListener.GerritRemoteReader reader =
+  private final GitRepositoryManager repoManager = new InMemoryRepositoryManager();
+  private final SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager
+      superManifestRepoManager =
+          new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
+              repoManager, CANONICAL_WEB_URL, null);
+  private final SuperManifestRefUpdatedListener.GerritRemoteReader reader =
       new SuperManifestRefUpdatedListener.GerritRemoteReader(
           superManifestRepoManager, CANONICAL_WEB_URL);
-  private Repository projectX;
   private RevCommit projectXTip;
 
   @Before
   public void setUp() throws Exception {
     repoManager.createRepository(Project.nameKey(PROJECT_REPONAME));
-    projectX = repoManager.openRepository(Project.nameKey(PROJECT_REPONAME));
+    Repository projectX = repoManager.openRepository(Project.nameKey(PROJECT_REPONAME));
     try (TestRepository<Repository> git = new TestRepository<>(projectX)) {
       projectXTip = git.branch(MASTER).commit().add("test_file", "test_contents").create();
     }
@@ -82,14 +83,16 @@ public class GerritRemoteReaderTest {
   public void readWithFileMode_uriInCanonical_reads() throws Exception {
     RepoCommand.RemoteFile remoteFile =
         reader.readFileWithMode(PROJECT_URL, "refs/heads/master", "test_file");
-    assertThat(new String(remoteFile.getContents())).isEqualTo("test_contents");
+    assertThat(new String(remoteFile.getContents(), StandardCharsets.UTF_8))
+        .isEqualTo("test_contents");
   }
 
   @Test
   public void readWithFileMode_repoName_reads() throws Exception {
     RepoCommand.RemoteFile remoteFile =
         reader.readFileWithMode(PROJECT_REPONAME, "refs/heads/master", "test_file");
-    assertThat(new String(remoteFile.getContents())).isEqualTo("test_contents");
+    assertThat(new String(remoteFile.getContents(), StandardCharsets.UTF_8))
+        .isEqualTo("test_contents");
   }
 
   @Test

@@ -6,6 +6,12 @@
       "started": "2021-04-07T00:24:12Z",
       "created": "2021-04-07T00:24:12Z",
       "updated": "2021-04-07T00:24:15Z"
+    },
+    "fmt:java-supermanifest": {
+      "state": "RUNNING",
+      "started": "2021-04-07T00:24:17Z",
+      "created": "2021-04-07T00:24:17Z",
+      "updated": "2021-04-07T00:24:17Z"
     }
   }
 }

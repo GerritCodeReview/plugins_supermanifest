@@ -45,7 +45,7 @@ public class ConfigEntry {
   // destBranch can be "*" in which case srcRef is ignored.
   String destBranch;
 
-  ConfigEntry(Config cfg, String name) throws ConfigInvalidException {
+  public ConfigEntry(Config cfg, String name) throws ConfigInvalidException {
     String[] parts = name.split(":");
     if (parts.length != 2) {
       throw new ConfigInvalidException(

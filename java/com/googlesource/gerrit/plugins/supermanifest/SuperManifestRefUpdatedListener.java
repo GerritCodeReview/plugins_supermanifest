@@ -485,16 +485,26 @@ public class SuperManifestRefUpdatedListener
     @Override
     public Repository openByUri(String uriStr) throws IOException {
       // A URL in this host is <canonicalWebUrl>/<repoName>.
-      if (!uriStr.startsWith(canonicalWebUrl)) {
-        // Cannot open repos in another host.
-        // InvalidRemoteException would stop the whole manifest processing. We rather ignore these
-        // entries.
-        throw new RepositoryNotFoundException(
-            "Manifest refers to repo in different host: " + uriStr);
+      //
+      // In googlesource the canonicalWebUrl is xxxx-review.googlesource.com and
+      // the repos are xxx.googlesource.com. Keep taking the path for backwards compatibility and
+      // clean it up when googlesource does the right thing.
+      String repoName;
+      if (uriStr.startsWith(canonicalWebUrl)) {
+        repoName = uriStr.substring(canonicalWebUrl.length());
+      } else {
+        logger.atWarning().log(
+            "%s: taking path from %s that looks from another host", canonicalWebUrl, uriStr);
+        URI uri;
+        try {
+          uri = new URI(uriStr);
+        } catch (URISyntaxException e) {
+          throw new RepositoryNotFoundException("Cannot parse uri: " + uriStr);
+        }
+
+        repoName = uri.getPath();
       }
 
-      // canonicalWebUrl can contain also a path part
-      String repoName = uriStr.substring(canonicalWebUrl.length());
       while (repoName.startsWith("/")) {
         repoName = repoName.substring(1);
       }

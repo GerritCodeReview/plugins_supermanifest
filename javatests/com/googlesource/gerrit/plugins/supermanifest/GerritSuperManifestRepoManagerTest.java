@@ -1,13 +1,11 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.testing.InMemoryRepositoryManager;
 import java.io.IOException;
-import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +40,10 @@ public class GerritSuperManifestRepoManagerTest {
   }
 
   @Test
-  public void openByUri_nonCanonical_uriPathIsRepoName() {
-    assertThrows(
-        RepositoryNotFoundException.class,
-        () -> superManifestRepoManager.openByUri("https://otherhost.com/project/x"));
+  public void openByUri_nonCanonical_uriPathIsRepoName() throws IOException {
+    // TODO(ifrade): This should be a RepositoryNotFound exception, but we are relying on opening
+    // the wrong repo.
+    Repository repo = superManifestRepoManager.openByUri("https://otherhost.com/project/x");
+    assertThat(repo).isNotNull();
   }
 }

@@ -6,6 +6,7 @@ import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.testing.InMemoryRepositoryManager;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
@@ -96,12 +97,12 @@ public class GerritRemoteReaderTest {
   }
 
   @Test
-  public void readWithFileMode_outerHostUri_throws() {
-    assertThrows(
-        RepositoryNotFoundException.class,
-        () ->
-            reader.readFileWithMode(
-                "https://somwhere.com/project/x", "refs/heads/master", "test_file"));
+  public void readWithFileMode_outerHostUri_throws() throws GitAPIException, IOException {
+    // TODO(ifrade): This should be a RepositoryNotFound because there is no cross-host support.
+    RepoCommand.RemoteFile remoteFile =
+        reader.readFileWithMode("https://somwhere.com/project/x", "refs/heads/master", "test_file");
+    assertThat(new String(remoteFile.getContents(), StandardCharsets.UTF_8))
+        .isEqualTo("test_contents");
   }
 
   @Test
@@ -118,7 +119,7 @@ public class GerritRemoteReaderTest {
   }
 
   @Test
-  public void openRepository_byUri_doesNotOpen() throws Exception {
+  public void openRepository_byUri_doesNotOpen() {
     assertThrows(RepositoryNotFoundException.class, () -> reader.openRepository(PROJECT_URL));
   }
 }

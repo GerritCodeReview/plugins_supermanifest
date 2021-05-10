@@ -45,6 +45,9 @@ import com.google.gerrit.server.project.ProjectCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
+import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReaderImpl;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -334,7 +337,7 @@ public class SuperManifestRefUpdatedListener
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
     try (GerritRemoteReader reader =
-        new GerritRemoteReader(gitRepositoryManager, canonicalWebUrl.toString())) {
+        new GerritRemoteReaderImpl(gitRepositoryManager, canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
     }
   }
@@ -357,14 +360,27 @@ public class SuperManifestRefUpdatedListener
     return trimmed.toArray(new StackTraceElement[trimmed.size()]);
   }
 
+  public interface GerritRemoteReader extends RepoCommand.RemoteReader, Closeable {
+    /**
+     * Opens a repository in this host.
+     *
+     * @param name repository name relative to current host (e.g. "submodule" for
+     *     "gerrit.googlesource.com/submodule")
+     * @return the open repository. The reader keeps it cached, so the caller MUST not close it.
+     * @throws IOException error opening the repo.
+     */
+    Repository openRepository(String name) throws IOException;
+  }
+
   // GerritRemoteReader is for injecting Gerrit's Git implementation into JGit.
-  static class GerritRemoteReader implements RepoCommand.RemoteReader, AutoCloseable {
+  static class GerritRemoteReaderImpl implements GerritRemoteReader {
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
     private final HashMap<Project.NameKey, Repository> repos;
     private final String canonicalWebUrl;
     private final GitRepositoryManager repoManager;
 
-    GerritRemoteReader(GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
+    GerritRemoteReaderImpl(
+        GitRepositoryManager repoManager, @CanonicalWebUrl String canonicalWebUrl) {
       this.repos = new HashMap<>();
       this.repoManager = repoManager;
       this.canonicalWebUrl = canonicalWebUrl;

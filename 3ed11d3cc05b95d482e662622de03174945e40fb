@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "732c669a_b640041c",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1011842
+      },
+      "writtenOn": "2021-05-21T23:04:06Z",
+      "side": 1,
+      "message": "How about other failure cases? Could we use a try { } finally and record a metric indicating whether the update was successful? Like\n\n  bool success \u003d false;\n  try (...) {\n    ...\n    success \u003d true;\n  } finally {\n    ...(success);\n  }",
+      "revId": "3ed11d3cc05b95d482e662622de03174945e40fb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

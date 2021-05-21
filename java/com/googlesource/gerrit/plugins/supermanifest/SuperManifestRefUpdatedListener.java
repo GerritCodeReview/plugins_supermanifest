@@ -29,6 +29,9 @@ import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.restapi.AuthException;
 import com.google.gerrit.extensions.restapi.Response;
 import com.google.gerrit.extensions.restapi.RestModifyView;
+import com.google.gerrit.metrics.Counter0;
+import com.google.gerrit.metrics.Description;
+import com.google.gerrit.metrics.MetricMaker;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;
@@ -56,6 +59,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.errors.ConfigInvalidException;
@@ -96,6 +100,9 @@ public class SuperManifestRefUpdatedListener
   // Mutable.
   private Set<ConfigEntry> config;
 
+  private final Counter0 manifestUpdates;
+  private final Counter0 manifestUpdatesLockFailures;
+
   @Inject
   SuperManifestRefUpdatedListener(
       AllProjectsName allProjectsName,
@@ -107,7 +114,8 @@ public class SuperManifestRefUpdatedListener
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
       SuperManifestRepoManager.Factory repoManagerFactory,
       Provider<IdentifiedUser> identifiedUser,
-      PermissionBackend permissionBackend) {
+      PermissionBackend permissionBackend,
+      MetricMaker metrics) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
@@ -124,6 +132,14 @@ public class SuperManifestRefUpdatedListener
     this.projectCache = projectCache;
     this.identifiedUser = identifiedUser;
     this.permissionBackend = permissionBackend;
+    this.manifestUpdates =
+        metrics.newCounter(
+            "supermanifest/update_for_config",
+            new Description("Process an manifest for an specific config (all conf parsed fine)"));
+    this.manifestUpdatesLockFailures =
+        metrics.newCounter(
+            "supermanifest/update_lock_failure",
+            new Description("Manifest update failed due to concurrent ref update"));
   }
 
   @FormatMethod
@@ -334,9 +350,14 @@ public class SuperManifestRefUpdatedListener
         throw new ConfigInvalidException(
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
+
+    manifestUpdates.increment();
     try (GerritRemoteReader reader =
         new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
+    } catch (ConcurrentRefUpdateException e) {
+      manifestUpdatesLockFailures.increment();
+      throw e;
     }
   }
 

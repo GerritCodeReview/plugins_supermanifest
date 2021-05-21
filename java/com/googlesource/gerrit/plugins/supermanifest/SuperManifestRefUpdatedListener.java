@@ -14,8 +14,6 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.entities.RefNames.REFS_HEADS;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.FluentLogger;
 import com.google.errorprone.annotations.FormatMethod;
@@ -29,12 +27,17 @@ import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.restapi.AuthException;
 import com.google.gerrit.extensions.restapi.Response;
 import com.google.gerrit.extensions.restapi.RestModifyView;
+import com.google.gerrit.metrics.Counter1;
+import com.google.gerrit.metrics.Description;
+import com.google.gerrit.metrics.Field;
+import com.google.gerrit.metrics.MetricMaker;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;
 import com.google.gerrit.server.config.CanonicalWebUrl;
 import com.google.gerrit.server.config.PluginConfigFactory;
 import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.server.logging.PluginMetadata;
 import com.google.gerrit.server.permissions.GlobalPermission;
 import com.google.gerrit.server.permissions.PermissionBackend;
 import com.google.gerrit.server.permissions.PermissionBackendException;
@@ -46,16 +49,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.errors.ConfigInvalidException;
@@ -70,6 +64,19 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.treewalk.TreeWalk;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 /**
  * This plugin will listen for changes to XML files in manifest repositories. When it finds such
@@ -92,9 +99,34 @@ public class SuperManifestRefUpdatedListener
   private final Provider<IdentifiedUser> identifiedUser;
   private final PermissionBackend permissionBackend;
   private final PluginMapContext<DownloadScheme> downloadScheme;
+  private final SupermanifestMetrics metrics;
 
   // Mutable.
   private Set<ConfigEntry> config;
+
+  @Singleton
+  private static class SupermanifestMetrics {
+    final Counter1<String> manifestUpdateResultCounter;
+
+    @Inject
+    SupermanifestMetrics(MetricMaker metrics) {
+      manifestUpdateResultCounter =
+          metrics.newCounter(
+              "supermanifest/update_result",
+              new Description(
+                  "Result of a manifest update for a specific conf (all conf parsed fine)"),
+              Field.ofString(
+                      "result",
+                      (metadataBuilder, fieldValue) ->
+                          metadataBuilder
+                              .pluginName("supermanifest")
+                              .addPluginMetadata(
+                                  PluginMetadata.create(
+                                      "update_result", fieldValue)))
+                  .description("result of a manifest update")
+                  .build());
+    }
+  }
 
   @Inject
   SuperManifestRefUpdatedListener(
@@ -107,7 +139,8 @@ public class SuperManifestRefUpdatedListener
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
       SuperManifestRepoManager.Factory repoManagerFactory,
       Provider<IdentifiedUser> identifiedUser,
-      PermissionBackend permissionBackend) {
+      PermissionBackend permissionBackend,
+      SupermanifestMetrics metrics) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
@@ -124,6 +157,7 @@ public class SuperManifestRefUpdatedListener
     this.projectCache = projectCache;
     this.identifiedUser = identifiedUser;
     this.permissionBackend = permissionBackend;
+    this.metrics = metrics;
   }
 
   @FormatMethod
@@ -334,9 +368,16 @@ public class SuperManifestRefUpdatedListener
         throw new ConfigInvalidException(
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
+
+    String status = "NOT_ATTEMPTED";
     try (GerritRemoteReader reader =
         new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
+      status = "OK";
+    } catch (ConcurrentRefUpdateException e) {
+      status = "LOCK_FAILURE";
+    } finally {
+      metrics.manifestUpdateResultCounter.increment(status);
     }
   }
 

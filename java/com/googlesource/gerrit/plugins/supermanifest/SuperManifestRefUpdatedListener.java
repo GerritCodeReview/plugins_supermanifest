@@ -29,12 +29,18 @@ import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.restapi.AuthException;
 import com.google.gerrit.extensions.restapi.Response;
 import com.google.gerrit.extensions.restapi.RestModifyView;
+import com.google.gerrit.metrics.Counter0;
+import com.google.gerrit.metrics.Counter1;
+import com.google.gerrit.metrics.Description;
+import com.google.gerrit.metrics.Field;
+import com.google.gerrit.metrics.MetricMaker;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;
 import com.google.gerrit.server.config.CanonicalWebUrl;
 import com.google.gerrit.server.config.PluginConfigFactory;
 import com.google.gerrit.server.git.GitRepositoryManager;
+import com.google.gerrit.server.logging.PluginMetadata;
 import com.google.gerrit.server.permissions.GlobalPermission;
 import com.google.gerrit.server.permissions.PermissionBackend;
 import com.google.gerrit.server.permissions.PermissionBackendException;
@@ -56,6 +62,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.errors.ConfigInvalidException;
@@ -92,9 +99,39 @@ public class SuperManifestRefUpdatedListener
   private final Provider<IdentifiedUser> identifiedUser;
   private final PermissionBackend permissionBackend;
   private final PluginMapContext<DownloadScheme> downloadScheme;
+  private final SupermanifestMetrics metrics;
 
   // Mutable.
   private Set<ConfigEntry> config;
+
+  @Singleton
+  private static class SupermanifestMetrics {
+    final Counter0 manifestUpdateLockFailureCounter;
+    final Counter1<Boolean> manifestUpdateResultCounter;
+
+    @Inject
+    SupermanifestMetrics(MetricMaker metrics) {
+      manifestUpdateLockFailureCounter =
+          metrics.newCounter(
+              "supermanifest/update_lock_failure",
+              new Description("Manifest update failed due to concurrent ref update"));
+      manifestUpdateResultCounter =
+          metrics.newCounter(
+              "supermanifest/update_result",
+              new Description(
+                  "Result of a manifest update for a specific conf (all conf parsed fine)"),
+              Field.ofBoolean(
+                      "success",
+                      (metadataBuilder, fieldValue) ->
+                          metadataBuilder
+                              .pluginName("supermanifest")
+                              .addPluginMetadata(
+                                  PluginMetadata.create(
+                                      "update_result", Boolean.toString(fieldValue))))
+                  .description("whether a manifest update has been successfull")
+                  .build());
+    }
+  }
 
   @Inject
   SuperManifestRefUpdatedListener(
@@ -107,7 +144,8 @@ public class SuperManifestRefUpdatedListener
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
       SuperManifestRepoManager.Factory repoManagerFactory,
       Provider<IdentifiedUser> identifiedUser,
-      PermissionBackend permissionBackend) {
+      PermissionBackend permissionBackend,
+      SupermanifestMetrics metrics) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
@@ -124,6 +162,7 @@ public class SuperManifestRefUpdatedListener
     this.projectCache = projectCache;
     this.identifiedUser = identifiedUser;
     this.permissionBackend = permissionBackend;
+    this.metrics = metrics;
   }
 
   @FormatMethod
@@ -334,9 +373,17 @@ public class SuperManifestRefUpdatedListener
         throw new ConfigInvalidException(
             String.format("invalid toolType: %s", c.getToolType().name()));
     }
+
+    boolean success = false;
     try (GerritRemoteReader reader =
         new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString())) {
       subModuleUpdater.update(reader, c, refName);
+      success = true;
+    } catch (ConcurrentRefUpdateException e) {
+      metrics.manifestUpdateLockFailureCounter.increment();
+      throw e;
+    } finally {
+      metrics.manifestUpdateResultCounter.increment(success);
     }
   }
 

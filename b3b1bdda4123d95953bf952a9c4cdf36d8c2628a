@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a31c94d1_3ea3ca0b",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-05-25T08:41:09Z",
+      "side": 1,
+      "message": "successful",
+      "range": {
+        "startLine": 131,
+        "startChar": 67,
+        "endLine": 131,
+        "endChar": 78
+      },
+      "revId": "b3b1bdda4123d95953bf952a9c4cdf36d8c2628a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9da6a96e_2aa3f054",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-05-25T08:41:09Z",
+      "side": 1,
+      "message": "nit: 2 metrics looks like overkill.\n\n```\n  String status \u003d \"NOT_ATTEMPTED\"\n  try ( ) {\n     update()\n     status \u003d \"OK¨;\n  } catch ( ) {\n     status \u003d \"LOCK_FAILURE\"\n  } finally {\n     counter.increment(status);\n  }\n```",
+      "range": {
+        "startLine": 386,
+        "startChar": 42,
+        "endLine": 386,
+        "endChar": 61
+      },
+      "revId": "b3b1bdda4123d95953bf952a9c4cdf36d8c2628a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

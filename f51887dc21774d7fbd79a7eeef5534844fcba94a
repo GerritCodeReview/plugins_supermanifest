@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ce075d5_7646731b",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2021-05-26T09:08:54Z",
+      "side": 1,
+      "message": "You can put the metric directly into the SuperManifestRefUpdatedListener?\n\n(follow-up change)",
+      "range": {
+        "startLine": 107,
+        "startChar": 23,
+        "endLine": 107,
+        "endChar": 43
+      },
+      "revId": "f51887dc21774d7fbd79a7eeef5534844fcba94a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

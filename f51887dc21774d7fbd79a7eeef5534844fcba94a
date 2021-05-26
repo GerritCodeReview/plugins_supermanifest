@@ -22,6 +22,30 @@
       },
       "revId": "f51887dc21774d7fbd79a7eeef5534844fcba94a",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32301ed8_62b30906",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-05-26T16:24:05Z",
+      "side": 1,
+      "message": "Ack. I wasn\u0027t sure about the plugin life cycle.\n\nhttps://gerrit-review.googlesource.com/c/plugins/supermanifest/+/307842",
+      "parentUuid": "6ce075d5_7646731b",
+      "range": {
+        "startLine": 107,
+        "startChar": 23,
+        "endLine": 107,
+        "endChar": 43
+      },
+      "revId": "f51887dc21774d7fbd79a7eeef5534844fcba94a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

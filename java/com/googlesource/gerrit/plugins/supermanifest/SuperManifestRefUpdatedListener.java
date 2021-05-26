@@ -98,33 +98,10 @@ public class SuperManifestRefUpdatedListener
   private final Provider<IdentifiedUser> identifiedUser;
   private final PermissionBackend permissionBackend;
   private final PluginMapContext<DownloadScheme> downloadScheme;
-  private final SupermanifestMetrics metrics;
+  private final Counter1<String> manifestUpdateResultCounter;
 
   // Mutable.
   private Set<ConfigEntry> config;
-
-  @Singleton
-  private static class SupermanifestMetrics {
-    final Counter1<String> manifestUpdateResultCounter;
-
-    @Inject
-    SupermanifestMetrics(MetricMaker metrics) {
-      manifestUpdateResultCounter =
-          metrics.newCounter(
-              "supermanifest/update_result",
-              new Description(
-                  "Result of a manifest update for a specific conf (all conf parsed fine)"),
-              Field.ofString(
-                      "result",
-                      (metadataBuilder, fieldValue) ->
-                          metadataBuilder
-                              .pluginName("supermanifest")
-                              .addPluginMetadata(
-                                  PluginMetadata.create("update_result", fieldValue)))
-                  .description("result of a manifest update")
-                  .build());
-    }
-  }
 
   @Inject
   SuperManifestRefUpdatedListener(
@@ -138,7 +115,7 @@ public class SuperManifestRefUpdatedListener
       SuperManifestRepoManager.Factory repoManagerFactory,
       Provider<IdentifiedUser> identifiedUser,
       PermissionBackend permissionBackend,
-      SupermanifestMetrics metrics) {
+      MetricMaker metrics) {
 
     this.pluginName = pluginName;
     this.serverIdent = serverIdent;
@@ -155,7 +132,19 @@ public class SuperManifestRefUpdatedListener
     this.projectCache = projectCache;
     this.identifiedUser = identifiedUser;
     this.permissionBackend = permissionBackend;
-    this.metrics = metrics;
+    this.manifestUpdateResultCounter =
+        metrics.newCounter(
+            "supermanifest/update_result",
+            new Description(
+                "Result of a manifest update for a specific conf (all conf parsed fine)"),
+            Field.ofString(
+                    "result",
+                    (metadataBuilder, fieldValue) ->
+                        metadataBuilder
+                            .pluginName("supermanifest")
+                            .addPluginMetadata(PluginMetadata.create("update_result", fieldValue)))
+                .description("result of a manifest update")
+                .build());
   }
 
   @FormatMethod
@@ -375,7 +364,7 @@ public class SuperManifestRefUpdatedListener
     } catch (ConcurrentRefUpdateException e) {
       status = "LOCK_FAILURE";
     } finally {
-      metrics.manifestUpdateResultCounter.increment(status);
+      manifestUpdateResultCounter.increment(status);
     }
   }
 

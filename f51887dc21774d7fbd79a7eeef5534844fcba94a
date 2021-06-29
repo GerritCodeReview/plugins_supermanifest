@@ -1,11 +1,9 @@
 {
   "checks": {
     "fmt:commitmsg-supermanifest": {
-      "state": "FAILED",
-      "message": "uuid \"fmt:commitmsg-supermanifest\" has unknown language",
-      "started": "2021-05-25T21:15:44Z",
+      "state": "NOT_STARTED",
       "created": "2021-05-25T21:15:44Z",
-      "updated": "2021-05-25T21:15:46Z"
+      "updated": "2021-06-29T03:00:54Z"
     },
     "fmt:java-supermanifest": {
       "state": "FAILED",

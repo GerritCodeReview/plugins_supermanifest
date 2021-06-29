@@ -363,6 +363,7 @@ public class SuperManifestRefUpdatedListener
       status = "OK";
     } catch (ConcurrentRefUpdateException e) {
       status = "LOCK_FAILURE";
+      throw e;
     } finally {
       manifestUpdateResultCounter.increment(status);
     }

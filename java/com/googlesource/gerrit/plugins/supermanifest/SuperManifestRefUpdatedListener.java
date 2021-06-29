@@ -364,6 +364,15 @@ public class SuperManifestRefUpdatedListener
     } catch (ConcurrentRefUpdateException e) {
       status = "LOCK_FAILURE";
       throw e;
+    } catch (ConfigInvalidException e) {
+      status = "INVALID_SUBMODULE_CONFIGURATION";
+      throw e;
+    } catch (GitAPIException e) {
+      status = "INTERNAL";
+      throw e;
+    } catch (IOException e) {
+      status = "IO_ERROR";
+      throw e;
     } finally {
       manifestUpdateResultCounter.increment(status);
     }

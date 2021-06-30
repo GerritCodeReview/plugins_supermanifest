@@ -81,8 +81,9 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   }
 
   void pushConfig(String config) throws Exception {
-    // This will trigger a configuration reload.
-    TestRepository<InMemoryRepository> allProjectRepo = cloneProject(allProjects, admin);
+    TestRepository<InMemoryRepository> allProjectRepo =
+       GitUtil.cloneProject(project, registerRepoConnection(allProjects, user));
+
     GitUtil.fetch(allProjectRepo, RefNames.REFS_CONFIG + ":config");
     allProjectRepo.reset("config");
     PushOneCommit push =

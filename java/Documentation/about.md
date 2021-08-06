@@ -76,9 +76,13 @@ call
 
 ```sh
 curl -X POST
-  http://HOST/a/projects/platform%2Fmanifest/branches/master/update_manifest
+  http://[host]/a/projects/[url-encoded repository name]/branches/[branch name]/update_manifest
 ```
 
+If you are working within Google and therefore talking to gerrit-on-borg you'll
+want to use go/gob-curl to properly authenticate.
+
+A successful request will return `204 No Content` if there were no errors.
 
 JIRI
 ====

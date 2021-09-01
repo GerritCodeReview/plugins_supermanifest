@@ -244,6 +244,10 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/srcbranch")
         .assertOkStatus();
+    pushFactory
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/anotherbranch")
+        .assertOkStatus();
 
     // Push config after XML. Needs a manual trigger to create the destination.
     pushConfig(
@@ -260,6 +264,10 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
         userRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
     r.assertForbidden();
     r = adminRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
+    r.assertOK();
+    r =
+        adminRestSession.post(
+            "/projects/" + manifestKey + "/branches/anotherbranch/update_manifest");
     r.assertNoContent();
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
@@ -313,7 +321,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     adminRestSession
         .post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest")
-        .assertNoContent();
+        .assertOK();
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
@@ -370,7 +378,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "  ignoreRemoteFailures = true\n");
 
     r = adminRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
-    r.assertNoContent();
+    r.assertOK();
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");

@@ -27,6 +27,7 @@ import com.google.gerrit.extensions.config.DownloadScheme;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
 import com.google.gerrit.extensions.events.LifecycleListener;
 import com.google.gerrit.extensions.restapi.AuthException;
+import com.google.gerrit.extensions.restapi.PreconditionFailedException;
 import com.google.gerrit.extensions.restapi.Response;
 import com.google.gerrit.extensions.restapi.RestModifyView;
 import com.google.gerrit.metrics.Counter1;
@@ -155,6 +156,11 @@ public class SuperManifestRefUpdatedListener
   @FormatMethod
   private void error(@FormatString String formatStr, Object... args) {
     logger.atSevere().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
+  }
+
+  @FormatMethod
+  private void errorWithCause(Exception e, @FormatString String formatStr, Object... args) {
+    logger.atSevere().withCause(e).log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
   @FormatMethod
@@ -299,22 +305,37 @@ public class SuperManifestRefUpdatedListener
 
   @Override
   public Response<?> apply(BranchResource resource, BranchInput input)
-      throws IOException, ConfigInvalidException, GitAPIException, AuthException,
-          PermissionBackendException {
+      throws AuthException, PermissionBackendException, PreconditionFailedException {
     permissionBackend.currentUser().check(GlobalPermission.ADMINISTRATE_SERVER);
+    String manifestProject = resource.getBranchKey().project().get();
+    String manifestBranch = resource.getBranchKey().branch();
     info(
         "manual trigger for %s:%s by %d. Config: %s",
-        resource.getBranchKey().project().get(),
-        resource.getBranchKey().branch(),
+        manifestProject,
+        manifestBranch,
         identifiedUser.get().getAccountId().get(),
         configurationToString());
 
     List<ConfigEntry> relevantConfigs =
         findRelevantConfigs(resource.getProjectState().getProject().getName(), resource.getRef());
-    for (ConfigEntry config : relevantConfigs) {
-      updateForConfig(config, resource.getRef());
+    if (relevantConfigs.isEmpty()) {
+      info(
+          "manual trigger for %s:%s: no configs found, nothing to do.",
+          manifestProject, manifestBranch);
+      return Response.none();
     }
-    return Response.none();
+    for (ConfigEntry config : relevantConfigs) {
+      try {
+        updateForConfig(config, resource.getRef());
+      } catch (ConfigInvalidException e) {
+        errorWithCause(e, "Invalid conf processing %s:%s", manifestProject, manifestBranch);
+        throw new PreconditionFailedException(e.getMessage());
+      } catch (GitAPIException | IOException e) {
+        errorWithCause(e, "Internal error processing %s:%s", manifestProject, manifestBranch);
+        return Response.withStatusCode(500, "Internal error: " + e.getMessage());
+      }
+    }
+    return Response.ok();
   }
 
   private List<ConfigEntry> findRelevantConfigs(String project, String refName) {

@@ -272,10 +272,28 @@ public class SuperManifestRefUpdatedListener
       }
       return;
     }
-    try {
-      update(event.getProjectName(), event.getRefName(), true);
-    } catch (Exception e) {
-      // no exceptions since we set continueOnError = true.
+
+    List<ConfigEntry> relevantConfigs =
+        findRelevantConfigs(event.getProjectName(), event.getRefName());
+    for (ConfigEntry relevantConfig : relevantConfigs) {
+      try {
+        updateForConfig(relevantConfig, event.getRefName());
+      } catch (ConfigInvalidException | IOException | GitAPIException e) {
+        // We only want the trace up to here. We could recurse into the exception, but this at least
+        // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
+        StackTraceElement here = Thread.currentThread().getStackTrace()[1];
+        e.setStackTrace(trimStack(e.getStackTrace(), here));
+
+        // We are in an asynchronously called listener, so there is no user action to give
+        // feedback to. We log the error, but it would be nice if we could surface these logs
+        // somewhere.  Perhaps we could store these as commits in some special branch (but in
+        // what repo?).
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        error(
+            "update for %s (ref %s) failed: %s", relevantConfig.toString(), event.getRefName(), sw);
+      }
     }
   }
 
@@ -291,16 +309,16 @@ public class SuperManifestRefUpdatedListener
         identifiedUser.get().getAccountId().get(),
         configurationToString());
 
-    update(resource.getProjectState().getProject().getName(), resource.getRef(), false);
+    List<ConfigEntry> relevantConfigs =
+        findRelevantConfigs(resource.getProjectState().getProject().getName(), resource.getRef());
+    for (ConfigEntry config : relevantConfigs) {
+      updateForConfig(config, resource.getRef());
+    }
     return Response.none();
   }
 
-  /**
-   * Updates projects in response to update in given project/ref. Only throws exceptions if
-   * continueOnError is false.
-   */
-  private void update(String project, String refName, boolean continueOnError)
-      throws IOException, GitAPIException, ConfigInvalidException {
+  private List<ConfigEntry> findRelevantConfigs(String project, String refName) {
+    List<ConfigEntry> relevantConfigs = new ArrayList<>();
     for (ConfigEntry c : config) {
       if (!c.srcRepoKey.get().equals(project)) {
         continue;
@@ -317,28 +335,9 @@ public class SuperManifestRefUpdatedListener
       if (c.srcRefsExcluded.contains(refName)) {
         continue;
       }
-
-      try {
-        updateForConfig(c, refName);
-      } catch (ConfigInvalidException | IOException | GitAPIException e) {
-        if (!continueOnError) {
-          throw e;
-        }
-        // We only want the trace up to here. We could recurse into the exception, but this at least
-        // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
-        StackTraceElement here = Thread.currentThread().getStackTrace()[1];
-        e.setStackTrace(trimStack(e.getStackTrace(), here));
-
-        // We are in an asynchronously called listener, so there is no user action to give
-        // feedback to. We log the error, but it would be nice if we could surface these logs
-        // somewhere.  Perhaps we could store these as commits in some special branch (but in
-        // what repo?).
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        error("update for %s (ref %s) failed: %s", c.toString(), refName, sw);
-      }
+      relevantConfigs.add(c);
     }
+    return relevantConfigs;
   }
 
   private void updateForConfig(ConfigEntry c, String refName)

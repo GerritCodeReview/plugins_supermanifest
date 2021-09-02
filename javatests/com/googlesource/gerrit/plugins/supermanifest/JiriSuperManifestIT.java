@@ -48,6 +48,7 @@ import org.junit.Test;
     name = "supermanifest",
     sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule")
 public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
+
   Project.NameKey[] testRepoKeys;
 
   @Inject private ProjectOperations projectOperations;
@@ -129,6 +130,10 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    Config base = new Config();
+    BlobBasedConfig cfg =
+        new BlobBasedConfig(base, branch.file(".gitmodules").asString().getBytes(UTF_8));
+    assertThat(cfg.getString("submodule", "project1", "branch")).isEqualTo("master");
     assertThrows(ResourceNotFoundException.class, () -> branch.file("project2"));
 
     xml =
@@ -622,6 +627,10 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     // Though the this project has the same name as a local repo, the subUrl must be absolute
     // as this is an external repo.
     assertThat(subUrl).isEqualTo("https://external/" + testRepoKeys[1].get());
+
+    assertThat(cfg.getString("submodule", "project1", "branch")).isEqualTo("master");
+    assertThat(cfg.getString("submodule", "project2", "branch")).isNull();
+    assertThat(cfg.getString("submodule", "project3", "branch")).isNull();
   }
 
   @Test

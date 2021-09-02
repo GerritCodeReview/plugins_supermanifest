@@ -1,6 +1,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.gerrit.entities.RefNames.REFS_HEADS;
+import static com.google.gerrit.entities.RefNames.REFS_TAGS;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.Lists;
@@ -99,8 +100,13 @@ class JiriUpdater implements SubModuleUpdater {
           }
         }
 
-        // can be branch or tag
-        cfg.setString("submodule", path, "branch", ref);
+        // can be branch, tag or SHA1 (objectId)
+        if (!ObjectId.isId(ref)) {
+          // "branch" field is only for non-tag references.
+          // Keep tags in "ref" field as hint for other tools.
+          String field = ref.startsWith(REFS_TAGS) ? "ref" : "branch";
+          cfg.setString("submodule", path, field, ref);
+        }
 
         if (proj.getHistorydepth() > 0) {
           cfg.setBoolean("submodule", path, "shallow", true);

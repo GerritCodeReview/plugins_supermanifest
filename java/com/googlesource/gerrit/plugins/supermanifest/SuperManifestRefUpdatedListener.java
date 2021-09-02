@@ -34,6 +34,7 @@ import com.google.gerrit.metrics.Counter1;
 import com.google.gerrit.metrics.Description;
 import com.google.gerrit.metrics.Field;
 import com.google.gerrit.metrics.MetricMaker;
+import com.google.gerrit.metrics.Timer1;
 import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;
@@ -100,6 +101,7 @@ public class SuperManifestRefUpdatedListener
   private final PermissionBackend permissionBackend;
   private final PluginMapContext<DownloadScheme> downloadScheme;
   private final Counter1<String> manifestUpdateResultCounter;
+  private final Timer1<ConfigEntry.ToolType> superprojectCommitTimer;
 
   // Mutable.
   private Set<ConfigEntry> config;
@@ -145,6 +147,19 @@ public class SuperManifestRefUpdatedListener
                             .pluginName("supermanifest")
                             .addPluginMetadata(PluginMetadata.create("update_result", fieldValue)))
                 .description("result of a manifest update")
+                .build());
+    this.superprojectCommitTimer =
+        metrics.newTimer(
+            "supermanifest/superproject_commit_latency",
+            new Description("Time taken to parse the manifest and commit to the superproject"),
+            Field.ofEnum(
+                    ConfigEntry.ToolType.class,
+                    "tool",
+                    (metadataBuilder, fieldValue) ->
+                        metadataBuilder
+                            .pluginName("supermanifest")
+                            .addPluginMetadata(PluginMetadata.create("tool", fieldValue)))
+                .description("Tool handling the manifest (repo or jiri)")
                 .build());
   }
 
@@ -378,7 +393,8 @@ public class SuperManifestRefUpdatedListener
 
     String status = "NOT_ATTEMPTED";
     try (GerritRemoteReader reader =
-        new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString())) {
+            new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString());
+        Timer1.Context<ConfigEntry.ToolType> ignored = superprojectCommitTimer.start(c.toolType)) {
       subModuleUpdater.update(reader, c, refName);
       status = "OK";
     } catch (ConcurrentRefUpdateException e) {

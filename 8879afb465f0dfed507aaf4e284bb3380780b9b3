@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "95c56006_4b60591c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2021-09-14T18:49:12Z",
+      "side": 1,
+      "message": "I address it in following change, to keep the +2",
+      "parentUuid": "002d39e4_c0829b3c",
+      "revId": "8879afb465f0dfed507aaf4e284bb3380780b9b3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f38bcf9d_9cdf67be",
         "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
         "patchSetId": 1

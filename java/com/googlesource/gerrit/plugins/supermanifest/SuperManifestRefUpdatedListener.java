@@ -252,6 +252,9 @@ public class SuperManifestRefUpdatedListener
 
   /** for debugging. */
   private String configurationToString() {
+    if (config == null) {
+      return "No config loaded (could not read All-Projects)";
+    }
     StringBuilder b = new StringBuilder();
     b.append("Supermanifest config (").append(config.size()).append(") {\n");
     for (ConfigEntry c : config) {
@@ -331,6 +334,13 @@ public class SuperManifestRefUpdatedListener
         identifiedUser.get().getAccountId().get(),
         configurationToString());
 
+    if (config == null) {
+      error(
+          "Plugin could not read conf from All-Projects (processing %s:%s)",
+          manifestProject, manifestBranch);
+      throw new PreconditionFailedException("Plugin could not read conf from All-Projects");
+    }
+
     List<ConfigEntry> relevantConfigs =
         findRelevantConfigs(resource.getProjectState().getProject().getName(), resource.getRef());
     if (relevantConfigs.isEmpty()) {
@@ -355,6 +365,9 @@ public class SuperManifestRefUpdatedListener
 
   private List<ConfigEntry> findRelevantConfigs(String project, String refName) {
     List<ConfigEntry> relevantConfigs = new ArrayList<>();
+    if (config == null) {
+      return relevantConfigs;
+    }
     for (ConfigEntry c : config) {
       if (!c.srcRepoKey.get().equals(project)) {
         continue;

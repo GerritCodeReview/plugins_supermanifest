@@ -32,6 +32,7 @@ import com.google.gerrit.extensions.restapi.Response;
 import com.google.gerrit.extensions.restapi.RestModifyView;
 import com.google.gerrit.metrics.Counter1;
 import com.google.gerrit.metrics.Description;
+import com.google.gerrit.metrics.Description.Units;
 import com.google.gerrit.metrics.Field;
 import com.google.gerrit.metrics.MetricMaker;
 import com.google.gerrit.metrics.Timer1;
@@ -151,7 +152,8 @@ public class SuperManifestRefUpdatedListener
     this.superprojectCommitTimer =
         metrics.newTimer(
             "supermanifest/superproject_commit_latency",
-            new Description("Time taken to parse the manifest and update the superproject"),
+            new Description("Time taken to parse the manifest and update the superproject")
+                .setUnit(Units.NANOSECONDS),
             Field.ofEnum(
                     ConfigEntry.ToolType.class,
                     "tool",

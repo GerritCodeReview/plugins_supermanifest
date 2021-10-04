@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b17fec6_e4cacc3e",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1011842
+      },
+      "writtenOn": "2021-10-04T19:34:52Z",
+      "side": 1,
+      "message": "Subtle: you noticed in internal bug b/202034223 that this requires the Description to have a unit set (see nextIdLatency in com.google.gerrit.server.notedb.Sequences for an example).\n\nPresumably RepoSuperManifestIT would have caught this, except that the TestMetricMaker or DisabledMetricMaker used doesn\u0027t check this property.",
+      "revId": "e6b65d99220bb4e5ba1d3f2c320c110485da8c25",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

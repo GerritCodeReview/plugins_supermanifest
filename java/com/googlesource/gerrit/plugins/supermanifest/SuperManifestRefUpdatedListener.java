@@ -151,7 +151,8 @@ public class SuperManifestRefUpdatedListener
     this.superprojectCommitTimer =
         metrics.newTimer(
             "supermanifest/superproject_commit_latency",
-            new Description("Time taken to parse the manifest and update the superproject"),
+            new Description("Time taken to parse the manifest and update the superproject")
+                .setUnit("nanoseconds"),
             Field.ofEnum(
                     ConfigEntry.ToolType.class,
                     "tool",

@@ -32,7 +32,7 @@ import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
 import com.google.inject.Inject;
 import java.net.URI;
 import java.util.Arrays;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;

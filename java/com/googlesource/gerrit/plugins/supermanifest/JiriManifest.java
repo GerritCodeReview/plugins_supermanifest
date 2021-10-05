@@ -17,7 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /** Refer https://fuchsia.googlesource.com/jiri/+/HEAD/manifest.md for manifest specification. */
 @XmlRootElement(name = "manifest")

@@ -14,7 +14,7 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 class StringUtil {
   public static String addTab(String str) {

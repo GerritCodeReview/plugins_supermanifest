@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 class JiriProjects {
   @XmlElement(name = "project")

@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 import com.google.inject.util.Providers;
 import java.net.URI;
 import java.util.Arrays;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;

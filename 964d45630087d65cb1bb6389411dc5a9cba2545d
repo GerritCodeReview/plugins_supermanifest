@@ -16,6 +16,24 @@
       "message": "this has to use a topic and be submitted together with the gerrit change, right?",
       "revId": "964d45630087d65cb1bb6389411dc5a9cba2545d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f36ffe60_2c80f2ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2021-10-06T07:30:17Z",
+      "side": 1,
+      "message": "Well, yeah we can do that. Thanks for suggesting.\n\nI gave this a second thought: This change alone is not breaking the plugin nor gerrit core (currently gerrit depends on v2 and v3). I was planning to clean v2 usages in plugins, then submit the change to remove v2 from core.",
+      "parentUuid": "549bddbd_d4fdc2e5",
+      "revId": "964d45630087d65cb1bb6389411dc5a9cba2545d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

@@ -51,109 +51,23 @@
       "message": "Verified by running the tests locally:\n\nTarget //plugins/supermanifest:supermanifest_tests up-to-date:\n  bazel-bin/plugins/supermanifest/supermanifest_tests.jar\n  bazel-bin/plugins/supermanifest/supermanifest_tests\nINFO: Elapsed time: 17.902s, Critical Path: 17.18s\nINFO: 146 processes: 143 remote cache hit, 2 linux-sandbox, 1 worker.\nINFO: Build completed successfully, 147 total actions\n//plugins/supermanifest:supermanifest_tests                              PASSED in 15.2s",
       "revId": "964d45630087d65cb1bb6389411dc5a9cba2545d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
-    }
-  ],
-  "submitRequirementResults": [
-    {
-      "submitRequirement": {
-        "name": "Code-Review",
-        "description": {},
-        "applicabilityExpression": {},
-        "submittabilityExpression": {
-          "expressionString": "label:Code-Review\u003dMAX,user\u003dnon_uploader -label:Code-Review\u003dMIN"
-        },
-        "overrideExpression": {},
-        "allowOverrideInChildProjects": true
-      },
-      "applicabilityExpressionResult": {},
-      "submittabilityExpressionResult": {
-        "expression": {
-          "expressionString": "label:Code-Review\u003dMAX,user\u003dnon_uploader -label:Code-Review\u003dMIN"
-        },
-        "status": "PASS",
-        "errorMessage": {},
-        "passingAtoms": [
-          "label:Code-Review\u003dMAX,user\u003dnon_uploader",
-          "-label:Code-Review\u003dMIN"
-        ],
-        "failingAtoms": []
-      },
-      "overrideExpressionResult": {},
-      "patchSetCommitId": {
-        "w1": -1773320861,
-        "w2": 8902236,
-        "w3": -1313119351,
-        "w4": 1092470185,
-        "w5": -878554019
-      },
-      "legacy": true
     },
     {
-      "submitRequirement": {
-        "name": "Verified",
-        "description": {},
-        "applicabilityExpression": {},
-        "submittabilityExpression": {
-          "expressionString": "label:Verified\u003dMAX -label:Verified\u003dMIN"
-        },
-        "overrideExpression": {},
-        "allowOverrideInChildProjects": true
+      "unresolved": false,
+      "key": {
+        "uuid": "3b4d4fd1_6338e62e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
       },
-      "applicabilityExpressionResult": {},
-      "submittabilityExpressionResult": {
-        "expression": {
-          "expressionString": "label:Verified\u003dMAX -label:Verified\u003dMIN"
-        },
-        "status": "PASS",
-        "errorMessage": {},
-        "passingAtoms": [
-          "label:Verified\u003dMAX",
-          "-label:Verified\u003dMIN"
-        ],
-        "failingAtoms": []
+      "lineNbr": 0,
+      "author": {
+        "id": 1072453
       },
-      "overrideExpressionResult": {},
-      "patchSetCommitId": {
-        "w1": -1773320861,
-        "w2": 8902236,
-        "w3": -1313119351,
-        "w4": 1092470185,
-        "w5": -878554019
-      },
-      "legacy": true
-    },
-    {
-      "submitRequirement": {
-        "name": "checks~ChecksSubmitRule",
-        "description": {},
-        "applicabilityExpression": {},
-        "submittabilityExpression": {
-          "expressionString": "rule:checks~ChecksSubmitRule"
-        },
-        "overrideExpression": {},
-        "allowOverrideInChildProjects": false
-      },
-      "applicabilityExpressionResult": {},
-      "submittabilityExpressionResult": {
-        "expression": {
-          "expressionString": "rule:checks~ChecksSubmitRule"
-        },
-        "status": "PASS",
-        "errorMessage": {},
-        "passingAtoms": [
-          "checks~ChecksSubmitRule"
-        ],
-        "failingAtoms": []
-      },
-      "overrideExpressionResult": {},
-      "patchSetCommitId": {
-        "w1": -1773320861,
-        "w2": 8902236,
-        "w3": -1313119351,
-        "w4": 1092470185,
-        "w5": -878554019
-      },
-      "legacy": true
+      "writtenOn": "2021-10-07T19:33:53Z",
+      "side": 1,
+      "message": "This fails to build for me:\n\n```                                                                                                                                                                 \nplugins/supermanifest/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java:86: error: [strict] Using type org.apache.commons.lang3.StringUtils from an indirect dependency (TOOL_INFO: \"@commons-lang3//jar\"). See command be\nlow **                                                                                                                                                                                                                                       \n      return name + \"\u003d\" + StringUtils.strip(remote, \"/\");                                                                                                                                                                                    \n                          ^                                                                                                                                                                                                                  \n ** Please add the following dependencies:                                                                                                                                                                                                   \n  @commons-lang3//jar to //plugins/supermanifest:supermanifest__plugin                                                                                                                                                                       \n ** You can use the following buildozer command:                                                                                                                                                                                             \nbuildozer \u0027add deps @commons-lang3//jar\u0027 //plugins/supermanifest:supermanifest__plugin                                                                                                                                                       \n                                                                                                                                                                                                                                             \nTarget //plugins/supermanifest:supermanifest failed to build  \n```\n\nFix: https://gerrit-review.googlesource.com/c/plugins/supermanifest/+/320276",
+      "revId": "964d45630087d65cb1bb6389411dc5a9cba2545d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

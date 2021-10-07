@@ -16,6 +16,7 @@ gerrit_plugin(
         "@istack-commons-runtime//jar",
         "@jaxb-api//jar",
         "@jaxb-runtime//jar",
+        "@commons-lang3//jar",
     ],
 )
 

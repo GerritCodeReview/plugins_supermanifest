@@ -68,6 +68,24 @@
       "message": "This fails to build for me:\n\n```                                                                                                                                                                 \nplugins/supermanifest/java/com/googlesource/gerrit/plugins/supermanifest/JiriManifest.java:86: error: [strict] Using type org.apache.commons.lang3.StringUtils from an indirect dependency (TOOL_INFO: \"@commons-lang3//jar\"). See command be\nlow **                                                                                                                                                                                                                                       \n      return name + \"\u003d\" + StringUtils.strip(remote, \"/\");                                                                                                                                                                                    \n                          ^                                                                                                                                                                                                                  \n ** Please add the following dependencies:                                                                                                                                                                                                   \n  @commons-lang3//jar to //plugins/supermanifest:supermanifest__plugin                                                                                                                                                                       \n ** You can use the following buildozer command:                                                                                                                                                                                             \nbuildozer \u0027add deps @commons-lang3//jar\u0027 //plugins/supermanifest:supermanifest__plugin                                                                                                                                                       \n                                                                                                                                                                                                                                             \nTarget //plugins/supermanifest:supermanifest failed to build  \n```\n\nFix: https://gerrit-review.googlesource.com/c/plugins/supermanifest/+/320276",
       "revId": "964d45630087d65cb1bb6389411dc5a9cba2545d",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a17f85b7_99c1880d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2021-10-08T07:58:13Z",
+      "side": 1,
+      "message": "I didn\u0027t see this error. Thanks for fixing.",
+      "parentUuid": "3b4d4fd1_6338e62e",
+      "revId": "964d45630087d65cb1bb6389411dc5a9cba2545d",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

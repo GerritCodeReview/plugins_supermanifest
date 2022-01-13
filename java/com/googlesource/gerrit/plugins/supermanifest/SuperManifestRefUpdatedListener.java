@@ -288,7 +288,7 @@ public class SuperManifestRefUpdatedListener
         try {
           // TODO: Remove, this is just band-aid.
           // Evict project cache because this is called before that eviction is done in core
-          projectCache.evict(allProjectsName);
+          projectCache.evictAndReindex(allProjectsName);
           updateConfiguration();
         } catch (NoSuchProjectException e) {
           throw new IllegalStateException(e);

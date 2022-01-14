@@ -16,6 +16,24 @@
       "message": "ping",
       "revId": "46d29f83ed66750a871881280a85ae4ad3427104",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75b74b35_123d9ba3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2022-01-14T16:12:40Z",
+      "side": 1,
+      "message": "it\u0027s already merged :)",
+      "parentUuid": "4258dec8_fd9fe7d9",
+      "revId": "46d29f83ed66750a871881280a85ae4ad3427104",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

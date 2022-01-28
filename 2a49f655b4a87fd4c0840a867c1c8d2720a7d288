@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79d09ea1_f2ad8fb8",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2022-01-28T11:41:16Z",
+      "side": 1,
+      "message": "I would assume so, but is this actually correct, Han-Wen?",
+      "range": {
+        "startLine": 304,
+        "startChar": 9,
+        "endLine": 304,
+        "endChar": 67
+      },
+      "revId": "2a49f655b4a87fd4c0840a867c1c8d2720a7d288",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

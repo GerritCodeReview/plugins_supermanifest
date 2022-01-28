@@ -22,6 +22,30 @@
       },
       "revId": "46d29f83ed66750a871881280a85ae4ad3427104",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ca8882b_0132bf6f",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1026112
+      },
+      "writtenOn": "2022-01-28T11:40:01Z",
+      "side": 0,
+      "message": "Ah nice find! Done.",
+      "parentUuid": "723e3589_46f8a148",
+      "range": {
+        "startLine": 291,
+        "startChar": 23,
+        "endLine": 291,
+        "endChar": 38
+      },
+      "revId": "46d29f83ed66750a871881280a85ae4ad3427104",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

@@ -22,6 +22,7 @@ import com.google.common.flogger.FluentLogger;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
 import com.google.gerrit.entities.Project;
+import com.google.gerrit.entities.RefNames;
 import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.config.DownloadScheme;
@@ -297,6 +298,10 @@ public class SuperManifestRefUpdatedListener
           throw new IllegalStateException(e);
         }
       }
+      return;
+    }
+    if(RefNames.isNoteDbMetaRef(event.getRefName())) {
+      // NoteDb meta ref updates never cause supermanifest updates.
       return;
     }
 

@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.flogger.FluentLogger;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
@@ -63,6 +64,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -104,7 +106,7 @@ public class SuperManifestRefUpdatedListener
   private final Timer1<ConfigEntry.ToolType> superprojectCommitTimer;
 
   // Mutable.
-  private Set<ConfigEntry> config;
+  private AtomicReference<ImmutableSet<ConfigEntry>> config = new AtomicReference<>();
 
   @Inject
   SuperManifestRefUpdatedListener(
@@ -252,12 +254,13 @@ public class SuperManifestRefUpdatedListener
 
   /** for debugging. */
   private String configurationToString() {
-    if (config == null) {
+    Set<ConfigEntry> cfg = config.get();
+    if (cfg == null) {
       return "No config loaded (could not read All-Projects)";
     }
     StringBuilder b = new StringBuilder();
-    b.append("Supermanifest config (").append(config.size()).append(") {\n");
-    for (ConfigEntry c : config) {
+    b.append("Supermanifest config (").append(cfg.size()).append(") {\n");
+    for (ConfigEntry c : cfg) {
       b.append(" ").append(c).append("\n");
     }
     b.append("}\n");
@@ -278,17 +281,17 @@ public class SuperManifestRefUpdatedListener
       }
     }
 
-    config = filtered;
+    config.set(ImmutableSet.copyOf(filtered));
   }
 
   @Override
-  public synchronized void onGitReferenceUpdated(Event event) {
+  public void onGitReferenceUpdated(Event event) {
     if (event.getProjectName().equals(allProjectsName.get())) {
       if (event.getRefName().equals("refs/meta/config")) {
         try {
           // TODO: Remove, this is just band-aid.
           // Evict project cache because this is called before that eviction is done in core
-          projectCache.evictAndReindex(allProjectsName);
+          projectCache.evict(allProjectsName);
           updateConfiguration();
         } catch (NoSuchProjectException e) {
           throw new IllegalStateException(e);
@@ -334,7 +337,7 @@ public class SuperManifestRefUpdatedListener
         identifiedUser.get().getAccountId().get(),
         configurationToString());
 
-    if (config == null) {
+    if (config.get() == null) {
       error(
           "Plugin could not read conf from All-Projects (processing %s:%s)",
           manifestProject, manifestBranch);
@@ -364,11 +367,12 @@ public class SuperManifestRefUpdatedListener
   }
 
   private List<ConfigEntry> findRelevantConfigs(String project, String refName) {
+    Set<ConfigEntry> cfg = config.get();
     List<ConfigEntry> relevantConfigs = new ArrayList<>();
-    if (config == null) {
+    if (cfg == null) {
       return relevantConfigs;
     }
-    for (ConfigEntry c : config) {
+    for (ConfigEntry c : cfg) {
       if (!c.srcRepoKey.get().equals(project)) {
         continue;
       }

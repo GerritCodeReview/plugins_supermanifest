@@ -17,7 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,19 +31,19 @@ import org.eclipse.jgit.lib.Repository;
 public class ConfigEntry {
   public static final String SECTION_NAME = "superproject";
 
-  Project.NameKey srcRepoKey;
-  String srcRef;
-  URI baseUri;
-  ToolType toolType;
-  String xmlPath;
-  Project.NameKey destRepoKey;
-  String repoGroups;
-  Set<String> srcRefsExcluded;
-  boolean recordSubmoduleLabels;
-  boolean ignoreRemoteFailures;
+  final Project.NameKey srcRepoKey;
+  final String srcRef;
+  final URI baseUri;
+  final ToolType toolType;
+  final String xmlPath;
+  final Project.NameKey destRepoKey;
+  final String repoGroups;
+  final ImmutableSet<String> srcRefsExcluded;
+  final boolean recordSubmoduleLabels;
+  final boolean ignoreRemoteFailures;
 
   // destBranch can be "*" in which case srcRef is ignored.
-  String destBranch;
+  final String destBranch;
 
   public ConfigEntry(Config cfg, String name) throws ConfigInvalidException {
     String[] parts = name.split(":");
@@ -106,7 +106,7 @@ public class ConfigEntry {
     }
 
     srcRefsExcluded =
-        Sets.newHashSet(
+        ImmutableSet.copyOf(
             Arrays.asList(nullToEmpty(cfg.getString(SECTION_NAME, name, "exclude")).split(",")));
 
     xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");

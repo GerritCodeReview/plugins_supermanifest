@@ -16,6 +16,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.gerrit.testing.GerritJUnit.assertThrows;
+import static com.googlesource.gerrit.plugins.supermanifest.RepoUpdater.SUPERMANIFEST_STAMP;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.gerrit.acceptance.GitUtil;
@@ -44,6 +45,7 @@ import org.junit.Test;
     name = "supermanifest",
     sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule")
 public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
+
   Project.NameKey[] testRepoKeys;
   String[] testRepoCommits;
   Project.NameKey manifestKey;
@@ -119,14 +121,19 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project1\" />\n"
             + "</manifest>\n";
 
-    pushFactory
-        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
-        .to("refs/heads/srcbranch")
-        .assertOkStatus();
+    Result manifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/srcbranch");
+    manifestPush.assertOkStatus();
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
     assertThrows(ResourceNotFoundException.class, () -> branch.file("project2"));
+
+    assertThat(branch.file(SUPERMANIFEST_STAMP).asString())
+        .isEqualTo(
+            manifestKey.get() + " refs/heads/srcbranch " + manifestPush.getCommit().getName());
 
     xml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -240,10 +247,11 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project1\" />\n"
             + "</manifest>\n";
 
-    pushFactory
-        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
-        .to("refs/heads/srcbranch")
-        .assertOkStatus();
+    Result manifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/srcbranch");
+    manifestPush.assertOkStatus();
     pushFactory
         .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
         .to("refs/heads/anotherbranch")
@@ -272,6 +280,9 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch.file(SUPERMANIFEST_STAMP).asString())
+        .isEqualTo(
+            manifestKey.get() + " refs/heads/srcbranch " + manifestPush.getCommit().getName());
   }
 
   @Test
@@ -293,10 +304,11 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" />\n"
             + "</manifest>\n";
 
-    pushFactory
-        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
-        .to("refs/heads/srcbranch")
-        .assertOkStatus();
+    Result manifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/srcbranch");
+    manifestPush.assertOkStatus();
 
     // Push config after XML. Needs a manual trigger to create the destination.
     pushConfig(
@@ -326,6 +338,10 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     BranchApi branch = gApi.projects().name(superKey.get()).branch("refs/heads/destbranch");
     assertThat(branch.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
     assertThat(branch.file("project1").asString()).isEqualTo(testRepoCommits[0]);
+
+    assertThat(branch.file(SUPERMANIFEST_STAMP).asString())
+        .startsWith(
+            manifestKey.get() + " refs/heads/srcbranch " + manifestPush.getCommit().getName());
   }
 
   @Test
@@ -435,10 +451,11 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project1\" />\n"
             + "</manifest>\n";
 
-    pushFactory
-        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
-        .to("refs/heads/src1")
-        .assertOkStatus();
+    Result src1ManifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/src1");
+    src1ManifestPush.assertOkStatus();
 
     xml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -450,18 +467,25 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
             + "\" path=\"project2\" />\n"
             + "</manifest>\n";
 
-    pushFactory
-        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
-        .to("refs/heads/src2")
-        .assertOkStatus();
+    Result src2ManifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/src2");
+    src2ManifestPush.assertOkStatus();
 
     BranchApi branch1 = gApi.projects().name(superKey.get()).branch("refs/heads/src1");
     assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
     assertThrows(ResourceNotFoundException.class, () -> branch1.file("project2"));
+    assertThat(branch1.file(SUPERMANIFEST_STAMP).asString())
+        .isEqualTo(
+            manifestKey.get() + " refs/heads/src1 " + src1ManifestPush.getCommit().getName());
 
     BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/src2");
     assertThat(branch2.file("project2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
     assertThrows(ResourceNotFoundException.class, () -> branch2.file("project1"));
+    assertThat(branch2.file(SUPERMANIFEST_STAMP).asString())
+        .isEqualTo(
+            manifestKey.get() + " refs/heads/src2 " + src2ManifestPush.getCommit().getName());
   }
 
   @Test
@@ -619,6 +643,8 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch1 = gApi.projects().name(superKey.get()).branch("refs/heads/src1");
     assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch1.file(SUPERMANIFEST_STAMP).asString())
+        .startsWith(manifestKey.get() + " refs/heads/src1");
 
     // This branch should not exist
     BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/src2");
@@ -630,6 +656,8 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     BranchApi branch4 = gApi.projects().name(superKey.get()).branch("refs/heads/src4");
     assertThat(branch4.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThat(branch4.file(SUPERMANIFEST_STAMP).asString())
+        .startsWith(manifestKey.get() + " refs/heads/src4");
   }
   // TODO - should add tests for all the error handling in configuration parsing?
 }

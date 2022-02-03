@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36bb4cce_dc73175b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2022-02-03T23:26:24Z",
+      "side": 1,
+      "message": "This cannot be merged upstream until gerrit moves to jgit 6.1 ",
+      "revId": "de5d705cbc6239ec1ebca27c9305681f5e18992a",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

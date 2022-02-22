@@ -22,6 +22,30 @@
       },
       "revId": "7af3bf66623c9fcd46a109300f35edc4ec6546df",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "802baef5_dca51cab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2022-02-22T20:32:32Z",
+      "side": 1,
+      "message": "This is useful also e.g. for CI. In that case the build bot wants to know what manifest is represented in a certain branch. \n\nThe file gives this information directly from the tip. If we put it in the commit message, the caller needs to walk the branch until finding the annotation. Note that the walk cannot be restricted to the .gitmodules because some manifest changes (e.g. adding a copylink) would not touch that file.\n\nI added this to the commit message.",
+      "parentUuid": "a5b1aaec_f56598df",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 58
+      },
+      "revId": "7af3bf66623c9fcd46a109300f35edc4ec6546df",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

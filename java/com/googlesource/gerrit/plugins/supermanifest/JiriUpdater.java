@@ -5,6 +5,7 @@ import static com.google.gerrit.entities.RefNames.REFS_TAGS;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.Lists;
+import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.extensions.config.DownloadScheme;
 import com.google.gerrit.server.plugincontext.PluginMapContext;
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
@@ -34,8 +35,6 @@ import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class JiriUpdater implements SubModuleUpdater {
   PersonIdent serverIdent;
@@ -51,12 +50,12 @@ class JiriUpdater implements SubModuleUpdater {
     this.downloadScheme = downloadScheme;
   }
 
-  private static final Logger log = LoggerFactory.getLogger(SuperManifestRefUpdatedListener.class);
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private void warn(String formatStr, Object... args) {
     // The docs claim that log.warn() uses format strings, but it doesn't seem to work, so we do it
     // explicitly.
-    log.warn(canonicalWebUrl + " : " + String.format(formatStr, args));
+    logger.atWarning().log("%s : %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
   private void updateSubmodules(

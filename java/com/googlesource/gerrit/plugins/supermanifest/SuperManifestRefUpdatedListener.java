@@ -300,7 +300,7 @@ public class SuperManifestRefUpdatedListener
       }
       return;
     }
-    if(RefNames.isNoteDbMetaRef(event.getRefName())) {
+    if (RefNames.isNoteDbMetaRef(event.getRefName())) {
       // NoteDb meta ref updates never cause supermanifest updates.
       return;
     }

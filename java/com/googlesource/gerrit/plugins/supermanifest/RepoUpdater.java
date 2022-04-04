@@ -28,7 +28,7 @@ import org.eclipse.jgit.lib.Repository;
 
 class RepoUpdater implements SubModuleUpdater {
 
-  static String SUPERMANIFEST_STAMP = ".supermanifest";
+  static final String SUPERMANIFEST_STAMP = ".supermanifest";
 
   PersonIdent serverIdent;
 
@@ -63,7 +63,7 @@ class RepoUpdater implements SubModuleUpdater {
             SUPERMANIFEST_STAMP,
             String.format(
                 "%s %s %s",
-                c.getSrcRepoKey().toString(), srcRef, srcRepo.resolve(srcRef).getName()))
+                c.getSrcRepoKey(), srcRef, srcRepo.resolve(srcRef).getName()))
         .setRecommendShallow(true)
         .setRemoteReader(reader)
         .setTargetURI(c.getDestRepoKey().toString())

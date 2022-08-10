@@ -390,7 +390,8 @@ public class SuperManifestRefUpdatedListener
         continue;
       }
 
-      if (c.srcRefsExcluded.contains(refName)) {
+      if (c.isExcluded(refName)) {
+        logger.atInfo().log("Skipping %s: it matches exclude conditions.");
         continue;
       }
       relevantConfigs.add(c);

@@ -44,6 +44,7 @@ public class ConfigEntryTest {
     assertThat(entry.getSrcRepoKey()).isEqualTo(Project.nameKey("manifest"));
     assertThat(entry.getSrcRef()).isEqualTo("refs/heads/nyc-src");
     assertThat(entry.getXmlPath()).isEqualTo("default.xml");
+    assertThat(entry.isExcluded("refs/heads/master")).isFalse();
   }
 
   @Test
@@ -135,9 +136,11 @@ public class ConfigEntryTest {
     cfg.fromText(builder.toString());
 
     ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
-
-    assertThat(entry.srcRefsExcluded)
-        .containsExactly("refs/heads/a", "refs/heads/b", "refs/heads/c");
+    assertThat(entry.isExcluded("refs/heads/a")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/b")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/c")).isTrue();
+    assertThat(entry.isExcluded("refs/tags/r1")).isFalse();
+    assertThat(entry.isExcluded("refs/heads/aaa")).isFalse();
   }
 
   @Test
@@ -155,9 +158,39 @@ public class ConfigEntryTest {
     cfg.fromText(builder.toString());
 
     ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
+    assertThat(entry.isExcluded("refs/heads/a")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/b")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/c")).isTrue();
+    assertThat(entry.isExcluded("refs/tags/r1")).isFalse();
+    assertThat(entry.isExcluded("refs/heads/aaa")).isFalse();
+  }
 
-    assertThat(entry.srcRefsExcluded)
-        .containsExactly("refs/heads/a", "refs/heads/b", "refs/heads/c");
+  @Test
+  public void excluded_patterns() throws ConfigInvalidException {
+    StringBuilder builder =
+        new StringBuilder(
+                getBasicConf(
+                    "superproject",
+                    "refs/heads/*",
+                    "manifest",
+                    "refs/heads/nyc-src",
+                    "default.xml"))
+            .append("  excludePattern = refs/heads/a*, refs/heads/*-release \n");
+    Config cfg = new Config();
+    cfg.fromText(builder.toString());
+
+    ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
+    // Excluded
+    assertThat(entry.isExcluded("refs/heads/aa")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/a-something")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/b-release")).isTrue();
+    assertThat(entry.isExcluded("refs/heads/bb-release")).isTrue();
+
+    // Non excluded
+    assertThat(entry.isExcluded("refs/heads/a")).isFalse();
+    assertThat(entry.isExcluded("refs/heads/master")).isFalse();
+    assertThat(entry.isExcluded("refs/heads/c-release-c")).isFalse();
+    assertThat(entry.isExcluded("refs/tags/aa")).isFalse();
   }
 
   private String getBasicConf(

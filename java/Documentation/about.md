@@ -50,20 +50,27 @@ The plugin supports the following options:
 
 For the destination branch, you may also specify `refs/heads/*` to copy all
 branches in the manifest repository. In this case the `srcRef` field is not
-required (it will be ignored if present). Specific branches can be excluded with
-the `exclude` option. `exclude` value is a comma-separated list of fully
-qualified refs (i.e. with the `refs/heads/` prefix).
+required (it will be ignored if present).
+
+Specific branches can be excluded with the `exclude` option. `exclude` value is
+a comma-separated list of fully qualified refs (i.e. with the `refs/heads/`
+prefix).
+
+Multiple branches can be excluded with the `excludePattern` option. Its value is
+a list of comma-separated ref pattern in a git style: the pattern can contain
+only one '*'. Refs are first check for exact match in `exclude` and then on
+these patterns.
 
 ```
 [superproject "submodules:refs/heads/*"]
    srcRepo = platforms/manifest
    srcPath = manifest.xml
    exclude = refs/heads/test,refs/heads/ignoreme
+   excludePattern = refs/heads/*-release, refs/heads/auto-*
 ```
 
-This plugin bypasses visibility restrictions, so edits to the manifest
-repo can be used to reveal existence of hidden repositories or
-branches.
+This plugin bypasses visibility restrictions, so edits to the manifest repo can
+be used to reveal existence of hidden repositories or branches.
 
 
 MANUAL TRIGGER

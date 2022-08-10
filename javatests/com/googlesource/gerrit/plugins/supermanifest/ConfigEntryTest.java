@@ -140,6 +140,26 @@ public class ConfigEntryTest {
         .containsExactly("refs/heads/a", "refs/heads/b", "refs/heads/c");
   }
 
+  @Test
+  public void excluded_whitespace() throws ConfigInvalidException {
+    StringBuilder builder =
+        new StringBuilder(
+                getBasicConf(
+                    "superproject",
+                    "refs/heads/*",
+                    "manifest",
+                    "refs/heads/nyc-src",
+                    "default.xml"))
+            .append("  exclude = refs/heads/a, refs/heads/b , refs/heads/c \n");
+    Config cfg = new Config();
+    cfg.fromText(builder.toString());
+
+    ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
+
+    assertThat(entry.srcRefsExcluded)
+        .containsExactly("refs/heads/a", "refs/heads/b", "refs/heads/c");
+  }
+
   private String getBasicConf(
       String destRepoKey, String destBranch, String srcRepoKey, String srcRef, String xmlPath) {
     return String.format(

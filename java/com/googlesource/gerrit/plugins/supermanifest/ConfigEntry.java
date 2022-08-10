@@ -21,9 +21,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
@@ -106,8 +106,9 @@ public class ConfigEntry {
     }
 
     srcRefsExcluded =
-        ImmutableSet.copyOf(
-            Arrays.asList(nullToEmpty(cfg.getString(SECTION_NAME, name, "exclude")).split(",")));
+        Stream.of(nullToEmpty(cfg.getString(SECTION_NAME, name, "exclude")).split(","))
+            .map(String::trim)
+            .collect(ImmutableSet.toImmutableSet());
 
     xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");
     if (xmlPath == null) {

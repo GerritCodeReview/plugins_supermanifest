@@ -22,11 +22,12 @@ import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.RefSpec.WildcardMode;
 
 public class ConfigEntry {
   public static final String SECTION_NAME = "superproject";
@@ -108,6 +109,7 @@ public class ConfigEntry {
     srcRefsExcluded =
         Stream.of(nullToEmpty(cfg.getString(SECTION_NAME, name, "exclude")).split(","))
             .map(String::trim)
+            .filter(s -> !s.isEmpty())
             .collect(ImmutableSet.toImmutableSet());
 
     xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");
@@ -209,13 +211,15 @@ public class ConfigEntry {
     return destBranch;
   }
 
-  /**
-   * Refs that should not be copied
-   *
-   * @return the refs listed in the "exclude" option
-   */
-  public Set<String> getSrcRefsExcluded() {
-    return srcRefsExcluded;
+  public boolean excludesRef(String refName) {
+    for (String excluded : srcRefsExcluded) {
+      // ALLOW_MISMATCH allows '*' only in one side (source in this case)
+      RefSpec excludedSpec = new RefSpec(excluded, WildcardMode.ALLOW_MISMATCH);
+      if (excludedSpec.matchSource(refName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   enum ToolType {

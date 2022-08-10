@@ -22,11 +22,11 @@ import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.RefSpec;
 
 public class ConfigEntry {
   public static final String SECTION_NAME = "superproject";
@@ -39,6 +39,7 @@ public class ConfigEntry {
   final Project.NameKey destRepoKey;
   final String repoGroups;
   final ImmutableSet<String> srcRefsExcluded;
+  final ImmutableSet<RefSpec> srcRefPatternsExcluded;
   final boolean recordSubmoduleLabels;
   final boolean ignoreRemoteFailures;
 
@@ -108,6 +109,14 @@ public class ConfigEntry {
     srcRefsExcluded =
         Stream.of(nullToEmpty(cfg.getString(SECTION_NAME, name, "exclude")).split(","))
             .map(String::trim)
+            .collect(ImmutableSet.toImmutableSet());
+
+    srcRefPatternsExcluded =
+        Stream.of(nullToEmpty(cfg.getString(SECTION_NAME, name, "excludePattern")).split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .peek(System.out::println)
+            .map(pattern -> new RefSpec(String.format("%s:%s", pattern, pattern)))
             .collect(ImmutableSet.toImmutableSet());
 
     xmlPath = cfg.getString(SECTION_NAME, name, "srcPath");
@@ -209,13 +218,18 @@ public class ConfigEntry {
     return destBranch;
   }
 
-  /**
-   * Refs that should not be copied
-   *
-   * @return the refs listed in the "exclude" option
-   */
-  public Set<String> getSrcRefsExcluded() {
-    return srcRefsExcluded;
+  public boolean isExcluded(String refName) {
+    if (srcRefsExcluded.contains(refName)) {
+      return true;
+    }
+
+    for (RefSpec spec : srcRefPatternsExcluded) {
+      if (spec.matchSource(refName)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   enum ToolType {

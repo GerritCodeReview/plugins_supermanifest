@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "440dd6c1_96bbcc53",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2022-08-18T13:18:59Z",
+      "side": 1,
+      "message": "refspecs are pairs of ref names, so this representation is incorrect.",
+      "range": {
+        "startLine": 42,
+        "startChar": 21,
+        "endLine": 42,
+        "endChar": 28
+      },
+      "revId": "53a35f6c7725057ab8f51d88742623618f1c9c98",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dd5943a_45b272ed",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/ConfigEntry.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2022-08-18T13:18:59Z",
+      "side": 1,
+      "message": "how about instantiating RefSpec over here to use the matchSource() method?\n\nAlso, I think you can create a RefSpec out of ref without wildcard, so you don\u0027t need both srcRefPatternsExcluded and srcRefsExcluded.",
+      "range": {
+        "startLine": 227,
+        "startChar": 10,
+        "endLine": 227,
+        "endChar": 14
+      },
+      "revId": "53a35f6c7725057ab8f51d88742623618f1c9c98",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

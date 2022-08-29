@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58d9f52e_b022dd38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1024147
+      },
+      "writtenOn": "2022-08-29T14:52:53Z",
+      "side": 1,
+      "message": "sorry, forgot to send drafts. +2 if you want to submit in a hurry.  ",
+      "revId": "653ec296c64536cf5b430d8552e50948661845e3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bbf4b1cf_72bca2f4",

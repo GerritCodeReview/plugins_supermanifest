@@ -15,6 +15,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.gerrit.entities.RefNames.REFS_HEADS;
+import static com.google.gerrit.server.update.context.RefUpdateContext.RefUpdateType.PLUGIN;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
@@ -51,6 +52,7 @@ import com.google.gerrit.server.plugincontext.PluginMapContext;
 import com.google.gerrit.server.project.BranchResource;
 import com.google.gerrit.server.project.NoSuchProjectException;
 import com.google.gerrit.server.project.ProjectCache;
+import com.google.gerrit.server.update.context.RefUpdateContext;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -415,7 +417,8 @@ public class SuperManifestRefUpdatedListener
     }
 
     String status = "NOT_ATTEMPTED";
-    try (GerritRemoteReader reader =
+    try (RefUpdateContext ctx = RefUpdateContext.open(PLUGIN);
+        GerritRemoteReader reader =
             new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString());
         Timer1.Context<ConfigEntry.ToolType> ignored = superprojectCommitTimer.start(c.toolType)) {
       subModuleUpdater.update(reader, c, refName);

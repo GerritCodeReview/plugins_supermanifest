@@ -798,5 +798,10 @@ public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
     public boolean isEnabled() {
       return true;
     }
+
+    @Override
+    public boolean isHidden() {
+      return false;
+    }
   }
 }

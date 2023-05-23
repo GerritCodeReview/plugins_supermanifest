@@ -44,7 +44,10 @@ public class ConfigEntryTest {
     assertThat(entry.getSrcRepoKey()).isEqualTo(Project.nameKey("manifest"));
     assertThat(entry.getSrcRef()).isEqualTo("refs/heads/nyc-src");
     assertThat(entry.getXmlPath()).isEqualTo("default.xml");
-    assertThat(entry.excludesRef("refs/heads/master")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/master")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/nyc-src")).isTrue();
+    assertThat(entry.matchesSource("manifest", "refs/heads/other")).isFalse();
+    assertThat(entry.matchesSource("otherproject", "refs/heads/nyc-src")).isFalse();
   }
 
   @Test
@@ -62,6 +65,9 @@ public class ConfigEntryTest {
     assertThat(entry.getSrcRepoKey()).isEqualTo(Project.nameKey("manifest"));
     assertThat(entry.getSrcRef()).isEqualTo(""); // Ignored
     assertThat(entry.getXmlPath()).isEqualTo("default.xml");
+    assertThat(entry.matchesSource("manifest", "refs/heads/a")).isTrue();
+    assertThat(entry.matchesSource("manifest", "refs/heads/b")).isTrue();
+    assertThat(entry.matchesSource("otherproject", "refs/heads/c")).isFalse();
   }
 
   @Test
@@ -122,7 +128,7 @@ public class ConfigEntryTest {
   }
 
   @Test
-  public void excluded() throws ConfigInvalidException {
+  public void matchesSource() throws ConfigInvalidException {
     StringBuilder builder =
         new StringBuilder(
                 getBasicConf(
@@ -136,11 +142,30 @@ public class ConfigEntryTest {
     cfg.fromText(builder.toString());
 
     ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
-    assertThat(entry.excludesRef("refs/heads/a")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/b")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/c")).isTrue();
-    assertThat(entry.excludesRef("refs/tags/r1")).isFalse();
-    assertThat(entry.excludesRef("refs/heads/aaa")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/d")).isTrue();
+    assertThat(entry.matchesSource("manifest", "refs/tags/a")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/nyc-src")).isTrue();
+    assertThat(entry.matchesSource("ohther", "refs/heads/d")).isFalse();
+  }
+
+  @Test
+  public void matchesSource_excludes() throws ConfigInvalidException {
+    StringBuilder builder =
+        new StringBuilder(
+                getBasicConf(
+                    "superproject",
+                    "refs/heads/*",
+                    "manifest",
+                    "refs/heads/nyc-src",
+                    "default.xml"))
+            .append("  exclude = refs/heads/a,refs/heads/b,refs/heads/c\n");
+    Config cfg = new Config();
+    cfg.fromText(builder.toString());
+
+    ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
+    assertThat(entry.matchesSource("manifest", "refs/heads/a")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/b")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/c")).isFalse();
   }
 
   @Test
@@ -158,11 +183,9 @@ public class ConfigEntryTest {
     cfg.fromText(builder.toString());
 
     ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
-    assertThat(entry.excludesRef("refs/heads/a")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/b")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/c")).isTrue();
-    assertThat(entry.excludesRef("refs/tags/r1")).isFalse();
-    assertThat(entry.excludesRef("refs/heads/aaa")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/a")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/b")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/c")).isFalse();
   }
 
   @Test
@@ -181,16 +204,15 @@ public class ConfigEntryTest {
 
     ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*");
     // Excluded
-    assertThat(entry.excludesRef("refs/heads/aa")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/a-something")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/b-release")).isTrue();
-    assertThat(entry.excludesRef("refs/heads/bb-release")).isTrue();
+    assertThat(entry.matchesSource("manifest", "refs/heads/aa")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/a-something")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/b-release")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/bb-release")).isFalse();
 
     // Non excluded
-    assertThat(entry.excludesRef("refs/heads/a")).isFalse();
-    assertThat(entry.excludesRef("refs/heads/master")).isFalse();
-    assertThat(entry.excludesRef("refs/heads/c-release-c")).isFalse();
-    assertThat(entry.excludesRef("refs/tags/aa")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/a")).isTrue();
+    assertThat(entry.matchesSource("manifest", "refs/heads/master")).isTrue();
+    assertThat(entry.matchesSource("manifest", "refs/heads/c-release-c")).isTrue();
   }
 
   private String getBasicConf(

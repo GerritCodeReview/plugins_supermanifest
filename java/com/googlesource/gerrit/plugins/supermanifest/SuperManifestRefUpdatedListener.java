@@ -14,7 +14,6 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 import static com.google.gerrit.server.update.context.RefUpdateContext.RefUpdateType.PLUGIN;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -68,6 +67,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -395,27 +395,9 @@ public class SuperManifestRefUpdatedListener
 
   private List<ConfigEntry> findRelevantConfigs(
       ImmutableSet<ConfigEntry> config, String project, String refName) {
-    List<ConfigEntry> relevantConfigs = new ArrayList<>();
-    for (ConfigEntry configEntry : config) {
-      if (!configEntry.srcRepoKey.get().equals(project)) {
-        continue;
-      }
-
-      if (!(configEntry.destBranch.equals("*") || configEntry.srcRef.equals(refName))) {
-        continue;
-      }
-
-      if (configEntry.destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
-        continue;
-      }
-
-      if (configEntry.excludesRef(refName)) {
-        info("Skipping %s: it matches exclude conditions.", refName);
-        continue;
-      }
-      relevantConfigs.add(configEntry);
-    }
-    return relevantConfigs;
+    return config.stream()
+        .filter(c -> c.matchesSource(project, refName))
+        .collect(Collectors.toList());
   }
 
   private void updateForConfig(ConfigEntry configEntry, String refName)

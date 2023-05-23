@@ -14,7 +14,6 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 import static com.google.gerrit.server.update.context.RefUpdateContext.RefUpdateType.PLUGIN;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -68,6 +67,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -361,6 +361,7 @@ public class SuperManifestRefUpdatedListener
     }
     for (ConfigEntry config : relevantConfigs) {
       try {
+        info("Applying conf %s (triggered by %s:%s)", config, manifestProject, manifestBranch);
         updateForConfig(config, resource.getRef());
       } catch (ConfigInvalidException e) {
         errorWithCause(e, "Invalid conf processing %s:%s", manifestProject, manifestBranch);
@@ -375,30 +376,10 @@ public class SuperManifestRefUpdatedListener
 
   private List<ConfigEntry> findRelevantConfigs(String project, String refName) {
     Set<ConfigEntry> cfg = config.get();
-    List<ConfigEntry> relevantConfigs = new ArrayList<>();
     if (cfg == null) {
-      return relevantConfigs;
+      return new ArrayList<>();
     }
-    for (ConfigEntry c : cfg) {
-      if (!c.srcRepoKey.get().equals(project)) {
-        continue;
-      }
-
-      if (!(c.destBranch.equals("*") || c.srcRef.equals(refName))) {
-        continue;
-      }
-
-      if (c.destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
-        continue;
-      }
-
-      if (c.excludesRef(refName)) {
-        info("Skipping %s: it matches exclude conditions.", refName);
-        continue;
-      }
-      relevantConfigs.add(c);
-    }
-    return relevantConfigs;
+    return cfg.stream().filter(c -> c.matchesSource(project, refName)).collect(Collectors.toList());
   }
 
   private void updateForConfig(ConfigEntry c, String refName)

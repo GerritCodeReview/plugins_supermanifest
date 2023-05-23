@@ -18,6 +18,7 @@ import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.flogger.FluentLogger;
 import com.google.gerrit.entities.Project;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,6 +31,8 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RefSpec.WildcardMode;
 
 public class ConfigEntry {
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
   public static final String SECTION_NAME = "superproject";
 
   final Project.NameKey srcRepoKey;
@@ -211,7 +214,27 @@ public class ConfigEntry {
     return destBranch;
   }
 
-  public boolean excludesRef(String refName) {
+  public boolean matchesSource(String project, String refName) {
+    if (!srcRepoKey.get().equals(project)) {
+      return false;
+    }
+
+    if (!(destBranch.equals("*") || srcRef.equals(refName))) {
+      return false;
+    }
+
+    if (destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
+      return false;
+    }
+
+    if (excludesRef(refName)) {
+      logger.atInfo().log("Skipping %s: it matches exclude conditions.", refName);
+      return false;
+    }
+    return true;
+  }
+
+  private boolean excludesRef(String refName) {
     for (String excluded : srcRefsExcluded) {
       // ALLOW_MISMATCH allows '*' only in one side (source in this case)
       RefSpec excludedSpec = new RefSpec(excluded, WildcardMode.ALLOW_MISMATCH);

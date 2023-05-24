@@ -14,7 +14,6 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
-import static com.google.gerrit.entities.RefNames.REFS_HEADS;
 
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
 import java.io.ByteArrayInputStream;
@@ -43,12 +42,7 @@ class RepoUpdater implements SubModuleUpdater {
     Repository srcRepo = reader.openRepository(c.getSrcRepoKey().toString());
 
     RepoCommand cmd = new RepoCommand(destRepo);
-
-    if (c.getDestBranch().equals("*")) {
-      cmd.setTargetBranch(srcRef.substring(REFS_HEADS.length()));
-    } else {
-      cmd.setTargetBranch(c.getDestBranch());
-    }
+    cmd.setTargetBranch(c.getActualDestBranch(srcRef));
 
     InputStream manifestStream =
         new ByteArrayInputStream(Utils.readBlob(srcRepo, srcRef + ":" + c.getXmlPath()));

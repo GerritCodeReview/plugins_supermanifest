@@ -294,7 +294,7 @@ class JiriUpdater implements SubModuleUpdater {
       JiriProjects projects =
           JiriManifestParser.getProjects(
               reader, c.getSrcRepoKey().toString(), srcRef, c.getXmlPath());
-      String targetRef = c.getDestBranch().equals("*") ? srcRef : REFS_HEADS + c.getDestBranch();
+      String targetRef = REFS_HEADS + c.getActualDestBranch(srcRef);
       updateSubmodules(
           destRepo, targetRef, URI.create(c.getDestRepoKey().toString() + "/"), projects, reader);
     }

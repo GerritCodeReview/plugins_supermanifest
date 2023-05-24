@@ -489,6 +489,71 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
   }
 
   @Test
+  public void regexDestBranchWorks() throws Exception {
+    setupTestRepos("project");
+
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/nyc-*\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = blablabla\n"
+            + "  srcPath = default.xml\n");
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String originXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+
+    // XML change will trigger commit to superproject.
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + originXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</manifest>\n";
+
+    Result src1ManifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/nyc-1");
+    src1ManifestPush.assertOkStatus();
+
+    xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + originXml
+            + "  <project name=\""
+            + testRepoKeys[1].get()
+            + "\" path=\"project2\" />\n"
+            + "</manifest>\n";
+
+    Result src2ManifestPush =
+        pushFactory
+            .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+            .to("refs/heads/nyc-2");
+    src2ManifestPush.assertOkStatus();
+
+    BranchApi branch1 = gApi.projects().name(superKey.get()).branch("refs/heads/nyc-1");
+    assertThat(branch1.file("project1").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThrows(ResourceNotFoundException.class, () -> branch1.file("project2"));
+    assertThat(branch1.file(SUPERMANIFEST_STAMP).asString())
+        .isEqualTo(
+            manifestKey.get() + " refs/heads/nyc-1 " + src1ManifestPush.getCommit().getName());
+
+    BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/nyc-2");
+    assertThat(branch2.file("project2").getContentType()).isEqualTo("x-git/gitlink; charset=UTF-8");
+    assertThrows(ResourceNotFoundException.class, () -> branch2.file("project1"));
+    assertThat(branch2.file(SUPERMANIFEST_STAMP).asString())
+        .isEqualTo(
+            manifestKey.get() + " refs/heads/nyc-2 " + src2ManifestPush.getCommit().getName());
+  }
+
+  @Test
   public void manifestIncludesOtherManifest() throws Exception {
     setupTestRepos("project");
 

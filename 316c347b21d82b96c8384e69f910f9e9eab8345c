@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd433435_db6559a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011842
+      },
+      "writtenOn": "2023-05-24T19:40:48Z",
+      "side": 1,
+      "message": "nit: that\u0027s not a regex -- it\u0027s a glob (just glob with a wildcard not at the end of the refname)",
+      "revId": "316c347b21d82b96c8384e69f910f9e9eab8345c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

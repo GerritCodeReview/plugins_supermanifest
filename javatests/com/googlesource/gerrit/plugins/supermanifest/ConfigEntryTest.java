@@ -14,6 +14,7 @@
 package com.googlesource.gerrit.plugins.supermanifest;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 
 import com.google.gerrit.entities.Project;
 import org.eclipse.jgit.errors.ConfigInvalidException;
@@ -68,6 +69,89 @@ public class ConfigEntryTest {
     assertThat(entry.matchesSource("manifest", "refs/heads/a")).isTrue();
     assertThat(entry.matchesSource("manifest", "refs/heads/b")).isTrue();
     assertThat(entry.matchesSource("otherproject", "refs/heads/c")).isFalse();
+  }
+
+  @Test
+  public void regexBranches_suffix_ok() throws ConfigInvalidException {
+    String conf =
+        getBasicConf(
+            "superproject", "refs/heads/nyc-*", "manifest", "refs/heads/nyc-src", "default.xml");
+
+    Config cfg = new Config();
+    cfg.fromText(conf);
+
+    ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/nyc-*");
+    assertThat(entry.getDestRepoKey()).isEqualTo(Project.nameKey("superproject"));
+    assertThat(entry.getDestBranch()).isEqualTo("nyc-*");
+    assertThat(entry.getSrcRepoKey()).isEqualTo(Project.nameKey("manifest"));
+    assertThat(entry.getSrcRef()).isEqualTo(""); // Ignored
+    assertThat(entry.getXmlPath()).isEqualTo("default.xml");
+    assertThat(entry.matchesSource("manifest", "refs/heads/a")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/nyc-dev")).isTrue();
+    assertThat(entry.matchesSource("otherproject", "refs/heads/nyc-dev")).isFalse();
+  }
+
+  @Test
+  public void regexBranches_prefix_ok() throws ConfigInvalidException {
+    String conf =
+        getBasicConf(
+            "superproject",
+            "refs/heads/*-release",
+            "manifest",
+            "refs/heads/nyc-src",
+            "default.xml");
+
+    Config cfg = new Config();
+    cfg.fromText(conf);
+
+    ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/*-release");
+    assertThat(entry.getDestRepoKey()).isEqualTo(Project.nameKey("superproject"));
+    assertThat(entry.getDestBranch()).isEqualTo("*-release");
+    assertThat(entry.getSrcRepoKey()).isEqualTo(Project.nameKey("manifest"));
+    assertThat(entry.getSrcRef()).isEqualTo(""); // Ignored
+    assertThat(entry.getXmlPath()).isEqualTo("default.xml");
+    assertThat(entry.matchesSource("manifest", "refs/heads/release")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/release-a")).isFalse();
+    assertThat(entry.matchesSource("manifest", "refs/heads/a-release")).isTrue();
+    assertThat(entry.matchesSource("otherproject", "refs/heads/a-release")).isFalse();
+  }
+
+  @Test
+  public void regexBranches_moreThanOneStar_invalid() throws ConfigInvalidException {
+    String conf =
+        getBasicConf(
+            "superproject",
+            "refs/heads/nyc-*-with-*",
+            "manifest",
+            "refs/heads/nyc-src",
+            "default.xml");
+
+    Config cfg = new Config();
+    cfg.fromText(conf);
+
+    try {
+      ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/nyc-*-with-*");
+      fail("Regex doesn't support more than one *");
+    } catch (ConfigInvalidException e) {
+      // Expected
+    }
+  }
+
+  @Test
+  public void regexBranches_noRefHeads_invalid() throws ConfigInvalidException {
+    String conf =
+        getBasicConf(
+            "superproject", "refs/tags/nyc-*", "manifest", "refs/heads/nyc-src", "default.xml");
+
+    Config cfg = new Config();
+    cfg.fromText(conf);
+
+    try {
+      ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/tags/nyc-*");
+      fail("Regex doesn't support more than one *");
+    } catch (ConfigInvalidException e) {
+      // Expected
+    }
   }
 
   @Test

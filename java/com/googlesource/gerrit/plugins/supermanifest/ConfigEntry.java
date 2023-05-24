@@ -64,9 +64,9 @@ public class ConfigEntry {
           String.format("invalid destination '%s'. Must specify refs/heads/", destRef));
     }
 
-    if (destRef.contains("*") && !destRef.equals(REFS_HEADS + "*")) {
+    if (destRef.indexOf("*") != destRef.lastIndexOf('*')) {
       throw new ConfigInvalidException(
-          String.format("invalid destination '%s'. Use just '*' for all branches.", destRef));
+          String.format("invalid destination '%s' has more than one '*'", destRef));
     }
 
     String srcRepo = cfg.getString(SECTION_NAME, name, "srcRepo");
@@ -92,7 +92,7 @@ public class ConfigEntry {
             String.format("entry %s has invalid toolType: %s", name, toolType));
     }
 
-    if (destRef.equals(REFS_HEADS + "*")) {
+    if (destRef.contains("*")) {
       srcRef = "";
     } else {
       if (!Repository.isValidRefName(destRef)) {
@@ -139,8 +139,8 @@ public class ConfigEntry {
 
   public String src() {
     String src = srcRef;
-    if (destBranch.equals("*")) {
-      src = "*";
+    if (destBranch.contains("*")) {
+      src = destBranch;
     }
     return srcRepoKey + ":" + src + ":" + xmlPath;
   }
@@ -223,7 +223,7 @@ public class ConfigEntry {
    * @return the short-named destination branch (assumed under refs/heads)
    */
   public String getActualDestBranch(String updatedRef) {
-    if (destBranch.equals("*")) {
+    if (destBranch.contains("*")) {
       // We can take the ref, because we know it matched this conf before
       return updatedRef.substring(REFS_HEADS.length());
     }
@@ -235,12 +235,19 @@ public class ConfigEntry {
       return false;
     }
 
-    if (!(destBranch.equals("*") || srcRef.equals(refName))) {
+    if (!(destBranch.contains("*") || srcRef.equals(refName))) {
       return false;
     }
 
-    if (destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
-      return false;
+    if (destBranch.contains("*")) {
+      if (!refName.startsWith(REFS_HEADS)) {
+        return false;
+      }
+
+      RefSpec destSpec = new RefSpec(REFS_HEADS + destBranch, WildcardMode.ALLOW_MISMATCH);
+      if (!destSpec.matchSource(refName)) {
+        return false;
+      }
     }
 
     if (excludesRef(refName)) {

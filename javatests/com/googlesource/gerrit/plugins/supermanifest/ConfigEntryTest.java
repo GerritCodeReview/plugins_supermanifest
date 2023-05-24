@@ -48,6 +48,7 @@ public class ConfigEntryTest {
     assertThat(entry.matchesSource("manifest", "refs/heads/nyc-src")).isTrue();
     assertThat(entry.matchesSource("manifest", "refs/heads/other")).isFalse();
     assertThat(entry.matchesSource("otherproject", "refs/heads/nyc-src")).isFalse();
+    assertThat(entry.getActualDestBranch("refs/heads/nyc-src")).isEqualTo("nyc");
   }
 
   @Test
@@ -68,6 +69,8 @@ public class ConfigEntryTest {
     assertThat(entry.matchesSource("manifest", "refs/heads/a")).isTrue();
     assertThat(entry.matchesSource("manifest", "refs/heads/b")).isTrue();
     assertThat(entry.matchesSource("otherproject", "refs/heads/c")).isFalse();
+    assertThat(entry.getActualDestBranch("refs/heads/a")).isEqualTo("a");
+    assertThat(entry.getActualDestBranch("refs/heads/b")).isEqualTo("b");
   }
 
   @Test

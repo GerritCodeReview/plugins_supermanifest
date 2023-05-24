@@ -209,8 +209,24 @@ public class ConfigEntry {
     return repoGroups;
   }
 
-  /** @return the destBranch */
+  /** @return the destBranch as defined in the conf */
   public String getDestBranch() {
+    return destBranch;
+  }
+
+  /**
+   * Get the real destination branch for the srcRef in this conf.
+   *
+   * <p>This takes into account patterns in destination
+   *
+   * @param updatedRef the source ref, expected to start with refs/heads
+   * @return the short-named destination branch (assumed under refs/heads)
+   */
+  public String getActualDestBranch(String updatedRef) {
+    if (destBranch.equals("*")) {
+      // We can take the ref, because we know it matched this conf before
+      return updatedRef.substring(REFS_HEADS.length());
+    }
     return destBranch;
   }
 

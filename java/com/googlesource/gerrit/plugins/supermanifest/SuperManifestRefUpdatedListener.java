@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -307,8 +308,16 @@ public class SuperManifestRefUpdatedListener
       return;
     }
 
-    List<ConfigEntry> relevantConfigs =
-        findRelevantConfigs(event.getProjectName(), event.getRefName());
+    List<ConfigEntry> relevantConfigs;
+    try {
+      relevantConfigs = findRelevantConfigs(event.getProjectName(), event.getRefName());
+    } catch (ConfigInvalidException e) {
+      error(
+          "update for %s (ref %s) failed finding configs: %s",
+          event.getProjectName(), event.getRefName(), e.getMessage());
+      return;
+    }
+
     for (ConfigEntry relevantConfig : relevantConfigs) {
       try {
         updateForConfig(relevantConfig, event.getRefName());
@@ -351,8 +360,15 @@ public class SuperManifestRefUpdatedListener
       throw new PreconditionFailedException("Plugin could not read conf from All-Projects");
     }
 
-    List<ConfigEntry> relevantConfigs =
-        findRelevantConfigs(resource.getProjectState().getProject().getName(), resource.getRef());
+    List<ConfigEntry> relevantConfigs;
+    try {
+      relevantConfigs =
+          findRelevantConfigs(resource.getProjectState().getProject().getName(), resource.getRef());
+    } catch (ConfigInvalidException e) {
+      error("manual trigger for %s:%s: %s", manifestProject, manifestBranch, e.getMessage());
+      throw new PreconditionFailedException("Invalid configuration");
+    }
+
     if (relevantConfigs.isEmpty()) {
       info(
           "manual trigger for %s:%s: no configs found, nothing to do.",
@@ -374,12 +390,28 @@ public class SuperManifestRefUpdatedListener
     return Response.ok();
   }
 
-  private List<ConfigEntry> findRelevantConfigs(String project, String refName) {
+  private List<ConfigEntry> findRelevantConfigs(String project, String refName)
+      throws ConfigInvalidException {
     Set<ConfigEntry> cfg = config.get();
     if (cfg == null) {
       return new ArrayList<>();
     }
-    return cfg.stream().filter(c -> c.matchesSource(project, refName)).collect(Collectors.toList());
+    List<ConfigEntry> relevantConfigs =
+        cfg.stream().filter(c -> c.matchesSource(project, refName)).collect(Collectors.toList());
+
+    // Don't write twice to same destination (no overlaps)
+    Map<String, ConfigEntry> destinations = new HashMap<>();
+    for (ConfigEntry config : relevantConfigs) {
+      String key = config.getDestRepoKey() + ":" + config.getActualDestBranch(refName);
+      if (destinations.containsKey(key)) {
+        throw new ConfigInvalidException(
+            String.format(
+                "Configuration overlap %s:%s writes to %s twice (confs %s and %s)",
+                project, refName, key, config, destinations.get(key)));
+      }
+      destinations.put(key, config);
+    }
+    return relevantConfigs;
   }
 
   private void updateForConfig(ConfigEntry c, String refName)

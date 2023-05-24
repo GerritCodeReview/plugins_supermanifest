@@ -724,5 +724,60 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     assertThat(branch4.file(SUPERMANIFEST_STAMP).asString())
         .startsWith(manifestKey.get() + " refs/heads/src4");
   }
+
+  @Test
+  public void overlappingRefSpecDestination() throws Exception {
+    setupTestRepos("project");
+
+    // Configure supermanifest to same superproject for main-* and *-release.
+    // An update to main-x-release triggers an overlapping write
+    pushConfig(
+        "[superproject \""
+            + superKey.get()
+            + ":refs/heads/main-*\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = blablabla\n"
+            + "  srcPath = default.xml\n"
+            + "\n"
+            + "[superproject \""
+            + superKey.get()
+            + ":refs/heads/*-release\"]\n"
+            + "  srcRepo = "
+            + manifestKey.get()
+            + "\n"
+            + "  srcRef = blablabla\n"
+            + "  srcPath = default.xml\n");
+
+    String remoteXml = "  <remote name=\"origin\" fetch=\"" + canonicalWebUrl.get() + "\" />\n";
+    String originXml = "  <default remote=\"origin\" revision=\"refs/heads/master\" />\n";
+
+    String xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<manifest>\n"
+            + remoteXml
+            + originXml
+            + "  <project name=\""
+            + testRepoKeys[0].get()
+            + "\" path=\"project1\" />\n"
+            + "</manifest>\n";
+
+    // This fails but silently. Check there is no destination written.
+    pushFactory
+        .create(admin.newIdent(), manifestRepo, "Subject", "default.xml", xml)
+        .to("refs/heads/main-x-release")
+        .assertOkStatus();
+
+    // This branch should not exist
+    BranchApi branch2 = gApi.projects().name(superKey.get()).branch("refs/heads/main-x-release");
+    assertThrows(ResourceNotFoundException.class, () -> branch2.file(".gitmodules"));
+
+    // Using update_manifest
+    RestResponse r =
+        adminRestSession.post(
+            "/projects/" + manifestKey + "/branches/main-x-release/update_manifest");
+    r.assertPreconditionFailed();
+  }
   // TODO - should add tests for all the error handling in configuration parsing?
 }

@@ -23,7 +23,6 @@ import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.entities.RefNames;
-import com.google.gerrit.extensions.annotations.PluginName;
 import com.google.gerrit.extensions.api.projects.BranchInput;
 import com.google.gerrit.extensions.config.DownloadScheme;
 import com.google.gerrit.extensions.events.GitReferenceUpdatedListener;
@@ -41,7 +40,6 @@ import com.google.gerrit.server.GerritPersonIdent;
 import com.google.gerrit.server.IdentifiedUser;
 import com.google.gerrit.server.config.AllProjectsName;
 import com.google.gerrit.server.config.CanonicalWebUrl;
-import com.google.gerrit.server.config.PluginConfigFactory;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.server.logging.PluginMetadata;
 import com.google.gerrit.server.permissions.GlobalPermission;
@@ -65,6 +63,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -76,7 +75,6 @@ import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.gitrepo.RepoCommand;
 import org.eclipse.jgit.gitrepo.RepoCommand.RemoteFile;
-import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
@@ -97,10 +95,9 @@ public class SuperManifestRefUpdatedListener
 
   private final SuperManifestRepoManager.Factory repoManagerFactory;
   private final URI canonicalWebUrl;
-  private final PluginConfigFactory cfgFactory;
-  private final String pluginName;
   private final AllProjectsName allProjectsName;
   private final ProjectCache projectCache;
+  private final ConfigParser configParser;
   private final Provider<PersonIdent> serverIdent;
   private final Provider<IdentifiedUser> identifiedUser;
   private final PermissionBackend permissionBackend;
@@ -112,9 +109,8 @@ public class SuperManifestRefUpdatedListener
   SuperManifestRefUpdatedListener(
       AllProjectsName allProjectsName,
       @CanonicalWebUrl String canonicalWebUrl,
-      @PluginName String pluginName,
       PluginMapContext<DownloadScheme> downloadScheme,
-      PluginConfigFactory cfgFactory,
+      ConfigParser configParser,
       ProjectCache projectCache,
       @GerritPersonIdent Provider<PersonIdent> serverIdent,
       SuperManifestRepoManager.Factory repoManagerFactory,
@@ -122,7 +118,7 @@ public class SuperManifestRefUpdatedListener
       PermissionBackend permissionBackend,
       MetricMaker metrics) {
 
-    this.pluginName = pluginName;
+    this.configParser = configParser;
     this.serverIdent = serverIdent;
     this.allProjectsName = allProjectsName;
     this.repoManagerFactory = repoManagerFactory;
@@ -133,7 +129,6 @@ public class SuperManifestRefUpdatedListener
     }
 
     this.downloadScheme = downloadScheme;
-    this.cfgFactory = cfgFactory;
     this.projectCache = projectCache;
     this.identifiedUser = identifiedUser;
     this.permissionBackend = permissionBackend;
@@ -191,57 +186,6 @@ public class SuperManifestRefUpdatedListener
     logger.atInfo().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
-  /*
-     [superproject "submodules:refs/heads/nyc"]
-        srcRepo = platforms/manifest
-        srcRef = refs/heads/nyc
-        srcPath = manifest.xml
-  */
-  private Set<ConfigEntry> parseConfiguration(PluginConfigFactory cfgFactory, String name)
-      throws NoSuchProjectException {
-    Config cfg = cfgFactory.getProjectPluginConfig(allProjectsName, name);
-
-    Set<ConfigEntry> newConf = new HashSet<>();
-    Set<String> destinations = new HashSet<>();
-    Set<String> wildcardDestinations = new HashSet<>();
-    Set<String> sources = new HashSet<>();
-
-    for (String sect : cfg.getSections()) {
-      if (!sect.equals(ConfigEntry.SECTION_NAME)) {
-        warn("%s.config: ignoring invalid section %s", name, sect);
-      }
-    }
-    for (String subsect : cfg.getSubsections(ConfigEntry.SECTION_NAME)) {
-      try {
-        ConfigEntry configEntry = new ConfigEntry(cfg, subsect);
-        if (destinations.contains(configEntry.srcRepoKey.get())
-            || sources.contains(configEntry.destRepoKey.get())) {
-          // Don't want cyclic dependencies.
-          throw new ConfigInvalidException(
-              String.format("repo in entry %s cannot be both source and destination", configEntry));
-        }
-        if (configEntry.destBranch.equals("*")) {
-          if (wildcardDestinations.contains(configEntry.destRepoKey.get())) {
-            throw new ConfigInvalidException(
-                String.format(
-                    "repo %s already has a wildcard destination branch.", configEntry.destRepoKey));
-          }
-          wildcardDestinations.add(configEntry.destRepoKey.get());
-        }
-
-        sources.add(configEntry.srcRepoKey.get());
-        destinations.add(configEntry.destRepoKey.get());
-
-        newConf.add(configEntry);
-
-      } catch (ConfigInvalidException e) {
-        error("invalid configuration: %s", e);
-      }
-    }
-
-    return newConf;
-  }
-
   private boolean checkRepoExists(Project.NameKey id) {
     return projectCache.get(id) != null;
   }
@@ -277,8 +221,7 @@ public class SuperManifestRefUpdatedListener
   }
 
   private ImmutableSet<ConfigEntry> getConfiguration() throws NoSuchProjectException {
-    Set<ConfigEntry> entries = parseConfiguration(cfgFactory, pluginName);
-
+    Set<ConfigEntry> entries = configParser.parseConfiguration();
     Set<ConfigEntry> filtered = new HashSet<>();
     for (ConfigEntry e : entries) {
       if (!checkRepoExists(e.srcRepoKey)) {
@@ -335,6 +278,10 @@ public class SuperManifestRefUpdatedListener
               relevantConfig.toString(), event.getRefName(), sw);
         }
       }
+    } catch (ConfigInvalidException e) {
+      error(
+          "Failed parsing supermanifest for project %s and ref %s: %s",
+          event.getProjectName(), event.getRefName(), e.getMessage());
     } catch (NoSuchProjectException e) {
       error(
           "Failed to do supermanifest updates for project %s and ref %s because the plugin could"
@@ -370,9 +317,16 @@ public class SuperManifestRefUpdatedListener
               allProjectsName));
     }
 
-    List<ConfigEntry> relevantConfigs =
-        findRelevantConfigs(
-            config, resource.getProjectState().getProject().getName(), resource.getRef());
+    List<ConfigEntry> relevantConfigs;
+    try {
+      relevantConfigs =
+          findRelevantConfigs(
+              config, resource.getProjectState().getProject().getName(), resource.getRef());
+    } catch (ConfigInvalidException e) {
+      error("manual trigger for %s:%s: %s", manifestProject, manifestBranch, e.getMessage());
+      throw new PreconditionFailedException("Invalid configuration");
+    }
+
     if (relevantConfigs.isEmpty()) {
       info(
           "manual trigger for %s:%s: no configs found, nothing to do.",
@@ -394,10 +348,24 @@ public class SuperManifestRefUpdatedListener
   }
 
   private List<ConfigEntry> findRelevantConfigs(
-      ImmutableSet<ConfigEntry> config, String project, String refName) {
-    return config.stream()
-        .filter(c -> c.matchesSource(project, refName))
-        .collect(Collectors.toList());
+      ImmutableSet<ConfigEntry> config, String project, String refName)
+      throws ConfigInvalidException {
+    List<ConfigEntry> relevantConfigs =
+        config.stream().filter(c -> c.matchesSource(project, refName)).collect(Collectors.toList());
+
+    // Don't write twice to same destination (no overlaps)
+    Map<String, ConfigEntry> destinations = new HashMap<>();
+    for (ConfigEntry configEntry : relevantConfigs) {
+      String key = configEntry.getDestRepoKey() + ":" + configEntry.getActualDestBranch(refName);
+      if (destinations.containsKey(key)) {
+        throw new ConfigInvalidException(
+            String.format(
+                "Configuration overlap %s:%s writes to %s twice (confs %s and %s)",
+                project, refName, key, configEntry, destinations.get(key)));
+      }
+      destinations.put(key, configEntry);
+    }
+    return relevantConfigs;
   }
 
   private void updateForConfig(ConfigEntry configEntry, String refName)

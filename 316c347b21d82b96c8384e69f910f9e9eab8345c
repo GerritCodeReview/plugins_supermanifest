@@ -24,6 +24,30 @@
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b4c4a44_4c467a9a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2023-05-25T19:35:34Z",
+      "side": 1,
+      "message": "In the following change (can be squashed into this one) I add some overlap detection. More comments there.",
+      "parentUuid": "e5c5e036_de618873",
+      "range": {
+        "startLine": 11,
+        "startChar": 37,
+        "endLine": 11,
+        "endChar": 57
+      },
+      "revId": "316c347b21d82b96c8384e69f910f9e9eab8345c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd433435_db6559a3",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-05-24T19:40:48Z",
       "side": 1,
       "message": "nit: that\u0027s not a regex -- it\u0027s a glob (just glob with a wildcard not at the end of the refname)",
+      "revId": "316c347b21d82b96c8384e69f910f9e9eab8345c",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "890c9396_a79de9df",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1072453
+      },
+      "writtenOn": "2023-05-25T19:35:34Z",
+      "side": 1,
+      "message": "Updated commit message to use \"glob\" instead of regex",
+      "parentUuid": "bd433435_db6559a3",
       "revId": "316c347b21d82b96c8384e69f910f9e9eab8345c",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }

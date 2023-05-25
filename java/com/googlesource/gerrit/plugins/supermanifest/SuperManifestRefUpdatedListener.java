@@ -221,7 +221,7 @@ public class SuperManifestRefUpdatedListener
   }
 
   private ImmutableSet<ConfigEntry> getConfiguration() throws NoSuchProjectException {
-    Set<ConfigEntry> entries = configParser.parseConfiguration();
+    Set<ConfigEntry> entries = configParser.parseConfiguration(new ArrayList<>());
     Set<ConfigEntry> filtered = new HashSet<>();
     for (ConfigEntry e : entries) {
       if (!checkRepoExists(e.srcRepoKey)) {

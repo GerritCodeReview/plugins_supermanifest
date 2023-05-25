@@ -41,5 +41,6 @@ public class SuperManifestModule extends RestApiModule {
                 SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager.class)
             .build(SuperManifestRefUpdatedListener.SuperManifestRepoManager.Factory.class));
     post(BRANCH_KIND, "update_manifest").to(SuperManifestRefUpdatedListener.class).in(SINGLETON);
+    get(BRANCH_KIND, "conf").to(SuperManifestBranchConf.class).in(SINGLETON);
   }
 }

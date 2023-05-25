@@ -8,6 +8,7 @@ import com.google.gerrit.server.config.PluginConfigFactory;
 import com.google.gerrit.server.project.NoSuchProjectException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -37,7 +38,8 @@ public class ConfigParser {
         srcRef = refs/heads/nyc
         srcPath = manifest.xml
   */
-  Set<ConfigEntry> parseConfiguration() throws NoSuchProjectException {
+
+  Set<ConfigEntry> parseConfiguration(List<String> report) throws NoSuchProjectException {
     Config cfg = cfgFactory.getProjectPluginConfig(allProjectsName, pluginName);
 
     Set<ConfigEntry> newConf = new HashSet<>();
@@ -48,6 +50,7 @@ public class ConfigParser {
 
     for (String sect : cfg.getSections()) {
       if (!sect.equals(ConfigEntry.SECTION_NAME)) {
+        report.add("WARNING: Unknown section " + sect);
         logger.atWarning().log("%s.config: ignoring invalid section %s", pluginName, sect);
       }
     }
@@ -89,7 +92,9 @@ public class ConfigParser {
         destinations.add(configEntry.destRepoKey.get());
 
         newConf.add(configEntry);
+        report.add("CONF OK: " + configEntry);
       } catch (ConfigInvalidException e) {
+        report.add("CONF INVALID: " + subsect + " " + e.getMessage());
         logger.atSevere().log("invalid configuration: %s", e);
       }
     }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0b61c11_1cb96345",
+        "filename": "java/Documentation/build.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2023-05-30T10:49:54Z",
+      "side": 0,
+      "message": "Is this removal right?\n\nI assume user\u0027s current directory is the gerrit root, and since the command is `ln -s TARGET LINK_NAME` then TARGET should be \u0027plugins/\u003cplugin_name\u003e/external_plugin_deps.bzl\u0027 and LINK_NAME is \u0027plugins/external_plugin_deps.bzl\u0027.\n\ni.e. current docs looks correct to me.",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 15
+      },
+      "revId": "256814e61a7969219f2dece636b5c284e8322326",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

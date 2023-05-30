@@ -94,6 +94,30 @@
       },
       "revId": "256814e61a7969219f2dece636b5c284e8322326",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dca6cdd_b70eb4ad",
+        "filename": "java/Documentation/build.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2023-05-30T11:05:56Z",
+      "side": 0,
+      "message": "FWIW I was also surprised by this behaviour.",
+      "parentUuid": "9fe56086_7dfe3d8e",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 15
+      },
+      "revId": "256814e61a7969219f2dece636b5c284e8322326",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

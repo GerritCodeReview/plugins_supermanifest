@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c9480b4_0d30eb05",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2023-05-30T08:06:31Z",
+      "side": 1,
+      "message": "refs*",
+      "range": {
+        "startLine": 15,
+        "startChar": 28,
+        "endLine": 15,
+        "endChar": 32
+      },
+      "revId": "65b771b3c8e53be9a74275f00369142c257cb467",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb02e68a_ce9b8588",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/ConfigEntryTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2023-05-30T08:06:31Z",
+      "side": 1,
+      "message": "We can also add an assertion for \"refs/heads/-release\"",
+      "revId": "65b771b3c8e53be9a74275f00369142c257cb467",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42f3d02b_7a941f2e",
+        "filename": "javatests/com/googlesource/gerrit/plugins/supermanifest/ConfigEntryTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2023-05-30T08:06:31Z",
+      "side": 1,
+      "message": "We use assertThrows in tests then we can check on the exception message: https://gerrit.googlesource.com/gerrit/+/ac905cbacff58219ed72cdb9301e6cc6293f6090/javatests/com/google/gerrit/acceptance/api/accounts/AccountIT.java#339",
+      "revId": "65b771b3c8e53be9a74275f00369142c257cb467",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

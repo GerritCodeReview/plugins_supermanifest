@@ -22,6 +22,30 @@
       },
       "revId": "256814e61a7969219f2dece636b5c284e8322326",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82fc94f2_6f968eba",
+        "filename": "java/Documentation/build.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2023-05-30T10:52:48Z",
+      "side": 0,
+      "message": "I tried this out and executing the old command from the current gerrit root creates:\n\n  plugins/external_plugins_deps.bzl -\u003e plugins/plugins/supermanifest/external_plugins_deps.bzl (which doesn\u0027t exist)\n  \nIt seems the link target must be given relative to the folder in which the link is created.",
+      "parentUuid": "c0b61c11_1cb96345",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 15
+      },
+      "revId": "256814e61a7969219f2dece636b5c284e8322326",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

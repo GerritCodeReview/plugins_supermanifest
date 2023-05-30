@@ -67,7 +67,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeUnit;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
@@ -107,9 +107,6 @@ public class SuperManifestRefUpdatedListener
   private final PluginMapContext<DownloadScheme> downloadScheme;
   private final Counter1<String> manifestUpdateResultCounter;
   private final Timer1<ConfigEntry.ToolType> superprojectCommitTimer;
-
-  // Mutable.
-  private AtomicReference<ImmutableSet<ConfigEntry>> config = new AtomicReference<>();
 
   @Inject
   SuperManifestRefUpdatedListener(
@@ -176,6 +173,12 @@ public class SuperManifestRefUpdatedListener
   @FormatMethod
   private void error(@FormatString String formatStr, Object... args) {
     logger.atSevere().log("%s: %s", canonicalWebUrl, String.format(formatStr, args));
+  }
+
+  @FormatMethod
+  private void errorAtMostOncePerDay(@FormatString String formatStr, Object... args) {
+    logger.atSevere().atMostEvery(1, TimeUnit.DAYS).log(
+        "%s: %s", canonicalWebUrl, String.format(formatStr, args));
   }
 
   @FormatMethod
@@ -249,7 +252,7 @@ public class SuperManifestRefUpdatedListener
   @Override
   public void start() {
     try {
-      updateConfiguration();
+      getConfiguration();
     } catch (NoSuchProjectException e) {
       warn("can't read configuration: %s", e.getMessage());
     }
@@ -257,49 +260,49 @@ public class SuperManifestRefUpdatedListener
 
   /** for debugging. */
   private String configurationToString() {
-    Set<ConfigEntry> cfg = config.get();
-    if (cfg == null) {
-      return "No config loaded (could not read All-Projects)";
+    try {
+      Set<ConfigEntry> cfg = getConfiguration();
+      StringBuilder b = new StringBuilder();
+      b.append("Supermanifest config (").append(cfg.size()).append(") {\n");
+      for (ConfigEntry c : cfg) {
+        b.append(" ").append(c).append("\n");
+      }
+      b.append("}\n");
+      return b.toString();
+    } catch (NoSuchProjectException e) {
+      return String.format(
+          "The supermanifest configuration could not be loaded from the %s project",
+          allProjectsName);
     }
-    StringBuilder b = new StringBuilder();
-    b.append("Supermanifest config (").append(cfg.size()).append(") {\n");
-    for (ConfigEntry c : cfg) {
-      b.append(" ").append(c).append("\n");
-    }
-    b.append("}\n");
-    return b.toString();
   }
 
-  private void updateConfiguration() throws NoSuchProjectException {
+  private ImmutableSet<ConfigEntry> getConfiguration() throws NoSuchProjectException {
     Set<ConfigEntry> entries = parseConfiguration(cfgFactory, pluginName);
 
     Set<ConfigEntry> filtered = new HashSet<>();
     for (ConfigEntry e : entries) {
       if (!checkRepoExists(e.srcRepoKey)) {
-        error("source repo '%s' does not exist", e.srcRepoKey);
+        errorAtMostOncePerDay(
+            "the supermanifest configuration in the %s project contains source repo '%s' that does"
+                + " not exist",
+            allProjectsName, e.srcRepoKey);
       } else if (!checkRepoExists(e.destRepoKey)) {
-        error("destination repo '%s' does not exist", e.destRepoKey);
+        errorAtMostOncePerDay(
+            "the supermanifest configuration in the %s project contains destination repo '%s' that"
+                + " does not exist",
+            allProjectsName, e.destRepoKey);
       } else {
         filtered.add(e);
       }
     }
 
-    config.set(ImmutableSet.copyOf(filtered));
+    return ImmutableSet.copyOf(filtered);
   }
 
   @Override
   public void onGitReferenceUpdated(Event event) {
     if (event.getProjectName().equals(allProjectsName.get())) {
-      if (event.getRefName().equals("refs/meta/config")) {
-        try {
-          // TODO: Remove, this is just band-aid.
-          // Evict project cache because this is called before that eviction is done in core
-          projectCache.evict(allProjectsName);
-          updateConfiguration();
-        } catch (NoSuchProjectException e) {
-          throw new IllegalStateException(e);
-        }
-      }
+      // supermanifest updates on All-Projects not supported
       return;
     }
     if (RefNames.isNoteDbMetaRef(event.getRefName())) {
@@ -307,27 +310,36 @@ public class SuperManifestRefUpdatedListener
       return;
     }
 
-    List<ConfigEntry> relevantConfigs =
-        findRelevantConfigs(event.getProjectName(), event.getRefName());
-    for (ConfigEntry relevantConfig : relevantConfigs) {
-      try {
-        updateForConfig(relevantConfig, event.getRefName());
-      } catch (ConfigInvalidException | IOException | GitAPIException e) {
-        // We only want the trace up to here. We could recurse into the exception, but this at least
-        // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
-        StackTraceElement here = Thread.currentThread().getStackTrace()[1];
-        e.setStackTrace(trimStack(e.getStackTrace(), here));
+    try {
+      List<ConfigEntry> relevantConfigEntries =
+          findRelevantConfigs(getConfiguration(), event.getProjectName(), event.getRefName());
+      for (ConfigEntry relevantConfig : relevantConfigEntries) {
+        try {
+          updateForConfig(relevantConfig, event.getRefName());
+        } catch (ConfigInvalidException | IOException | GitAPIException e) {
+          // We only want the trace up to here. We could recurse into the exception, but this at
+          // least
+          // trims the very common jgit.gitrepo.RepoCommand.RemoteUnavailableException.
+          StackTraceElement here = Thread.currentThread().getStackTrace()[1];
+          e.setStackTrace(trimStack(e.getStackTrace(), here));
 
-        // We are in an asynchronously called listener, so there is no user action to give
-        // feedback to. We log the error, but it would be nice if we could surface these logs
-        // somewhere.  Perhaps we could store these as commits in some special branch (but in
-        // what repo?).
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        error(
-            "update for %s (ref %s) failed: %s", relevantConfig.toString(), event.getRefName(), sw);
+          // We are in an asynchronously called listener, so there is no user action to give
+          // feedback to. We log the error, but it would be nice if we could surface these logs
+          // somewhere.  Perhaps we could store these as commits in some special branch (but in
+          // what repo?).
+          StringWriter sw = new StringWriter();
+          PrintWriter pw = new PrintWriter(sw);
+          e.printStackTrace(pw);
+          error(
+              "update for %s (ref %s) failed: %s",
+              relevantConfig.toString(), event.getRefName(), sw);
+        }
       }
+    } catch (NoSuchProjectException e) {
+      error(
+          "Failed to do supermanifest updates for project %s and ref %s because the plugin could"
+              + " not read the supermanifest configuration from the %s project",
+          event.getProjectName(), event.getRefName(), allProjectsName);
     }
   }
 
@@ -344,24 +356,32 @@ public class SuperManifestRefUpdatedListener
         identifiedUser.get().getAccountId().get(),
         configurationToString());
 
-    if (config.get() == null) {
+    ImmutableSet<ConfigEntry> config;
+    try {
+      config = getConfiguration();
+    } catch (NoSuchProjectException e) {
       error(
-          "Plugin could not read conf from All-Projects (processing %s:%s)",
-          manifestProject, manifestBranch);
-      throw new PreconditionFailedException("Plugin could not read conf from All-Projects");
+          "Plugin could not read the supermanifest configuration from the %s project"
+              + " (processing %s:%s)",
+          allProjectsName, manifestProject, manifestBranch);
+      throw new PreconditionFailedException(
+          String.format(
+              "Plugin could not read the supermanifest configuration from the %s project",
+              allProjectsName));
     }
 
     List<ConfigEntry> relevantConfigs =
-        findRelevantConfigs(resource.getProjectState().getProject().getName(), resource.getRef());
+        findRelevantConfigs(
+            config, resource.getProjectState().getProject().getName(), resource.getRef());
     if (relevantConfigs.isEmpty()) {
       info(
           "manual trigger for %s:%s: no configs found, nothing to do.",
           manifestProject, manifestBranch);
       return Response.none();
     }
-    for (ConfigEntry config : relevantConfigs) {
+    for (ConfigEntry configEntry : relevantConfigs) {
       try {
-        updateForConfig(config, resource.getRef());
+        updateForConfig(configEntry, resource.getRef());
       } catch (ConfigInvalidException e) {
         errorWithCause(e, "Invalid conf processing %s:%s", manifestProject, manifestBranch);
         throw new PreconditionFailedException(e.getMessage());
@@ -373,38 +393,35 @@ public class SuperManifestRefUpdatedListener
     return Response.ok();
   }
 
-  private List<ConfigEntry> findRelevantConfigs(String project, String refName) {
-    Set<ConfigEntry> cfg = config.get();
+  private List<ConfigEntry> findRelevantConfigs(
+      ImmutableSet<ConfigEntry> config, String project, String refName) {
     List<ConfigEntry> relevantConfigs = new ArrayList<>();
-    if (cfg == null) {
-      return relevantConfigs;
-    }
-    for (ConfigEntry c : cfg) {
-      if (!c.srcRepoKey.get().equals(project)) {
+    for (ConfigEntry configEntry : config) {
+      if (!configEntry.srcRepoKey.get().equals(project)) {
         continue;
       }
 
-      if (!(c.destBranch.equals("*") || c.srcRef.equals(refName))) {
+      if (!(configEntry.destBranch.equals("*") || configEntry.srcRef.equals(refName))) {
         continue;
       }
 
-      if (c.destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
+      if (configEntry.destBranch.equals("*") && !refName.startsWith(REFS_HEADS)) {
         continue;
       }
 
-      if (c.excludesRef(refName)) {
+      if (configEntry.excludesRef(refName)) {
         info("Skipping %s: it matches exclude conditions.", refName);
         continue;
       }
-      relevantConfigs.add(c);
+      relevantConfigs.add(configEntry);
     }
     return relevantConfigs;
   }
 
-  private void updateForConfig(ConfigEntry c, String refName)
+  private void updateForConfig(ConfigEntry configEntry, String refName)
       throws ConfigInvalidException, IOException, GitAPIException {
     SubModuleUpdater subModuleUpdater;
-    switch (c.getToolType()) {
+    switch (configEntry.getToolType()) {
       case Repo:
         subModuleUpdater = new RepoUpdater(serverIdent.get());
         break;
@@ -413,15 +430,17 @@ public class SuperManifestRefUpdatedListener
         break;
       default:
         throw new ConfigInvalidException(
-            String.format("invalid toolType: %s", c.getToolType().name()));
+            String.format("invalid toolType: %s", configEntry.getToolType().name()));
     }
 
     String status = "NOT_ATTEMPTED";
     try (RefUpdateContext ctx = RefUpdateContext.open(PLUGIN);
         GerritRemoteReader reader =
-            new GerritRemoteReader(repoManagerFactory.create(c), canonicalWebUrl.toString());
-        Timer1.Context<ConfigEntry.ToolType> ignored = superprojectCommitTimer.start(c.toolType)) {
-      subModuleUpdater.update(reader, c, refName);
+            new GerritRemoteReader(
+                repoManagerFactory.create(configEntry), canonicalWebUrl.toString());
+        Timer1.Context<ConfigEntry.ToolType> ignored =
+            superprojectCommitTimer.start(configEntry.toolType)) {
+      subModuleUpdater.update(reader, configEntry, refName);
       status = "OK";
     } catch (ConcurrentRefUpdateException e) {
       status = "LOCK_FAILURE";

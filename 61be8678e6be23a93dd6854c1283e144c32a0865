@@ -63,6 +63,30 @@
       },
       "revId": "61be8678e6be23a93dd6854c1283e144c32a0865",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b45babd8_e3dc8348",
+        "filename": "java/com/googlesource/gerrit/plugins/supermanifest/SuperManifestRefUpdatedListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1091982
+      },
+      "writtenOn": "2023-05-30T13:53:09Z",
+      "side": 1,
+      "message": "Right, thanks for explaining.\n\nBefore this change updateConfig() was noly called for All-Projects:refs/meta/config, but now is called much more often.",
+      "parentUuid": "612dcf55_dc6deeac",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 29
+      },
+      "revId": "61be8678e6be23a93dd6854c1283e144c32a0865",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }

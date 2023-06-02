@@ -14,10 +14,12 @@
 
 package com.googlesource.gerrit.plugins.supermanifest;
 
+import com.google.gerrit.git.LockFailureException;
 import com.googlesource.gerrit.plugins.supermanifest.SuperManifestRefUpdatedListener.GerritRemoteReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.gitrepo.ManifestParser;
 import org.eclipse.jgit.gitrepo.RepoCommand;
@@ -64,7 +66,12 @@ class RepoUpdater implements SubModuleUpdater {
     // otherwise, which would leak data from the serving machine.
     cmd.setIncludedFileReader(new GerritIncludeReader(srcRepo, srcRef));
 
-    cmd.call();
+    try {
+      cmd.call();
+    } catch (ConcurrentRefUpdateException e) {
+      LockFailureException.throwIfLockFailure(e);
+      throw e;
+    }
   }
 
   private static class GerritIncludeReader implements ManifestParser.IncludedFileReader {

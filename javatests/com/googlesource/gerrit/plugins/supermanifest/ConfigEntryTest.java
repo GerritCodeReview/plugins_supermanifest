@@ -216,6 +216,25 @@ public class ConfigEntryTest {
   }
 
   @Test
+  public void recordRemoteBranch() throws ConfigInvalidException {
+    StringBuilder builder =
+        new StringBuilder(
+            getBasicConf(
+                "superproject",
+                "refs/heads/nyc",
+                "manifest",
+                "refs/heads/nyc-src",
+                "default.xml"))
+            .append("  recordRemoteBranch = false\n");
+    Config cfg = new Config();
+    cfg.fromText(builder.toString());
+
+    ConfigEntry entry = new ConfigEntry(cfg, "superproject:refs/heads/nyc");
+
+    assertThat(entry.recordRemoteBranch).isFalse();
+  }
+
+  @Test
   public void matchesSource() throws ConfigInvalidException {
     StringBuilder builder =
         new StringBuilder(

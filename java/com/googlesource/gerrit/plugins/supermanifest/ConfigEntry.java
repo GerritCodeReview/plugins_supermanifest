@@ -43,6 +43,7 @@ public class ConfigEntry {
   final Project.NameKey destRepoKey;
   final String repoGroups;
   final ImmutableSet<String> srcRefsExcluded;
+  final boolean recordRemoteBranch;
   final boolean recordSubmoduleLabels;
   final boolean ignoreRemoteFailures;
 
@@ -126,6 +127,7 @@ public class ConfigEntry {
     destBranch = destRef.substring(REFS_HEADS.length());
 
     repoGroups = nullToEmpty(cfg.getString(SECTION_NAME, name, "groups"));
+    recordRemoteBranch = cfg.getBoolean(SECTION_NAME, name, "recordRemoteBranch", true);
     recordSubmoduleLabels = cfg.getBoolean(SECTION_NAME, name, "recordSubmoduleLabels", false);
     ignoreRemoteFailures = cfg.getBoolean(SECTION_NAME, name, "ignoreRemoteFailures", false);
 

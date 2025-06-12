@@ -31,6 +31,7 @@ import com.google.gerrit.entities.Project.NameKey;
 import com.google.gerrit.entities.RefNames;
 import com.google.gerrit.extensions.api.projects.BranchApi;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
+import com.google.gerrit.testing.NoGitRepositoryCheckIfClosed;
 import com.google.inject.Inject;
 import java.net.URI;
 import java.util.Arrays;
@@ -45,6 +46,7 @@ import org.junit.Test;
 @TestPlugin(
     name = "supermanifest",
     sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule")
+@NoGitRepositoryCheckIfClosed
 public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
   Project.NameKey[] testRepoKeys;

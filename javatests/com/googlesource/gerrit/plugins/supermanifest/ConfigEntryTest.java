@@ -18,6 +18,7 @@ import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import static org.junit.Assert.fail;
 
 import com.google.gerrit.entities.Project;
+import com.google.gerrit.testing.NoGitRepositoryCheckIfClosed;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
+@NoGitRepositoryCheckIfClosed
 public class ConfigEntryTest {
 
   @Test
@@ -219,12 +221,12 @@ public class ConfigEntryTest {
   public void recordRemoteBranch() throws ConfigInvalidException {
     StringBuilder builder =
         new StringBuilder(
-            getBasicConf(
-                "superproject",
-                "refs/heads/nyc",
-                "manifest",
-                "refs/heads/nyc-src",
-                "default.xml"))
+                getBasicConf(
+                    "superproject",
+                    "refs/heads/nyc",
+                    "manifest",
+                    "refs/heads/nyc-src",
+                    "default.xml"))
             .append("  recordRemoteBranch = false\n");
     Config cfg = new Config();
     cfg.fromText(builder.toString());

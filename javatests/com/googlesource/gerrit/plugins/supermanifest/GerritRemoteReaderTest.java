@@ -6,6 +6,7 @@ import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.testing.InMemoryRepositoryManager;
+import com.google.gerrit.testing.NoGitRepositoryCheckIfClosed;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -21,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
+@NoGitRepositoryCheckIfClosed
 public class GerritRemoteReaderTest {
 
   private static final String MASTER = "refs/heads/master";

@@ -5,6 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.git.GitRepositoryManager;
 import com.google.gerrit.testing.InMemoryRepositoryManager;
+import com.google.gerrit.testing.NoGitRepositoryCheckIfClosed;
 import java.io.IOException;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
+@NoGitRepositoryCheckIfClosed
 public class GerritSuperManifestRepoManagerTest {
   private static final String CANONICAL_WEB_URL = "https://example.com/gerrit/";
 

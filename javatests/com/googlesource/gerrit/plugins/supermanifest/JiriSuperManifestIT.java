@@ -32,6 +32,7 @@ import com.google.gerrit.extensions.config.DownloadScheme;
 import com.google.gerrit.extensions.registration.DynamicMap;
 import com.google.gerrit.extensions.registration.PrivateInternals_DynamicMapImpl;
 import com.google.gerrit.extensions.restapi.ResourceNotFoundException;
+import com.google.gerrit.testing.NoGitRepositoryCheckIfClosed;
 import com.google.inject.Inject;
 import com.google.inject.util.Providers;
 import java.net.URI;
@@ -47,6 +48,7 @@ import org.junit.Test;
 @TestPlugin(
     name = "supermanifest",
     sysModule = "com.googlesource.gerrit.plugins.supermanifest.SuperManifestModule")
+@NoGitRepositoryCheckIfClosed
 public class JiriSuperManifestIT extends LightweightPluginDaemonTest {
 
   Project.NameKey[] testRepoKeys;

@@ -292,7 +292,11 @@ public class SuperManifestRefUpdatedListener
 
   @Override
   public Response<?> apply(BranchResource resource, BranchInput input)
-      throws AuthException, PermissionBackendException, PreconditionFailedException {
+      throws AuthException,
+          PermissionBackendException,
+          PreconditionFailedException,
+          GitAPIException,
+          IOException {
     permissionBackend.currentUser().check(GlobalPermission.ADMINISTRATE_SERVER);
     String manifestProject = resource.getBranchKey().project().get();
     String manifestBranch = resource.getBranchKey().branch();
@@ -341,7 +345,7 @@ public class SuperManifestRefUpdatedListener
         throw new PreconditionFailedException(e.getMessage());
       } catch (GitAPIException | IOException e) {
         errorWithCause(e, "Internal error processing %s:%s", manifestProject, manifestBranch);
-        return Response.withStatusCode(500, "Internal error: " + e.getMessage());
+        throw e;
       }
     }
     return Response.ok();

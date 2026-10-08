@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f03a271_b93650f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003935
+      },
+      "writtenOn": "2026-10-08T09:23:00Z",
+      "side": 1,
+      "message": "Sorry, Kamil and I are no longer working on Gerrit, hence removing us as reviewers from this change.",
+      "revId": "acda991f84c5fd7106149cbe6fb74a3272bccaa9",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "082751b3_b3af434f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4395292
+      },
+      "writtenOn": "2026-11-02T21:01:46Z",
+      "side": 1,
+      "message": "It seems this change would fail on 3.14. It would be nice to have a commit that would build for that version, so that we could make a stable-3.14 branch",
+      "revId": "6b03e9b31612c72ab881817fef02d2de39899d16",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    }
+  ]
+}

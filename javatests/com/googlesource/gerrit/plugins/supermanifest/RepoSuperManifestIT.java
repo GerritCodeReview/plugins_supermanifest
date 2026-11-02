@@ -17,6 +17,7 @@ package com.googlesource.gerrit.plugins.supermanifest;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.gerrit.testing.GerritJUnit.assertThrows;
 import static com.googlesource.gerrit.plugins.supermanifest.RepoUpdater.SUPERMANIFEST_STAMP;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.gerrit.acceptance.GitUtil;
@@ -36,7 +37,6 @@ import com.google.inject.Inject;
 import java.net.URI;
 import java.util.Arrays;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
 import org.eclipse.jgit.junit.TestRepository;
 import org.eclipse.jgit.lib.BlobBasedConfig;
@@ -82,7 +82,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     manifestRepo = cloneProject(manifestKey, admin);
 
     superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
+    var unused = cloneProject(superKey, admin);
   }
 
   void pushConfig(String config) throws Exception {
@@ -383,7 +383,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
 
     RestResponse r =
         adminRestSession.post("/projects/" + manifestKey + "/branches/srcbranch/update_manifest");
-    r.assertStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+    r.assertStatus(HTTP_INTERNAL_ERROR);
 
     pushConfig(
         "[superproject \""

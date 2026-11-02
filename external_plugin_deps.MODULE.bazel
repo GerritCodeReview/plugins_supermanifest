@@ -1,0 +1,11 @@
+# Include this fragment from Gerrit's plugins/external_plugin_deps.MODULE.bazel.
+# Bindings do not cross include() boundaries, so declare the extension here too.
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+bazel_dep(name = "gerrit-supermanifest")
+local_path_override(
+    module_name = "gerrit-supermanifest",
+    path = "plugins/supermanifest",
+)
+
+use_repo(maven, "supermanifest_plugin_deps")

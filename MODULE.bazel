@@ -1,0 +1,29 @@
+module(name = "gerrit-supermanifest")
+
+# Dependency configuration for Gerrit in-tree builds only.
+bazel_dep(name = "rules_jvm_external", version = "7.2")
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    name = "supermanifest_plugin_deps",
+    artifacts = [
+        "com.sun.istack:istack-commons-runtime:3.0.11",
+        "javax.xml.bind:jaxb-api:2.3.1",
+        "org.glassfish.jaxb:jaxb-runtime:2.3.3",
+    ],
+    duplicate_version_warning = "error",
+    excluded_artifacts = [
+        # JAXB 2.3.x's Jakarta artifact still contains javax.xml.bind classes.
+        # Keep the existing javax API rather than packaging both copies.
+        "jakarta.xml.bind:jakarta.xml.bind-api",
+        # The activation implementation already contains the javax API.
+        "javax.activation:javax.activation-api",
+    ],
+    fail_if_repin_required = True,
+    fail_on_missing_checksum = True,
+    fetch_sources = True,
+    lock_file = "supermanifest_plugin_deps.lock.json",
+    repositories = ["https://repo1.maven.org/maven2"],
+    version_conflict_policy = "pinned",
+)
+use_repo(maven, "supermanifest_plugin_deps")

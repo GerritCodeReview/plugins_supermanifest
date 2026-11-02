@@ -82,7 +82,7 @@ public class RepoSuperManifestIT extends LightweightPluginDaemonTest {
     manifestRepo = cloneProject(manifestKey, admin);
 
     superKey = projectOperations.newProject().name(name("superproject")).create();
-    cloneProject(superKey, admin);
+    var unused = cloneProject(superKey, admin);
   }
 
   void pushConfig(String config) throws Exception {

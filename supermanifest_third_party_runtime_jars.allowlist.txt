@@ -1,0 +1,5 @@
+istack-commons-runtime
+jakarta.activation
+jaxb-api
+jaxb-runtime
+txw2

@@ -43,7 +43,7 @@ public class GerritRemoteReaderTest {
 
   @Before
   public void setUp() throws Exception {
-    repoManager.createRepository(Project.nameKey(PROJECT_REPONAME));
+    repoManager.createRepository(Project.nameKey(PROJECT_REPONAME)).close();
     Repository projectX = repoManager.openRepository(Project.nameKey(PROJECT_REPONAME));
     try (TestRepository<Repository> git = new TestRepository<>(projectX)) {
       projectXTip = git.branch(MASTER).commit().add("test_file", "test_contents").create();

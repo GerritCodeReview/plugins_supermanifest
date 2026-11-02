@@ -23,7 +23,7 @@ public class GerritSuperManifestRepoManagerTest {
   @Before
   public void setUp() throws IOException {
     GitRepositoryManager repoManager = new InMemoryRepositoryManager();
-    repoManager.createRepository(Project.nameKey("project/x"));
+    repoManager.createRepository(Project.nameKey("project/x")).close();
     superManifestRepoManager =
         new SuperManifestRefUpdatedListener.GerritSuperManifestRepoManager(
             repoManager, CANONICAL_WEB_URL, null);

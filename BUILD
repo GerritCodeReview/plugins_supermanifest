@@ -12,11 +12,10 @@ gerrit_plugin(
     ],
     resources = glob(["java/Documentation/**/*.md"]),
     deps = [
-        "@error-prone-annotations//jar",
+        "//lib/errorprone:annotations",
         "@istack-commons-runtime//jar",
         "@jaxb-api//jar",
         "@jaxb-runtime//jar",
-        "@commons-lang3//jar",
     ],
 )
 
@@ -35,9 +34,5 @@ junit_tests(
     deps = [
         ":supermanifest__plugin",
         "//java/com/google/gerrit/acceptance:lib",
-        "//lib/bouncycastle:bcprov",
-        "//lib/commons:lang3",
-        "//lib/jetty:http",
-        "//plugins:plugin-lib",
     ],
 )

@@ -16,6 +16,23 @@
       "message": "Verified the build and the tests only.",
       "revId": "84e604c695ae009267bef113a7004c52b1be2d7e",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "081a72fb_eba70123",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2026-11-05T06:50:09Z",
+      "side": 1,
+      "message": "This can be built against stable-14 branch.",
+      "revId": "84e604c695ae009267bef113a7004c52b1be2d7e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153"
     }
   ]
 }
